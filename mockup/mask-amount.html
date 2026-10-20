@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ padding:16px 12px 44px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:420px}
+h1{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12px;color:#475569;line-height:1.75;margin-top:7px}
+.two{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.colw{flex:1;min-width:190px;max-width:210px}
+.tag{font-size:11px;font-weight:750;padding:3px 11px;border-radius:999px;display:inline-block;margin-bottom:8px}
+.tag.a{background:#D1FAE5;color:#047857}
+.tag.b{background:#DBEAFE;color:#1D4ED8}
+/* 卡片 */
+.card{background:#fff;border-radius:20px;padding:15px 16px;box-shadow:0 12px 28px -18px rgba(6,95,70,.35),0 2px 6px -3px rgba(6,95,70,.1)}
+.hd{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#5B7C7C}
+.hd .dot{width:6px;height:6px;border-radius:50%;background:#0B9E7D;box-shadow:0 0 6px #0B9E7D}
+.hd .link{margin-left:auto;font-size:11.5px;color:#0B9E7D;font-weight:600}
+.amtrow{display:flex;align-items:center;gap:8px;margin-top:8px}
+.amt{font-size:27px;font-weight:770;color:#063A2C;letter-spacing:-1px;white-space:nowrap}
+.amt.mask{letter-spacing:1px;color:#0B9E7D;animation:breathe 2.6s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.75}50%{opacity:1}}
+.chip{font-size:11px;font-weight:700;color:#0A7A62;background:rgba(11,158,125,.14);padding:4px 10px;border-radius:12px;white-space:nowrap}
+.sub{font-size:11.5px;color:#8AA6B0;margin-top:7px}
+.sub .hint{color:#0B9E7D;font-weight:600}
+.hr{height:1px;background:#F0F5F4;margin:12px 0 0}
+/* 存钱罐 */
+.goalhd{display:flex;align-items:center;gap:6px;margin-top:12px}
+.goalhd b{font-size:13px;color:#16323B;flex:1}
+.goalhd .pct{font-size:17px;font-weight:800;color:#0FA98A}
+.mline{display:flex;justify-content:space-between;font-size:9.5px;color:#8AA6B0;margin-top:9px;padding:0 2px}
+.mtrack{position:relative;height:6px;border-radius:4px;background:#EDF3F1;margin:5px 4px 0}
+.mtrack i{position:absolute;left:0;top:0;bottom:0;width:13%;border-radius:4px;background:linear-gradient(90deg,#0EAE8C,#2DD4BF)}
+.mtrack b{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);background:#fff;border:2px solid #B9CCC6}
+.mtrack b:first-of-type{border-color:#D97706}
+.tag2{margin-top:10px;font-size:11px;color:#92400E;background:#FEF3C7;border-radius:10px;padding:7px 11px;display:inline-block}
+.tag2 .mask{letter-spacing:1px}
+.cols{display:flex;margin-top:12px}
+.cols>div{flex:1;display:flex;flex-direction:column;gap:3px}
+.cols span{font-size:10px;color:#8AA6B0}
+.cols b{font-size:12.5px;font-weight:750;color:#16323B}
+.cols b.mask{letter-spacing:1px;color:#B9CCC6}
+.note{background:#fff;border-radius:14px;padding:13px 15px;border:1px solid #E2E8EC;font-size:11.8px;color:#475569;line-height:1.75;margin-top:22px}
+.note b{color:#0B7A5C}
+.foot{background:#ECFDF5;border:1px solid #CDEEE5;border-radius:16px;padding:14px 16px;margin-top:16px;font-size:12px;color:#065F46;line-height:1.8}
+.foot b{display:block;font-size:12.5px;margin-bottom:6px}
+</style></head><body>
+<div class="page">
+  <h1>累计收入 · 金额遮蔽</h1>
+  <p class="intro">📦 <b>SalaryJump-3.53-mask.apk</b> —— 「累计收入」金额默认遮住（防旁人瞥见），
+  <b>点一下金额</b>即可查看；再点一下又遮回去。</p>
+
+  <div class="two">
+    <!-- 默认：遮蔽 -->
+    <div class="colw">
+      <span class="tag a">默认 · 金额已遮住</span>
+      <div class="card">
+        <div class="hd"><span class="dot"></span>累计收入<span class="link">明细 ›</span></div>
+        <div class="amtrow">
+          <span class="amt mask">¥ ••••••••</span>
+          <span class="chip">已结算 3 天</span>
+        </div>
+        <div class="sub">按工作日累计 · <span class="hint">点击金额查看</span></div>
+        <div class="hr"></div>
+        <div class="goalhd"><b>🎯 MacBook Pro</b><span class="pct">13%</span></div>
+        <div class="mtrack"><i></i><b style="left:25%"></b><b style="left:50%"></b><b style="left:75%"></b><b style="left:100%"></b></div>
+        <div class="mline"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+        <div class="tag2">下个里程碑 25% · 还需 3 个工作日</div>
+        <div class="cols">
+          <div><span>已攒</span><b class="mask">¥••••••</b></div>
+          <div><span>还差</span><b class="mask">¥••••••</b></div>
+          <div><span>预计完成</span><b>11月9日</b></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 点击后：显示 -->
+    <div class="colw">
+      <span class="tag b">点一下 · 显示金额</span>
+      <div class="card">
+        <div class="hd"><span class="dot"></span>累计收入<span class="link">明细 ›</span></div>
+        <div class="amtrow">
+          <span class="amt">¥ 151,141.17</span>
+          <span class="chip">已结算 3 天</span>
+        </div>
+        <div class="sub">按工作日累计</div>
+        <div class="hr"></div>
+        <div class="goalhd"><b>🎯 MacBook Pro</b><span class="pct">13%</span></div>
+        <div class="mtrack"><i></i><b style="left:25%"></b><b style="left:50%"></b><b style="left:75%"></b><b style="left:100%"></b></div>
+        <div class="mline"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+        <div class="tag2">下个里程碑 25%（¥5,890.00）· 还需 3 个工作日</div>
+        <div class="cols">
+          <div><span>已攒</span><b>¥3,023.34</b></div>
+          <div><span>还差</span><b>¥20,536.66</b></div>
+          <div><span>预计完成</span><b>11月9日</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>行为细节</b><br>
+    · 默认遮蔽：<b>每次打开 App 都是遮住状态</b>（不同步显示状态，安全优先）<br>
+    · 点击金额 → 滚动数字显示（300ms 计数动画）；再点 → 遮回去<br>
+    · 遮蔽范围：主金额 + 存钱罐的「已攒 / 还差 / 里程碑金额」（同卡片金额一并遮住）<br>
+    · 不受影响：已结算天数、里程碑百分比、预计完成日期、存钱罐名称
+  </div>
+
+  <div class="foot">
+    <b>验证</b>
+    ✅ 编译 238 类 · 测试 908/908 · 反编译核对 4 处应用点<br><br>
+    💡 一个待你决定的问题：<b>桌面小组件</b>也显示累计金额（「累计 ¥X · 已结算 N 天」），
+    要不要也默认遮住？（小组件不能点击展开，只能用「刷新」时切换，体验会差一些）
+  </div>
+</div>
+</body></html>

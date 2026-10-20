@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ padding:16px 12px 44px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:392px}
+h1{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12px;color:#475569;line-height:1.7;margin-top:7px}
+.diag{background:#fff;border-radius:16px;padding:14px 16px;border:1px solid #E2E8EC;margin-top:14px;font-size:11.8px;color:#475569;line-height:1.7}
+.diag b{color:#0F172A;font-size:12.5px;display:block;margin-bottom:4px}
+.diag ol{padding-left:17px}
+.diag li{margin:4px 0}
+.diag .hi{color:#B45309;font-weight:650}
+.opt{margin-top:24px}
+.opt .t{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.badge{font-size:11px;font-weight:800;color:#fff;background:linear-gradient(135deg,#0B7A5C,#10B981);padding:3px 10px;border-radius:999px}
+.badge.gray{background:#94A3B8}
+.badge.rec{background:linear-gradient(135deg,#B45309,#F59E0B)}
+.opt .name{font-size:14px;font-weight:800;color:#0F172A}
+.opt .sub{font-size:11px;color:#64748B;margin:3px 0 10px;line-height:1.65}
+.screen{border-radius:22px;padding:18px 16px 16px;background:linear-gradient(168deg,#EAF7F2,#E8F1F7 55%,#EDEFF9);
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.75)}
+.card{background:linear-gradient(152deg,rgba(255,255,255,.9),rgba(255,255,255,.66));border-radius:24px;
+ border:1px solid rgba(255,255,255,.95);box-shadow:0 18px 36px -22px rgba(6,95,70,.28),0 3px 9px -4px rgba(6,95,70,.1);
+ padding:16px 16px 14px}
+.row{display:flex;align-items:center}
+.amt{flex:1;font-size:42px;font-weight:770;letter-spacing:-1.6px;color:#063A2C;line-height:1;font-variant-numeric:tabular-nums}
+.petside{display:flex;align-items:center}
+.petcol{width:88px;display:flex;flex-direction:column;align-items:center}
+.pv{width:88px;height:92px}
+.pvA{width:84px;height:88px}
+.pvB{width:84px;height:88px}
+.pvC{width:104px;height:104px}
+.mood{font-size:10px;color:rgba(10,59,49,.58);margin-top:3px;white-space:nowrap}
+.pill{font-size:10px;color:rgba(10,59,49,.62);background:rgba(10,59,49,.07);padding:5px 10px;border-radius:999px;
+ white-space:nowrap;margin-right:8px}
+.chiprow{margin-top:12px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:rgba(180,83,9,.10);border:1px solid rgba(180,83,9,.22);
+ color:#92400E;font-size:11px;padding:5px 12px;border-radius:999px}
+.chip i{width:6px;height:6px;border-radius:50%;background:#F59E0B}
+.pbar{height:7px;border-radius:4px;background:rgba(10,59,49,.09);margin-top:12px;overflow:hidden}
+.pbar i{display:block;height:100%;width:5%;border-radius:4px;background:linear-gradient(90deg,#0EAE8C,#2DD4BF)}
+/* 对齐辅助线（仅用于演示） */
+.rowA{position:relative}
+.rowA::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;border-top:1px dashed rgba(11,158,125,.45);pointer-events:none}
+.gl{position:relative}
+.gl::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;border-top:1px dashed rgba(11,158,125,.30);pointer-events:none}
+svg{display:block;width:100%;height:100%}
+.footer{background:#ECFDF5;border:1px solid #CDEEE5;border-radius:16px;padding:14px 16px;margin-top:26px;
+ font-size:12px;color:#065F46;line-height:1.75}
+.footer b{display:block;font-size:12.5px;margin-bottom:6px}
+</style></head><body>
+
+<div class="page">
+  <h1>主卡「金额 + 小人」排版 · 3 个优化方案</h1>
+  <p class="intro">你圈的那块区域，我量了一下，有 3 个「说不清但看着别扭」的原因。下面给出 3 个方案供挑选（含现状对照）。</p>
+
+  <div class="diag">
+    <b>为什么感觉不协调 —— 3 个细节</b>
+    <ol>
+      <li><span class="hi">宠物的「视觉重心」不稳定</span>：云朵、躺平、站姿等内容高度各不相同（最多差约 20dp），而当前按「画框」对齐 → 不同状态下宠物和大数字的对齐时好时歪，看起来「没谱」。</li>
+      <li><span class="hi">文案是悬空孤行</span>：心情文案夹在宠物和状态胶囊之间，离胶囊只有 ~12dp —— 跟宠物不成组、跟胶囊也不成组，像被「挤」出来的。</li>
+      <li><span class="hi">留白没有衔接</span>：数字和小人之间空了一大片，两者之间没有任何元素建立联系 → 小人像「飘」在卡片右侧。</li>
+    </ol>
+  </div>
+
+  <!-- ═══ 现状 ═══ -->
+  <div class="opt">
+    <div class="t"><span class="badge gray">现状</span><span class="name">你截图里的版本</span></div>
+    <div class="sub">宠物中心偏下 10dp · 文案悬空 · 留白无衔接</div>
+    <div class="screen"><div class="card">
+      <div class="row">
+        <div class="amt">¥ 0.00</div>
+        <div class="petcol">
+          <div class="pv" data-pet></div>
+          <div class="mood">别人放假我搬砖</div>
+        </div>
+      </div>
+      <div class="chiprow"><span class="chip"><i></i>周末 · 出勤 调休</span></div>
+      <div class="pbar"><i></i></div>
+    </div></div>
+  </div>
+
+  <!-- ═══ 方案 A ═══ -->
+  <div class="opt">
+    <div class="t"><span class="badge">方案 A</span><span class="name">精确对齐（最小改动）</span></div>
+    <div class="sub">宠物图形与内容重心归一化后与大数字共用一条中心线（虚线）· 文案上移贴近宠物 · 间距重排 —— 改动最小，观感更「正」</div>
+    <div class="screen"><div class="card">
+      <div class="row rowA">
+        <div class="amt">¥ 0.00</div>
+        <div class="petcol">
+          <div class="pvA" data-pet></div>
+          <div class="mood">别人放假我搬砖</div>
+        </div>
+      </div>
+      <div class="chiprow" style="margin-top:14px"><span class="chip"><i></i>周末 · 出勤 调休</span></div>
+      <div class="pbar"><i></i></div>
+    </div></div>
+  </div>
+
+  <!-- ═══ 方案 B（推荐） ═══ -->
+  <div class="opt">
+    <div class="t"><span class="badge rec">方案 B · 推荐</span><span class="name">对话标签（一行式构图）</span></div>
+    <div class="sub">文案变成宠物左侧的小圆角标签（垂直居中）—— 留白被填充、下方不再有悬空文案、所有元素共用一条中心线。整体像「小人正举手说这句话」</div>
+    <div class="screen"><div class="card">
+      <div class="row gl">
+        <div class="amt">¥ 0.00</div>
+        <span class="pill">别人放假我搬砖</span>
+        <div class="pvB" data-pet></div>
+      </div>
+      <div class="chiprow" style="margin-top:14px"><span class="chip"><i></i>周末 · 出勤 调休</span></div>
+      <div class="pbar"><i></i></div>
+    </div></div>
+  </div>
+
+  <!-- ═══ 方案 C ═══ -->
+  <div class="opt">
+    <div class="t"><span class="badge">方案 C</span><span class="name">放大宠物（存在感更强）</span></div>
+    <div class="sub">宠物放大到 104dp，把右侧空间撑满 · 文案在下方 · 数字与宠物对比更均衡，但视觉重心会偏向小人</div>
+    <div class="screen"><div class="card">
+      <div class="row gl">
+        <div class="amt" style="font-size:38px">¥ 0.00</div>
+        <div class="petcol" style="width:104px">
+          <div class="pvC" data-pet></div>
+          <div class="mood">别人放假我搬砖</div>
+        </div>
+      </div>
+      <div class="chiprow" style="margin-top:14px"><span class="chip"><i></i>周末 · 出勤 调休</span></div>
+      <div class="pbar"><i></i></div>
+    </div></div>
+  </div>
+
+  <div class="footer">
+    <b>我的推荐：方案 B</b>
+    理由：一次性解决 3 个问题 —— ① 无悬空文案；② 所有元素（数字 / 标签 / 小人）垂直居中于同一条线；③ 标签填补了中间留白，让「小人说话」有明确的语义。<br>
+    如果你偏好更克制的观感 → 选 A；想要小人是画面主角 → 选 C。<br><br>
+    另外还有个极简选项：<b>完全去掉文案，只留小人</b>（最干净）——需要的话说一声。<br><br>
+    回复 <b>A / B / C</b>（或「按推荐」）→ 我立即实现并出 APK。
+  </div>
+</div>
+
+<script>
+/* 苦命出勤姿势（浅色调色板，与 App 完全同源） */
+const PET = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+<defs><linearGradient id="petg" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>
+<ellipse cx="50" cy="90" rx="16" ry="3.4" fill="rgba(10,30,25,.10)"/>
+<ellipse cx="50" cy="60" rx="21" ry="24" fill="url(#petg)"/>
+<ellipse cx="44" cy="50" rx="8" ry="6" fill="rgba(255,255,255,.30)"/>
+<path d="M31 58 Q25 64 26 70" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M69 58 Q74 63 73 68" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+<rect x="69" y="69" width="15" height="12" rx="2.5" fill="#B08968"/>
+<rect x="69" y="69" width="15" height="4.5" rx="2.2" fill="#8F6B4A"/>
+<path d="M73.5 69 L73.5 66.5 Q76.5 64.5 79.5 66.5 L79.5 69" stroke="#8F6B4A" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<path d="M43 82 L40 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+<path d="M57 82 L61 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+<circle cx="43.5" cy="57" r="2.6" fill="#063A2F"/><circle cx="56.5" cy="57" r="2.6" fill="#063A2F"/>
+<path d="M40.1 52.6 L45.5 54.4" stroke="#063A2F" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M59.9 52.6 L54.5 54.4" stroke="#063A2F" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M45 67 Q47.5 64 50 67 Q52.5 70 55 67" stroke="#063A2F" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<path d="M30 42 A9 9 0 0 1 44 38 A7 7 0 0 1 46 51 L31 51 A6.4 6.4 0 0 1 30 42 Z" fill="#93A7B4"/>
+<path d="M36 53 L35 58" stroke="#6FB3E0" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M41 53 L40 57.6" stroke="#6FB3E0" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M63 44 Q65 47.6 63 51 Q61 47.6 63 44 Z" fill="#7CC6F2"/>
+</svg>`;
+document.querySelectorAll('[data-pet]').forEach(function (el) { el.innerHTML = PET; });
+</script>
+</body></html>

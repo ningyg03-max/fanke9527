@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ padding:16px 10px 40px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:740px}
+h1{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12px;color:#475569;line-height:1.7;margin-top:7px}
+.sec{margin-top:24px}
+h2{font-size:14.5px;font-weight:800;color:#0F172A;display:flex;align-items:center;gap:8px}
+.num{width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+ font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sub{font-size:11.5px;color:#64748B;margin:6px 0 12px;line-height:1.65}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.cell{width:146px;background:linear-gradient(168deg,#EAF7F2,#E8F1F7);border-radius:16px;padding:11px 9px;text-align:center;
+ border:1px solid rgba(255,255,255,.9)}
+.cell .nm{font-size:12px;font-weight:800;color:#0A3B31}
+.cell .box{width:120px;height:126px;margin:4px auto}
+.cell .tag{font-size:9.5px;font-weight:700;padding:2.5px 8px;border-radius:8px;display:inline-block;margin-top:4px}
+.tag.no{background:#FFE4E6;color:#BE123C}
+.tag.yes{background:#D1FAE5;color:#047857}
+.tag.dim{background:#E0E7FF;color:#3730A3}
+table{width:100%;border-collapse:collapse;font-size:11.5px;background:#fff;border-radius:14px;overflow:hidden;margin-top:6px}
+th{background:#F1F5F4;color:#46626B;font-weight:650;padding:9px 11px;text-align:left;font-size:11px}
+td{padding:9px 11px;border-top:1px solid #EEF3F2;color:#16323B;line-height:1.5}
+td.ok{color:#047857;font-weight:700}td.no{color:#BE123C;font-weight:700}
+.note{background:#fff;border-radius:14px;padding:13px 15px;border:1px solid #E2E8EC;font-size:11.8px;color:#475569;line-height:1.75;margin-top:14px}
+.note b{color:#0B7A5C}
+svg{display:block;width:100%;height:100%}
+</style></head><body>
+<div class="page">
+  <h1>工位场景 · 显示规则优化</h1>
+  <p class="intro">📦 <b>SalaryJump-3.58-scene.apk</b> —— ①「在家/在路上」的 4 种姿势不再画工位；
+  ② 修复戳小人时灯光闪灭；③ 午休/周五的灯改为亮着（人还在工位）。</p>
+
+  <div class="sec">
+    <h2><span class="num">1</span>不再画工位（在家 / 在路上）</h2>
+    <div class="sub">这些状态人不在公司，只显示小人本身 —— 场景语义更诚实。</div>
+    <div class="row" id="away"></div>
+  </div>
+
+  <div class="sec">
+    <h2><span class="num">2</span>保留工位（在公司）</h2>
+    <div class="sub">按「是否在用电脑」决定灯光：工作亮（屏幕+台灯+热气）/ 下班灭。</div>
+    <div class="row" id="atdesk"></div>
+  </div>
+
+  <div class="sec">
+    <h2><span class="num">3</span>另一个修复：灯光不再闪灭</h2>
+    <div class="sub">戳小人的互动反应现在<b>继承底座状态的灯光</b>（此前固定为"工作亮"，会闪一下）。</div>
+    <div class="note">
+      <b>修复前</b>：下班后戳小人 → 工位的灯突然亮起（几秒后又灭）❌<br>
+      <b>修复后</b>：下班后戳 → 灯保持灭 ✓｜工作时戳 → 灯保持亮 ✓｜在家戳 → 仍不画工位 ✓
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2><span class="num">4</span>完整规则表</h2>
+    <table>
+      <tr><th style="width:34%">姿势</th><th>工位</th><th>灯光</th></tr>
+      <tr><td>通勤赶路</td><td class="no">不画</td><td>—（在路上）</td></tr>
+      <tr><td>躺平快乐</td><td class="no">不画</td><td>—（在家）</td></tr>
+      <tr><td>今日休假</td><td class="no">不画</td><td>—（在家）</td></tr>
+      <tr><td>周日晚焦虑</td><td class="no">不画</td><td>—（在家）</td></tr>
+      <tr><td>元气搬砖 / 硬撑 / 干饭 / 加班 / 出勤 / 周一 / 周五</td><td class="ok">显示</td><td class="ok">💡 亮</td></tr>
+      <tr><td>下班快乐</td><td class="ok">显示</td><td>🌙 灭（刚离开）</td></tr>
+    </table>
+  </div>
+
+  <div class="note" style="margin-top:16px">
+    <b>为什么「下班快乐」保留工位？</b><br>
+    叙事上：你刚下班（人可能还在工位收拾东西），桌子留着、灯灭了 —— 这个画面比"空无一人"更有故事感。<br>
+    而通勤/躺平/休假/周日晚是明确「不在公司」，所以不画。
+  </div>
+</div>
+
+<script>
+function sceneFx(on){
+  return `<rect x="2" y="86" width="96" height="7" rx="2.5" fill="#D8E4E0"/>
+  <rect x="2" y="50" width="20" height="24" rx="2" fill="#B9C9C5"/>
+  <rect x="4" y="52" width="16" height="19.5" rx="1.2" fill="${on?'#8ED9C4':'#C6D3D0'}"/>
+  <rect x="10.5" y="74" width="3" height="6" fill="#A9BBB7"/>
+  <rect x="6" y="79.5" width="12" height="2.5" rx="1.2" fill="#A9BBB7"/>
+  <rect x="94" y="56" width="2" height="30" fill="#B9C9C5"/>
+  <rect x="86" y="52" width="12" height="5" rx="2" fill="#C9D7D3"/>
+  <rect x="78" y="76" width="11" height="10" rx="2.2" fill="#F2F7F6"/>
+  <rect x="79.5" y="77.5" width="8" height="3.5" rx="1.4" fill="#6B4F3A"/>
+  <rect x="24" y="78" width="14" height="8" rx="1.5" fill="#FDF6E3"/>
+  ${on?`<ellipse cx="88" cy="66" rx="12" ry="10" fill="rgba(252,211,77,.14)"/>
+        <path d="M82 74 Q83.5 70 82 66" stroke="rgba(185,198,206,.4)" stroke-width="1.6" fill="none" stroke-linecap="round"/>`:''}`;
+}
+function pet(o){
+  const gid='p'+Math.random().toString(36).slice(2,6);
+  let s2=`<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>`;
+  s2+=`<ellipse cx="50" cy="90" rx="16" ry="3.4" fill="rgba(10,30,25,.10)"/>`;
+  if(o.lying){
+    s2+=`<rect x="20" y="68" width="26" height="15" rx="7" fill="#DCE9F2"/>`;
+    s2+=`<ellipse cx="56" cy="64" rx="26" ry="16" fill="url(#${gid})"/>`;
+    s2+=`<ellipse cx="47" cy="57" rx="9" ry="5" fill="rgba(255,255,255,.28)"/>`;
+    s2+=`<path d="M55 60 Q58.5 56 62 60" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+    s2+=`<path d="M60 60 Q63.5 56 67 60" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+    s2+=`<path d="M56 68 Q60 72 64 68" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+    s2+=`<line x1="36" y1="78" x2="33" y2="84" stroke="#063A2F" stroke-width="2.6" stroke-linecap="round"/>`;
+    s2+=`<line x1="44" y1="80" x2="43" y2="86" stroke="#063A2F" stroke-width="2.6" stroke-linecap="round"/>`;
+    s2+=`<text x="76" y="40" font-size="13" font-weight="700" fill="rgba(11,158,125,.55)">Z</text><text x="84" y="31" font-size="10" font-weight="700" fill="rgba(11,158,125,.4)">z</text>`;
+    return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${s2}</svg>`;
+  }
+  s2+=`<ellipse cx="50" cy="${o.cy||58}" rx="21" ry="${o.ry||24}" fill="url(#${gid})"/>`;
+  s2+=`<ellipse cx="44" cy="${(o.cy||58)-8}" rx="8" ry="5.6" fill="rgba(255,255,255,.30)"/>`;
+  s2+=o.arms;
+  s2+=o.eyes; s2+=o.mouth;
+  if(o.extra) s2+=o.extra;
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${s2}</svg>`;
+}
+const armsDown=`<path d="M31 58 Q25 64 26 70" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M69 58 Q74 63 73 68" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M43 82 L40 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/><path d="M57 82 L61 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>`;
+const eyesN=`<circle cx="43.5" cy="54" r="2.7" fill="#063A2F"/><circle cx="56.5" cy="54" r="2.7" fill="#063A2F"/>`;
+const mouthWave=`<path d="M45 65 Q47.5 62 50 65 Q52.5 68 55 65" stroke="#063A2F" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+
+const AWAY=[
+  {nm:'通勤赶路', o:{cy:58,ry:24,arms:`<path d="M31 56 Q24 60 22 66" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M69 56 Q75 60 76 65" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="70" y="66" width="15" height="12" rx="2.5" fill="#B08968"/><path d="M43 80 L37 86" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/><path d="M57 80 L63 83" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>`,eyes:eyesN,mouth:`<circle cx="50" cy="58" r="2.6" fill="#063A2F"/>`}, tag:'no'},
+  {nm:'躺平快乐', o:{lying:true}, tag:'no'},
+  {nm:'今日休假', o:{lying:true}, tag:'no'},
+  {nm:'周日晚焦虑', o:{cy:58,ry:24,arms:armsDown,eyes:eyesN,mouth:mouthWave,extra:`<path d="M76 30 L86 30 L80.6 37 L86 44 L76 44 L81.4 37 Z" fill="rgba(244,199,107,.35)" stroke="#E0A93F" stroke-width="1.4" stroke-linejoin="round"/>`}, tag:'no'},
+];
+const DESK=[
+  {nm:'元气搬砖', o:{cy:54,ry:22,arms:`<path d="M33 62 Q40 69 45 72" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M67 62 Q60 69 55 72" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="34" y="74" width="32" height="4" rx="2" fill="#2E4046"/><rect x="38" y="65" width="24" height="9" rx="1.6" fill="#48626A"/>`,eyes:eyesN,mouth:`<path d="M46 58 Q50 62 54 58" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>`}, tag:'yes'},
+  {nm:'下班快乐', o:{cy:52,ry:23,arms:`<path d="M31 46 Q22 40 20 32" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M69 46 Q78 40 80 32" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M43 74 L38 80" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/><path d="M57 74 L62 80" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>`,eyes:`<path d="M40 44 Q43.5 40 47 44" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M53 44 Q56.5 40 60 44" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>`,mouth:`<path d="M44 54 Q50 61 56 54" stroke="#063A2F" stroke-width="2.2" fill="none" stroke-linecap="round"/>`}, tag:'dim'},
+];
+function render(list, id, sceneOn){
+  document.getElementById(id).innerHTML = list.map(function(d){
+    return `<div class="cell"><div class="nm">${d.nm}</div><div class="box">${pet(d.o)}${''}</div><span class="tag ${d.tag}">${d.tag==='no'?'❌ 不画工位':(d.tag==='dim'?'🌙 灯灭':'💡 灯亮')}</span>${d.withscene?`<div style="font-size:9px;color:#94A3B8;margin-top:3px">（截图含场景）</div>`:''}</div>`;
+  }).join('');
+}
+render(AWAY,'away',false);
+render(DESK,'atdesk',true);
+</script>
+</body></html>

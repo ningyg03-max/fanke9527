@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+     padding:16px 10px 40px;display:flex;flex-direction:column;align-items:center}
+.phead{width:100%;max-width:392px;margin:6px auto 20px}
+.phead h1{font-size:20px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.phead p{font-size:12.5px;color:#475569;line-height:1.7;margin-top:8px}
+/* 深色 App 屏 */
+.ph{width:100%;max-width:392px;border-radius:24px;padding:14px 14px 16px;margin-bottom:20px;
+    background:linear-gradient(168deg,#07110F,#081518 55%,#071019);position:relative;overflow:hidden}
+.ph::before{content:"";position:absolute;inset:-25%;z-index:0;
+  background:radial-gradient(46% 38% at 22% 18%,rgba(16,185,129,.45),transparent 70%),
+             radial-gradient(40% 35% at 82% 26%,rgba(34,211,238,.34),transparent 70%),
+             radial-gradient(38% 40% at 62% 88%,rgba(139,92,246,.25),transparent 72%);
+  filter:blur(34px)}
+.ph>*{position:relative;z-index:2}
+.top{display:flex;align-items:center;height:40px;margin-bottom:4px}
+.bk{font-size:13px;color:#E8F4F2;padding:0 12px;height:34px;display:flex;align-items:center;
+    background:rgba(255,255,255,.06);border-radius:17px;border:1px solid rgba(255,255,255,.12)}
+.tt{position:absolute;left:0;right:0;text-align:center;font-size:16.5px;font-weight:700;color:#E8F4F2;pointer-events:none}
+.bf{margin-left:auto;font-size:13px;color:#34D399;font-weight:600;padding:0 12px;height:34px;display:flex;align-items:center;
+    background:rgba(255,255,255,.06);border-radius:17px;border:1.5px solid rgba(52,211,153,.45);
+    box-shadow:0 0 14px -4px rgba(52,211,153,.55);animation:glow 2.6s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 14px -4px rgba(52,211,153,.55)}50%{box-shadow:0 0 20px 0 rgba(52,211,153,.75)}}
+.mrow{display:flex;align-items:center;margin:10px 0 12px}
+.mn{width:38px;height:34px;border-radius:17px;display:flex;align-items:center;justify-content:center;
+    color:#E8F4F2;font-size:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+.mt{flex:1;text-align:center;font-size:16px;font-weight:700;color:#E8F4F2}
+/* 汇总卡 */
+.card{background:linear-gradient(152deg,rgba(255,255,255,.095),rgba(255,255,255,.032));border-radius:20px;
+      padding:14px 16px;border:1px solid rgba(255,255,255,.10);margin-bottom:12px}
+.ch{display:flex;align-items:center;gap:6px;font-size:11.5px;color:rgba(232,255,247,.65)}
+.ch .dot{width:6px;height:6px;border-radius:50%;background:#34D399;box-shadow:0 0 8px #34D399}
+.cb{font-size:27px;font-weight:750;color:#F2FFFA;margin-top:8px;letter-spacing:-.8px}
+.cs{font-size:12px;color:rgba(232,255,247,.5);margin-top:6px}
+/* 天行 */
+.drow{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.045);border-radius:14px;
+      padding:11px 13px;margin-bottom:8px;border:1px solid rgba(255,255,255,.07)}
+.drow.new{border-color:rgba(52,211,153,.45);background:rgba(52,211,153,.07)}
+.dd{width:40px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.dd b{font-size:16px;font-weight:750;color:#E8F4F2}
+.dd span{font-size:9.5px;color:rgba(232,255,247,.45)}
+.dm{flex:1;font-size:13px;font-weight:600}
+.dm.amber{color:#FCD34D}
+.dm.purple{color:#B8A5F5}
+.dm.plain{color:rgba(232,255,247,.78)}
+.da{font-size:14.5px;font-weight:720;color:#34D399;font-variant-numeric:tabular-nums}
+.da.zero{color:rgba(232,255,247,.45)}
+.tag{font-size:9.5px;padding:2px 8px;border-radius:8px;margin-left:6px;font-weight:700;vertical-align:1.5px}
+.tag.g{background:rgba(52,211,153,.18);color:#5EEAD4}
+/* 步骤 */
+.steps{width:100%;max-width:392px}
+.step{display:flex;gap:11px;background:#fff;border-radius:14px;padding:13px 15px;margin-bottom:10px;border:1px solid #E2E8EC}
+.sn{width:26px;height:26px;border-radius:9px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+    font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sb{flex:1}
+.sb b{font-size:13px;color:#0F172A;display:block;margin-bottom:4px}
+.sb p{font-size:11.8px;color:#475569;line-height:1.6}
+.sb code{font-family:ui-monospace,Menlo,monospace;font-size:11px;background:#F1F5F4;padding:1px 5px;border-radius:4px;color:#0B7A5C}
+.note{width:100%;max-width:392px;background:#ECFDF5;border-radius:14px;padding:13px 15px;border:1px solid #CDEEE5;margin-top:4px}
+.note b{font-size:12.5px;color:#065F46;display:block;margin-bottom:7px}
+.note li{font-size:11.8px;color:#047857;line-height:1.65;margin:4px 0 4px 15px}
+</style></head><body>
+
+<div class="phead">
+  <h1>补记历史数据 · 操作指引</h1>
+  <p>新版给日历加了<b>「补记」入口</b>（右上角），并修复了一个问题：休息日的出勤记录原先在日历里不显示（无法补记、补了也看不见）。</p>
+</div>
+
+<!-- ══════ 新日历页 ══════ -->
+<div class="ph">
+  <div class="top"><span class="bk">‹ 返回</span><span class="tt">工资日历</span><span class="bf">补记</span></div>
+  <div class="mrow"><span class="mn">‹</span><span class="mt">2026 年 10 月</span><span class="mn">›</span></div>
+  <div class="card">
+    <div class="ch"><i class="dot"></i>本月合计</div>
+    <div class="cb">¥ 2,015.56</div>
+    <div class="cs">6 个工作日 · 日均 335.93 元</div>
+  </div>
+  <div class="drow"><div class="dd"><b>9</b><span>周五</span></div><div class="dm purple">育儿假 · 全薪</div><div class="da">¥ 1,007.78</div></div>
+  <div class="drow"><div class="dd"><b>8</b><span>周四</span></div><div class="dm purple">育儿假 · 全薪</div><div class="da">¥ 1,007.78</div></div>
+  <div class="drow new"><div class="dd"><b>6</b><span>周二</span></div><div class="dm amber">出勤 · 调休<span class="tag g">补记后出现</span></div><div class="da zero">¥ 0.00</div></div>
+</div>
+
+<!-- ══════ 步骤 ══════ -->
+<div class="steps">
+  <div class="step"><span class="sn">1</span><div class="sb">
+    <b>先装新版（3.37）</b>
+    <p>新版才支持补记休息日并让记录在日历中可见。装完后打开一次 App。</p>
+  </div></div>
+  <div class="step"><span class="sn">2</span><div class="sb">
+    <b>确认月薪 = 18140</b>
+    <p>设置 → 薪跳设置 → 「月薪」填 <code>18140</code> → 保存。日薪会自动算出 <code>¥ 1,007.78</code>（18140 ÷ 18 个工作日）。</p>
+  </div></div>
+  <div class="step"><span class="sn">3</span><div class="sb">
+    <b>补记 10/6 出勤</b>
+    <p>工资日历 → 右上角「<b>补记</b>」→ 选 10 月 6 日 → 确定 → 点「<b>标记为出勤</b>」。完成后 10/6 会出现在日历里（显示「出勤 · 调休」，调休 +1 天）。</p>
+  </div></div>
+  <div class="step"><span class="sn">4</span><div class="sb">
+    <b>补记 10/8、10/9 育儿假</b>
+    <p>在日历列表里长按 <b>10/8</b> → 「标记请假」→ 选「育儿假 · 全薪」→「整天」；对 <b>10/9</b> 重复一次。</p>
+  </div></div>
+</div>
+
+<div class="note">
+  <b>💰 金额说明（重要）</b>
+  <ul>
+    <li>这三条记录<strong>不改变任何金额</strong>：调休出勤不直接计钱（换 1 天假）；育儿假是全薪（金额不变）</li>
+    <li>它们的影响：日历标签 ✓ · 调休余额 +1 天 ✓ · 育儿假已用 +2 天 ✓</li>
+    <li>月薪改 18140 后：<strong>之后的新结算</strong>按 ¥1,007.78/天；之前已结算的日子不会追溯重算</li>
+  </ul>
+</div>
+
+</body></html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eef1f4;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:14px;align-items:center}
+.wrap{width:388px}
+.t{font-size:13.5px;font-weight:700;color:#111827;margin-bottom:8px}
+.t span{font-size:11px;font-weight:400;color:#6b7280}
+.card{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 2px 8px rgba(15,40,40,.08)}
+/* 时间线 */
+.tl{position:relative;padding:6px 0 0 0}
+.line{position:absolute;left:8px;top:14px;bottom:14px;width:3px;background:#D6E4E2;border-radius:2px}
+.ln{position:absolute;left:8px;top:14px;height:56px;width:3px;background:#0E9C8C;border-radius:2px}
+.item{display:flex;gap:12px;padding:7px 0;position:relative}
+.dot{width:19px;height:19px;border-radius:50%;flex-shrink:0;z-index:2;display:flex;align-items:center;
+     justify-content:center;font-size:10px;color:#fff;font-weight:700}
+.dot.g{background:#0E9C8C}
+.dot.gray{background:#C4D2D0}
+.dot.a{background:#F59E0B}
+.dot.r{background:#E11D48}
+.bd{flex:1;padding-top:-2px}
+.b1{font-size:12.5px;font-weight:700;color:#16323B}
+.b2{font-size:11.5px;color:#61808C;line-height:1.5;margin-top:2px}
+.tag{display:inline-block;font-size:10.5px;padding:2px 7px;border-radius:10px;margin-left:6px;font-weight:600;vertical-align:1px}
+.tag.ok{background:#D1FAE5;color:#047857}
+.tag.bad{background:#FFE4E6;color:#BE123C}
+.tag.mid{background:#FEF3C7;color:#B45309}
+/* 对照表 */
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#F1F5F4;color:#46626B;font-weight:600;padding:8px 10px;text-align:left;font-size:11.5px}
+td{padding:8px 10px;border-top:1px solid #EEF3F2;color:#16323B}
+td.ok{color:#047857;font-weight:700}
+td.bad{color:#BE123C;font-weight:700}
+/* 公式 */
+.f{background:#F0FDF9;border-radius:10px;padding:10px 12px;font-size:11.5px;color:#0F766E;line-height:1.75;
+   font-family:"SF Mono",Menlo,monospace;border:1px solid #CDEEE5}
+.f b{color:#065F46}
+.f2{background:#FFF7ED;border-radius:10px;padding:10px 12px;font-size:11.5px;color:#9A3412;line-height:1.7;
+   border:1px solid #FDE4CE;margin-top:8px}
+.hd{font-size:12.5px;font-weight:700;color:#16323B;margin:2px 0 8px}
+</style></head><body>
+
+<div class="wrap"><div class="card">
+<div class="t">① 问题场景 <span>· 补记一个"已归档"的日期</span></div>
+<div class="tl"><div class="line"></div>
+  <div class="item"><div class="dot g">✓</div><div class="bd">
+    <div class="b1">周五晚 打开 App</div>
+    <div class="b2">归档器推进到周四 · <code>cum_last_day = 周四</code></div>
+  </div></div>
+  <div class="item"><div class="dot r">!</div><div class="bd">
+    <div class="b1">周六 出勤 · 忘了点</div>
+    <div class="b2">这天没有出勤记录</div>
+  </div></div>
+  <div class="item"><div class="dot gray">…</div><div class="bd">
+    <div class="b1">周日 / 周一 / 周二</div>
+    <div class="b2">归档点一直向后推进</div>
+  </div></div>
+  <div class="item"><div class="dot a">补</div><div class="bd">
+    <div class="b1">周三 补记周六出勤</div>
+    <div class="b2">周六 ≤ 归档点 → <b>已归档区间</b>（100% 踩中）</div>
+  </div></div>
+</div>
+<div style="height:10px"></div>
+<table>
+<tr><th>功能</th><th>补记已归档日期</th><th>原因</th></tr>
+<tr><td>外快</td><td class="ok">✓ 进账</td><td style="font-size:11px;color:#61808C">有手动同步</td></tr>
+<tr><td>出勤（计薪）</td><td class="bad">✗ 不进账</td><td style="font-size:11px;color:#61808C">缺同步 ← 修复</td></tr>
+<tr><td>请假</td><td class="bad">✗ 不进账</td><td style="font-size:11px;color:#61808C">缺同步 ← 修复</td></tr>
+</table>
+</div></div>
+
+<div class="wrap"><div class="card">
+<div class="t">② 修复机制 <span>· 差量同步</span></div>
+<div class="hd">记录变更时算「归档口径贡献」的差额：</div>
+<div class="f">
+Δ = contribution(<b>改后</b>) − contribution(<b>改前</b>)<br>
+&nbsp;&nbsp;→ SalaryHistory.adjust(Δ) <span style="color:#94A3B8">// 工资日历</span><br>
+&nbsp;&nbsp;→ cum_total += Δ <span style="color:#94A3B8">// 累计总额</span>
+</div>
+<div style="height:10px"></div>
+<table>
+<tr><th>操作</th><th>改前 → 改后</th><th>Δ</th></tr>
+<tr><td>补记出勤 3 倍</td><td>0 → 900</td><td class="ok">+900</td></tr>
+<tr><td>取消出勤</td><td>600 → 0</td><td class="bad">−600</td></tr>
+<tr><td>补记病假 60%</td><td>300 → 180</td><td class="bad">−120</td></tr>
+<tr><td>取消请假</td><td>0 → 300</td><td class="ok">+300</td></tr>
+</table>
+<div class="f2">
+🔑 <b>为什么用"改前/改后"而不直接写死增减？</b><br>
+「取消请假」要把那天的钱<b>恢复成整日工资</b>（不是清零）——
+只有对比两个状态的贡献值才能做到正确回冲。
+</div>
+</div></div>
+
+<div class="wrap"><div class="card">
+<div class="t">③ 保护规则 <span>· 不会重复计算</span></div>
+<div class="b1" style="font-size:12.5px;margin-bottom:6px">✅ 已归档日（stamp ≤ cum_last_day）→ 立即同步金额</div>
+<div class="b1" style="font-size:12.5px;margin-bottom:6px">🚫 未归档日（含今天）→ 不碰金额，交给归档器自然带上</div>
+<div class="b2" style="margin-top:8px">判定条件与外快完全相同：<code>cum_last_day &gt; 0 && stamp ≤ cum_last_day</code>
+<br>→ 两套机制不会互相干扰，也不会重复进账。</div>
+<div style="height:10px"></div>
+<div class="t" style="margin-bottom:6px">顺带统一</div>
+<div class="b2">外快的同步逻辑也改走同一个 <code>ArchiveSync</code> 类 —— 三处实现合并为一处，
+以后所有"往期补记"功能自动正确。</div>
+</div></div>
+
+</body></html>

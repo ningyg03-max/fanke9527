@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b0d11;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;display:flex;gap:20px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:6px}
+.cap{font-size:12px;color:#7d8794;text-align:center}
+.cap b{display:block;font-size:13px;color:#eef2f7;font-weight:700;margin-bottom:2px}
+.dlg{width:353px;background:#fff;border-radius:14px;padding:18px 22px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.note{font-size:11px;color:#8aa6b0;margin-bottom:8px}
+.row{display:flex;align-items:center}
+.btn{height:42px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;
+     border:1px solid #e3efec;background:#eff7f6;color:#16323b;white-space:nowrap;overflow:hidden}
+.btn.pri{background:#047857;color:#fff;border:none}
+.fixed88{width:88px;flex:0 0 88px}
+.ml8{margin-left:8px}
+/* 工具行平分 */
+.w1{flex:1 1 0;min-width:0}
+.rm5{margin-right:5px}
+.lm5{margin-left:5px}
+.g16{gap:0}
+.sp10{margin-top:10px}
+.sp22{margin-top:22px}
+.bad{outline:2px solid #f87171}
+.marker{font-size:10px;color:#f59e0b}
+</style></head><body>
+
+<div class="col"><div class="cap"><b>① 修复前</b>4 个按钮挤一行 → 左侧溢出</div>
+<div class="dlg">
+  <div class="note">（省略内容）</div>
+  <div class="row" style="justify-content:flex-end" id="before">
+    <div class="btn" id="b1">更新节假日</div>
+    <div class="btn" id="b2">数据备份</div>
+    <div class="btn fixed88 ml8" id="b3">取消</div>
+    <div class="btn pri fixed88 ml8" id="b4">保存</div>
+  </div>
+  <div class="marker" id="beforeInfo"></div>
+</div></div>
+
+<div class="col"><div class="cap"><b>② 修复后</b>两行 · 工具行平分 · 动作行右对齐</div>
+<div class="dlg">
+  <div class="note">（省略内容）</div>
+  <div class="row g16" id="toolRow">
+    <div class="btn w1 rm5" id="t1">更新节假日</div>
+    <div class="btn w1 lm5" id="t2">数据备份</div>
+  </div>
+  <div class="row sp10" style="justify-content:flex-end" id="actionRow">
+    <div class="btn fixed88" id="a1">取消</div>
+    <div class="btn pri fixed88 ml8" id="a2">保存</div>
+  </div>
+  <div class="marker" id="afterInfo"></div>
+</div></div>
+
+<script>
+function measure(ids){
+  var out = [];
+  ids.forEach(function(id){
+    var el = document.getElementById(id);
+    var r = el.getBoundingClientRect();
+    out.push(id + '=' + Math.round(r.width) + 'dp');
+  });
+  return out.join('  ');
+}
+window.addEventListener('load', function(){
+  // 修复前
+  var row = document.getElementById('before');
+  var inner = row.clientWidth;
+  var total = 0;
+  ['b1','b2','b3','b4'].forEach(function(id){
+    var el = document.getElementById(id);
+    total += el.getBoundingClientRect().width;
+    if (id==='b3'||id==='b4') total += 8;   // leftMargin
+  });
+  document.getElementById('beforeInfo').textContent =
+    '可用 ' + Math.round(inner) + 'dp · 需要 ' + Math.round(total) + 'dp · 溢出 ' + Math.round(Math.max(0,total-inner)) + 'dp';
+  if (total > inner) document.getElementById('b1').classList.add('bad');
+
+  // 修复后
+  var tr = document.getElementById('toolRow');
+  var arow = document.getElementById('actionRow');
+  var need1 = 0;
+  ['t1','t2'].forEach(function(id){
+    var el = document.getElementById(id);
+    need1 += el.scrollWidth;  // 内容需要宽度
+  });
+  var avail1 = tr.clientWidth - 10;  // 减去 margin
+  var aTotal = 0;
+  ['a1','a2'].forEach(function(id){
+    aTotal += document.getElementById('a1').getBoundingClientRect().width + 8;
+  });
+  document.getElementById('afterInfo').textContent =
+    '工具行：可用 ' + Math.round(avail1) + 'dp · 各分 ' + Math.round(avail1/2) + 'dp（需约 102dp）' +
+    '　动作行：需 ' + Math.round(aTotal) + 'dp / 可用 ' + Math.round(arow.clientWidth) + 'dp';
+});
+</script>
+</body></html>

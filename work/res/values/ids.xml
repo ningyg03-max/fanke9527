@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="widget_amount" />
+    <item type="id" name="widget_clock" />
+    <item type="id" name="widget_drink" />
+    <item type="id" name="widget_next_water" />
+    <item type="id" name="widget_progress" />
+    <item type="id" name="widget_root" />
+    <item type="id" name="widget_status" />
+    <item type="id" name="widget_timer" />
+    <item type="id" name="widget_water_progress" />
+    <item type="id" name="widget_water_text" />
+    <item type="id" name="widget_cumulative" />
+    <item type="id" name="widget_pet" />
+</resources>

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3.73 · 年度统计两行 + 补班标记</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#E9F1EF}
+body{font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ width:384px;margin:0 auto;padding:16px 20px 28px;color:#16323B}
+
+/* ── 年度统计卡 ── */
+.card{background:#fff;border-radius:18px;padding:16px 18px;margin-bottom:14px;
+ box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.ctitle{font-size:12.5px;font-weight:700;color:#16323B;margin-bottom:2px}
+.statrow{display:flex;margin-top:12px}
+.stat{flex:1;text-align:center;min-width:0}
+.stat .v{font-size:12.5px;font-weight:700;color:#16323B;white-space:nowrap;
+ overflow:hidden;text-overflow:ellipsis}
+.stat .l{font-size:9.5px;color:#8AA6B0;margin-top:3px;white-space:nowrap;
+ overflow:hidden;text-overflow:ellipsis}
+.old .stat .v{font-size:14.5px}
+.old .stat .l{font-size:10.5px}
+
+/* ── 日历 ── */
+.grid{background:#fff;border-radius:18px;padding:12px 10px}
+.head{display:flex}
+.head div{flex:1;text-align:center;font-size:10px;color:#8AA6B0;padding-bottom:6px}
+.week{display:flex;margin-top:4px}
+.cell{flex:1;height:62px;border-radius:10px;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;margin-left:2px;overflow:hidden;
+ background:#F3F8F7}
+.cell:first-child{margin-left:0}
+.cell.plain{background:transparent}
+.d{font-size:11px;line-height:1.15;color:#16323B}
+.m{font-size:10px;font-weight:700;color:#0B9E7D;line-height:1.2;margin-top:1px;letter-spacing:-.2px}
+.o{font-size:9.5px;font-weight:700;color:#B45309;line-height:1.2;letter-spacing:-.2px}
+.e{font-size:9.5px;font-weight:700;color:#2563EB;line-height:1.2;letter-spacing:-.2px}
+.mk{font-size:9px;color:#8AA6B0;line-height:1.2;letter-spacing:-.2px}
+.cell.dim .d{color:#8AA6B0}
+.today{box-shadow:inset 0 0 0 1.5px #0B9E7D}
+.today .d{color:#0B9E7D;font-weight:700}
+
+.sec{font-size:12.5px;font-weight:700;color:#5A7680;margin:20px 2px 8px}
+.note{font-size:11px;color:#5A7680;line-height:1.75;margin:12px 2px 0}
+.note b{color:#16323B}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:10.5px;color:#5A7680;margin:10px 2px 0}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle}
+</style></head><body>
+
+<div style="font-size:12px;color:#5A7680;margin-bottom:10px">SalaryJump 3.73 · 384dp 实尺寸</div>
+
+<div class="sec">① 年度统计：3 行 → 2 行，字号 14.5/10.5 → 12.5/9.5</div>
+
+<div class="card">
+  <div class="ctitle">全年统计</div>
+  <!-- 4 项一行 × 2 行 -->
+  <div class="statrow">
+    <div class="stat"><div class="v">194</div><div class="l">计薪天数</div></div>
+    <div class="stat"><div class="v">2</div><div class="l">请假天数</div></div>
+    <div class="stat"><div class="v">2</div><div class="l">休息日出勤</div></div>
+    <div class="stat"><div class="v">1</div><div class="l">加班次数</div></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><div class="v">¥781.59</div><div class="l">加班费总额</div></div>
+    <div class="stat"><div class="v">¥0</div><div class="l">外快总额</div></div>
+    <div class="stat"><div class="v">2 月</div><div class="l">最佳月份</div></div>
+    <div class="stat"><div class="v">¥798.69</div><div class="l">日均</div></div>
+  </div>
+</div>
+
+<div class="note" style="margin-top:6px">
+  <b>对比</b>：原先是 3 行（3+3+2），现在 2 行（4+4），字号从 14.5/10.5sp 收到 12.5/9.5sp。
+  最长的是「¥1,789.37」这种，12.5sp 下约占 62dp，一格宽 80dp，放得下。
+</div>
+
+<div class="sec">② 补班标记（日历格子）</div>
+
+<div class="grid" id="cal"></div>
+
+<div class="legend">
+  <span><i style="background:#8AA6B0"></i>补班 / 调休</span>
+  <span><i style="background:#0B9E7D"></i>日薪</span>
+  <span><i style="background:#B45309"></i>加班费</span>
+  <span><i style="background:#2563EB"></i>外快</span>
+</div>
+
+<div class="note">
+  <b>10/10（周六）标「补班」</b>—— 那是国务院规定的补班日（1 倍工资，没有额外补贴）。<br>
+  和 <b>10/11（周日·出勤 2 倍）</b> 一眼就能区分开：一个是「补班」灰字，一个是绿色的实际金额。<br>
+  2026 全年 6 个补班日：<b>1/4、2/14、2/28、5/9、9/20、10/10</b>
+</div>
+
+<script>
+const REST = new Set([1,2,3,4,5,7,18,24,25,31]);
+const TODAY = 15;
+const DAY = {
+  6 :{tag:'调休'}, 8:{m:1008}, 9:{m:1008}, 10:{m:1008, mk:'补班'},
+  11:{m:1008}, 12:{m:1008}, 13:{m:1008}, 14:{m:1008, o:782},
+  15:{m:1008, o:782, e:200}, 16:{m:1008, e:500}, 19:{e:800},
+};
+function build(){
+  const cal = document.getElementById('cal');
+  const h = document.createElement('div'); h.className='head';
+  ['日','一','二','三','四','五','六'].forEach(w=>{const d=document.createElement('div');d.textContent=w;h.appendChild(d);});
+  cal.appendChild(h);
+  let day = 1;
+  const lead = 4, total = 31;
+  for(let r=0;r<Math.ceil((lead+total)/7);r++){
+    const w = document.createElement('div'); w.className='week';
+    for(let c=0;c<7;c++){
+      const cell = document.createElement('div'); cell.className='cell';
+      const idx = r*7+c;
+      if(idx<lead || day>total){ cell.className='cell plain'; w.appendChild(cell); continue; }
+      const rec = DAY[day] || {};
+      const has = rec.m || rec.o || rec.e || rec.tag || rec.mk;
+      if(!has) cell.classList.add('plain');
+      if(!has && REST.has(day) || day>TODAY) cell.classList.add('dim');
+      if(day===TODAY) cell.classList.add('today');
+      const d = document.createElement('div'); d.className='d'; d.textContent=day; cell.appendChild(d);
+      if(rec.mk){const k=document.createElement('div');k.className='mk';k.textContent=rec.mk;cell.appendChild(k);}
+      if(rec.m){const m=document.createElement('div');m.className='m';m.textContent=rec.m;cell.appendChild(m);}
+      if(rec.o){const o=document.createElement('div');o.className='o';o.textContent='+'+rec.o;cell.appendChild(o);}
+      if(rec.e){const e=document.createElement('div');e.className='e';e.textContent='外 '+rec.e;cell.appendChild(e);}
+      if(rec.tag){const t=document.createElement('div');t.className='o';t.textContent=rec.tag;cell.appendChild(t);}
+      w.appendChild(cell);
+      day++;
+    }
+    cal.appendChild(w);
+  }
+}
+build();
+</script>
+</body></html>

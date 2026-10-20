@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0e11;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:14px;
+     display:flex;gap:13px;align-items:flex-start}
+.col{width:332px;flex-shrink:0}
+.hd{text-align:center;margin-bottom:9px}
+.hd .t{font-size:14px;font-weight:700;color:#eef2f7}
+.hd .s{font-size:11px;color:#7d8794;margin-top:3px;line-height:1.5}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;margin-top:5px}
+.b-now{background:#3a1f22;color:#f87171}
+.b-good{background:#123a2c;color:#4ade80}
+.card{background:#14262A;border-radius:20px;padding:16px;margin-bottom:11px}
+/* 主卡 */
+.hero{border-radius:22px;padding:16px;margin-bottom:11px;position:relative;overflow:hidden;
+  background:linear-gradient(140deg,#065F46,#0B8A6A 38%,#0E9C8C 68%,#0C7FA8)}
+.hero:before{content:"";position:absolute;width:150px;height:150px;border-radius:50%;
+  background:rgba(255,255,255,.10);top:-55px;right:-40px}
+.hero>*{position:relative}
+.row{display:flex;align-items:center;justify-content:space-between}
+.lbl{font-size:10.5px;color:rgba(255,255,255,.78);letter-spacing:1px;font-weight:600}
+.tm{font-size:10.5px;color:rgba(255,255,255,.72)}
+.big{font-size:37px;font-weight:700;color:#fff;letter-spacing:-1px;margin-top:5px;line-height:1}
+.big .c{font-size:19px;font-weight:600}
+.chip{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:10.5px;
+  padding:4px 9px;border-radius:16px;margin-top:9px}
+.pb{height:6px;border-radius:4px;background:rgba(255,255,255,.26);margin-top:11px;overflow:hidden}
+.pb>i{display:block;height:100%;background:#fff;border-radius:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:11px}
+.stats .v{font-size:11px;font-weight:600;color:#fff;text-align:center}
+.stats .k{font-size:9px;color:rgba(255,255,255,.7);text-align:center;margin-top:2px}
+.dv{height:1px;background:rgba(255,255,255,.2);margin:10px 0 7px}
+.sch{font-size:10px;color:rgba(255,255,255,.75)}
+/* 普通卡 */
+.chead{display:flex;align-items:center;justify-content:space-between;height:24px}
+.cl{display:flex;align-items:center;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%}
+.cl span{font-size:11px;color:#8AA6B0;letter-spacing:.12em;font-weight:600}
+.links{display:flex;gap:12px}
+.lk{font-size:11.5px;font-weight:600}
+.numbig{font-size:29px;font-weight:700;letter-spacing:-.5px;margin-top:9px;line-height:1;
+  display:flex;align-items:baseline;gap:3px}
+.unit{font-size:13.5px;color:#7E9AA3;font-weight:400}
+.sub{font-size:11.5px;color:#7E9AA3;margin-top:7px}
+.dv2{height:1px;background:#1F3A38;margin:12px 0 10px}
+.goal{display:flex;align-items:center;justify-content:space-between}
+.goal .n{font-size:12.5px;color:#E8F4F2;font-weight:600}
+.pb2{height:6px;border-radius:4px;background:#1E3336;margin-top:10px;overflow:hidden}
+.pb2>i{display:block;height:100%;border-radius:4px}
+.btns{display:flex;gap:8px;margin-top:13px}
+.btn1{flex:1;height:42px;border-radius:21px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700}
+.btn2{width:80px;height:42px;border-radius:21px;display:flex;align-items:center;justify-content:center;
+  font-size:11.5px;color:#BFE3DC;background:#12242A;border:1.5px solid #1F3E3D}
+.notebox{background:#101c20;border-radius:12px;padding:9px 11px;margin-top:9px;font-size:10.5px;
+  color:#9fb8be;line-height:1.75}
+.notebox b{color:#fbbf24;font-weight:600}
+.notebox code{font-family:ui-monospace,monospace;font-size:10px;color:#7dd3fc}
+</style></head><body>
+<div id="app" style="display:flex;gap:13px;align-items:flex-start"></div>
+<script>
+const D = {
+  money:650, price:'650.00', target:'650.00', hourly:'81.25', minute:'1.35', second:'0.023',
+  water:2400, wtarget:3000, goal:'MacBook Pro', goalAmt:'23,560.00',
+  saved:'650.00', left:'22,910.00', days:'36'
+};
+
+function heroCard(){
+  return `<div class="hero">
+    <div class="row"><span class="lbl">今日已赚</span><span class="tm">22:41:35</span></div>
+    <div class="big"><span class="c">¥</span>${D.price}</div>
+    <div class="chip">● 年假 · 全薪 · 今日 650.00 元</div>
+    <div class="pb"><i style="width:100%"></i></div>
+    <div class="stats">
+      <div><div class="v">¥${D.target}</div><div class="k">今日目标</div></div>
+      <div><div class="v">¥${D.hourly}</div><div class="k">每小时</div></div>
+      <div><div class="v">¥${D.minute}</div><div class="k">每分钟</div></div>
+      <div><div class="v">¥${D.second}</div><div class="k">每秒</div></div>
+    </div>
+    <div class="dv"></div>
+    <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>`;
+}
+
+function waterCard(w){
+  return `<div class="card">
+    <div class="chead">
+      <div class="cl"><span class="dot" style="background:${w.dot}"></span><span>今日喝水</span></div>
+      <div class="links"><span class="lk" style="color:${w.link}">记录</span><span class="lk" style="color:${w.link}">统计</span></div>
+    </div>
+    <div class="numbig" style="color:${w.num}">${D.water}<span class="unit">/ ${D.wtarget} ml</span></div>
+    <div class="pb2"><i style="width:80%;background:${w.pb}"></i></div>
+    <div class="btns">
+      <div class="btn1" style="background:${w.btn};color:${w.btnText}">喝水 +300 ml</div>
+      <div class="btn2">选饮品</div>
+    </div>
+    <div class="sub" style="margin-top:10px">下次提醒 10月10日 09:30 · 约 275 kcal</div>
+  </div>`;
+}
+
+function cumCard(c){
+  return `<div class="card">
+    <div class="chead">
+      <div class="cl"><span class="dot" style="background:${c.dot}"></span><span>累计收入</span></div>
+      <div class="links"><span class="lk" style="color:${c.link}">明细 ›</span></div>
+    </div>
+    <div class="numbig" style="color:${c.num}">¥${D.price}<span style="font-size:10.5px;padding:3px 8px;border-radius:10px;margin-left:7px;
+      background:${c.chipBg};color:${c.num}">0 天</span></div>
+    <div class="sub">按工作日累计</div>
+    <div class="dv2"></div>
+    <div class="goal"><span class="n">🎯 ${D.goal} ${D.goalAmt}</span><span class="lk" style="color:${c.link};font-size:11.5px">设置</span></div>
+    <div class="pb2"><i style="width:3%;background:${c.prog}"></i></div>
+    <div class="sub" style="margin-top:9px">已攒 ${D.saved} · 还差 ${D.left} · 约还需 ${D.days} 个工作日</div>
+  </div>`;
+}
+
+const V = [
+  { t:'现状', s:'4 色混用',
+    b:'b-now', bt:'卡内打架',
+    w:{dot:'#38BDF8',num:'#38BDF8',pb:'#38BDF8',link:'#38BDF8',btn:'linear-gradient(135deg,#34D399,#2DD4BF)',btnText:'#04211A'},
+    c:{dot:'#FCD34D',num:'#FCD34D',chipBg:'#2A2415',prog:'#34D399',link:'#38BDF8'},
+    note:`▸ 喝水卡：蓝数字 + <b>绿按钮</b><br>▸ 累计卡：黄数字 + <b>绿进度条</b> + 蓝链接<br>▸ 共 4 个高饱和色：绿/蓝/黄/白` },
+
+  { t:'方案 A', s:'绿=钱 · 蓝=水',
+    b:'b-good', bt:'两色分区',
+    w:{dot:'#38BDF8',num:'#38BDF8',pb:'#38BDF8',link:'#38BDF8',btn:'linear-gradient(135deg,#38BDF8,#22D3EE)',btnText:'#052E3F'},
+    c:{dot:'#34D399',num:'#34D399',chipBg:'#122E26',prog:'#34D399',link:'#34D399'},
+    note:`▸ 喝水卡<b>全蓝</b>（数字/进度/链接/按钮）<br>▸ 累计卡<b>全绿</b>，与主卡呼应「都是钱」<br>▸ 结果：绿卡+蓝卡+绿卡，最干净` },
+
+  { t:'方案 B', s:'绿 / 蓝 / 琥珀',
+    b:'b-good', bt:'三色各司其职',
+    w:{dot:'#38BDF8',num:'#38BDF8',pb:'#38BDF8',link:'#38BDF8',btn:'linear-gradient(135deg,#38BDF8,#22D3EE)',btnText:'#052E3F'},
+    c:{dot:'#FCD34D',num:'#FCD34D',chipBg:'#2A2415',prog:'#FCD34D',link:'#FCD34D'},
+    note:`▸ 喝水卡<b>全蓝</b><br>▸ 累计卡<b>全琥珀</b>（进度条也改琥珀）<br>▸ 结果：三色各有其位，层次最分明` },
+
+  { t:'方案 C', s:'全绿统一',
+    b:'b-good', bt:'最大统一',
+    w:{dot:'#34D399',num:'#34D399',pb:'#34D399',link:'#34D399',btn:'linear-gradient(135deg,#34D399,#2DD4BF)',btnText:'#04211A'},
+    c:{dot:'#34D399',num:'#34D399',chipBg:'#122E26',prog:'#34D399',link:'#34D399'},
+    note:`▸ 除主卡外全部绿色<br>▸ 只剩「绿 + 白」两个彩色<br>▸ 最统一，但失去「水=蓝」直觉` },
+];
+
+document.getElementById('app').innerHTML = V.map(v=>`
+  <div class="col">
+    <div class="hd"><div class="t">${v.t}</div><div class="s">${v.s}</div>
+      <span class="badge ${v.b}">${v.bt}</span></div>
+    ${heroCard()}
+    ${waterCard(v.w)}
+    ${cumCard(v.c)}
+    <div class="notebox">${v.note}</div>
+  </div>`).join('');
+</script>
+</body></html>

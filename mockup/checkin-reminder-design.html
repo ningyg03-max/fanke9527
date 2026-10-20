@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eef1f4;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:16px;align-items:center}
+.wrap{width:392px}
+.cap{font-size:13px;font-weight:700;color:#111827;margin-bottom:3px}
+.cap span{font-size:11px;font-weight:400;color:#6b7280}
+.capnote{font-size:11.5px;color:#6b7280;line-height:1.5;margin-bottom:9px}
+/* 手机屏（深色 App） */
+.ph{border-radius:18px;padding:14px 14px 18px;background:linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26)}
+.top{display:flex;align-items:center;height:42px;margin-bottom:6px;position:relative}
+.tbtn{font-size:13px;color:#E8F4F2;font-weight:500;padding:0 12px;height:34px;display:flex;align-items:center;
+   background:rgba(255,255,255,.06);border-radius:17px;border:1px solid rgba(255,255,255,.10)}
+.ttitle{position:absolute;left:0;right:0;text-align:center;font-size:19px;font-weight:700;color:#E8F4F2}
+.intro{font-size:12px;color:#9FB8BE;line-height:1.5;margin:6px 2px 14px}
+.sec{display:flex;align-items:center;margin:4px 2px 12px}
+.sdot{width:8px;height:8px;border-radius:50%;background:#34D399;margin-right:8px}
+.sname{font-size:14px;font-weight:700;color:#E8F4F2;flex:1}
+/* 设置卡 */
+.card{background:linear-gradient(160deg,rgba(16,44,48,.96),rgba(14,38,44,.96));border-radius:22px;
+   padding:16px 18px;border:1px solid rgba(52,211,153,.10);box-shadow:0 3px 10px rgba(0,0,0,.35)}
+.lab{font-size:13px;color:#9FB8BE}
+.row{display:flex;align-items:center;margin-top:10px}
+.rlab{font-size:14px;color:#E8F4F2}
+.tbtn2{font-size:14px;color:#E8F4F2;font-weight:600;padding:0 14px;height:38px;display:flex;align-items:center;
+   background:rgba(255,255,255,.05);border-radius:9px;border:1px solid rgba(255,255,255,.14);margin:0 8px}
+/* iOS 风格开关 */
+.sw{width:48px;height:29px;border-radius:15px;background:#34D399;position:relative;margin-left:auto;flex-shrink:0}
+.sw i{position:absolute;width:25px;height:25px;border-radius:50%;background:#fff;top:2px;right:2px;
+   box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.note{font-size:11.5px;color:#8AA6B0;line-height:1.55;margin-top:10px}
+.note b{color:#CFEDE8;font-weight:600}
+/* 通知面板 */
+.shade{background:#101418;border-radius:18px;padding:14px}
+.sht{font-size:10.5px;color:#7B8794;text-align:center;margin-bottom:10px;letter-spacing:.06em}
+.notif{background:#1E2429;border-radius:18px;padding:13px 15px;margin-bottom:10px;display:flex;gap:11px}
+.nico{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#10B981,#14B8A6);
+   display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.nbody{flex:1}
+.napp{font-size:10.5px;color:#8B98A5;display:flex;justify-content:space-between;margin-bottom:3px}
+.ntitle{font-size:13.5px;font-weight:700;color:#E8F0F6;margin-bottom:2px}
+.ntext{font-size:12.5px;color:#B8C4CE;line-height:1.5}
+.tagline{display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;margin-top:6px;font-weight:600}
+.tagline.g{background:rgba(52,211,153,.15);color:#5EEAD4}
+.tagline.a{background:rgba(252,211,77,.15);color:#FCD34D}
+/* 逻辑表 */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;background:#fff;border-radius:12px;overflow:hidden}
+.tbl th{background:#F1F5F4;color:#46626B;font-weight:600;padding:8px 11px;text-align:left;font-size:11.5px}
+.tbl td{padding:8px 11px;border-top:1px solid #EEF3F2;color:#16323B;line-height:1.45}
+.tbl .ok{color:#047857;font-weight:700}
+.tbl .no{color:#94A3B8}
+/* 说明 */
+.note2{background:#fff;border-radius:10px;padding:10px 12px;font-size:11.5px;color:#4b5563;line-height:1.65;margin-top:4px}
+.note2 b{color:#047857}
+.note2 .w{color:#B45309;font-weight:600}
+/* 双列 */
+.grid2{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.pill{display:inline-block;background:rgba(52,211,153,.12);color:#34D399;font-size:10.5px;font-weight:700;
+   padding:3px 9px;border-radius:9px;margin-left:8px}
+</style></head><body>
+
+<div class="grid2">
+<!-- ══════ ① 设置界面 ══════ -->
+<div class="wrap" style="width:392px">
+<div class="cap">① 设置界面 <span>· 设置 → 薪跳设置（发薪日提醒下方）</span></div>
+<div class="capnote">一个总开关 + 提醒时间。默认关闭，需要时打开。</div>
+<div class="ph">
+  <div class="top"><span class="tbtn">‹ 返回</span><span class="ttitle">薪跳设置</span></div>
+  <div class="intro">修改后点下方「保存」生效。</div>
+
+  <!-- 模拟上面已有内容 -->
+  <div class="card" style="opacity:.4;padding:12px 18px">
+    <div class="lab">发薪日提醒（上方已有）</div>
+    <div class="row"><span class="rlab">每月 [15] 号发薪</span>
+      <div class="sw" style="background:#4B5563"><i style="right:21px"></i></div></div>
+    <div class="note">当天与前一天 10:00 提醒</div>
+  </div>
+
+  <div class="card" style="margin-top:12px;border-color:rgba(52,211,153,.45);box-shadow:0 3px 14px rgba(52,211,153,.15)">
+    <div class="lab" style="color:#CFEDE8;font-weight:700">打卡提醒 <span class="pill">新</span></div>
+    <div class="row">
+      <span class="rlab">每天</span>
+      <span class="tbtn2">20:00</span>
+      <span class="rlab" style="font-size:12.5px;color:#9FB8BE">提醒</span>
+      <div class="sw"><i></i></div>
+    </div>
+    <div class="note">只在该记、还没记时提醒：<b>工作日问加班</b>（已打卡 / 已请假不打扰），<b>休息日问出勤</b>。点时间可修改。</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════ ② 通知示例 ══════ -->
+<div class="wrap" style="width:392px">
+<div class="cap">② 通知长这样 <span>· 三种场景</span></div>
+<div class="capnote">点通知直接打开 App；在 App 里标记后通知自动消失。</div>
+<div class="shade">
+  <div class="sht">晚上 20:00 · 工作日</div>
+  <div class="notif">
+    <div class="nico">⏱</div>
+    <div class="nbody">
+      <div class="napp"><span>SalaryJump</span><span>现在</span></div>
+      <div class="ntitle">今天加班了吗？</div>
+      <div class="ntext">有加班或请假的话，记得在 App 里记一下</div>
+    </div>
+  </div>
+
+  <div class="sht" style="margin-top:14px">晚上 20:00 · 周六（调休模式）</div>
+  <div class="notif">
+    <div class="nico">🏢</div>
+    <div class="nbody">
+      <div class="napp"><span>SalaryJump</span><span>现在</span></div>
+      <div class="ntitle">今天出勤了吗？</div>
+      <div class="ntext">如果出勤了，记得标记「出勤」，记 1 天调休</div>
+      <span class="tagline g">✓ 标记后自动消失</span>
+    </div>
+  </div>
+
+  <div class="sht" style="margin-top:14px">晚上 20:00 · 法定节假日（3 倍）</div>
+  <div class="notif">
+    <div class="nico">🏢</div>
+    <div class="nbody">
+      <div class="napp"><span>SalaryJump</span><span>现在</span></div>
+      <div class="ntitle">今天出勤了吗？</div>
+      <div class="ntext">法定节假日 · 出勤记得标记，按 3 倍计薪</div>
+      <span class="tagline a">金额较大，别忘了记</span>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ══════ ③ 触发逻辑 ══════ -->
+<div class="wrap">
+<div class="cap">③ 「智能」在哪 —— 触发条件矩阵 <span>· 到点先检查，符合才提醒</span></div>
+<table class="tbl">
+<tr><th>当天情况</th><th>到点检查</th><th>结果</th></tr>
+<tr><td>工作日 · 没加班没请假</td><td>没打卡</td><td class="ok">提醒「今天加班了吗？」</td></tr>
+<tr><td>工作日 · <b>已打卡加班</b></td><td>已打卡</td><td class="no">不打扰 ✓</td></tr>
+<tr><td>工作日 · <b>已标记请假</b></td><td>请假了</td><td class="no">不打扰 ✓</td></tr>
+<tr><td>工作日 · 未开启加班功能</td><td>没有加班概念</td><td class="no">不打扰 ✓</td></tr>
+<tr><td>休息日 · 没标出勤</td><td>没标记</td><td class="ok">提醒「今天出勤了吗？」</td></tr>
+<tr><td>休息日 · <b>已标出勤</b></td><td>已标记</td><td class="no">不打扰 ✓</td></tr>
+</table>
+<div class="note2" style="margin-top:10px">
+💡 <b>自动消失</b>：收到通知后打开 App 标记（打卡 / 标出勤 / 标请假）→ 通知自动消失，不会残留。<br>
+⚙️ <b>偷懒保护</b>：到点的检查在通知发出前实时进行 —— 比如你 19:50 刚打过卡，20:00 就静默跳过。
+</div>
+</div>
+
+<!-- ══════ ④ 实现说明 ══════ -->
+<div class="wrap"><div class="note2">
+🔧 <b>技术方案</b>（复用现有发薪日提醒的成熟链路，稳定性经过验证）：
+<div style="margin-top:6px;line-height:1.8">
+· 精确闹钟每天触发一次，触发后自动排下一天（重启 / 改时间自动重排）<br>
+· 独立通知渠道「打卡提醒」，可单独静音 / 关掉，不影响喝水提醒<br>
+· 新增约 200 行代码 + 独立开关，<b>对现有功能零影响</b>
+</div>
+</div></div>
+
+<!-- ══════ 待确认 ══════ -->
+<div class="wrap"><div class="note2" style="border:2px solid #A7F3D0">
+<b>需要你确认的 3 个点：</b><br>
+1️⃣ 开关默认<b>关闭</b>（需要你手动打开）—— 还是想默认开启？<br>
+2️⃣ 提醒时间默认 <b>20:00</b>，可以改。<br>
+3️⃣ 一个总开关（工作日 + 休息日一起管）—— 还是想拆成两个独立开关？
+</div></div>
+
+</body></html>

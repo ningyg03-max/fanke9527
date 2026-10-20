@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b0d11;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.col{display:flex;flex-direction:column;gap:6px}
+.cap{font-size:11.5px;color:#7d8794;text-align:center;line-height:1.4}
+.cap b{display:block;font-size:12.5px;color:#eef2f7;font-weight:700;margin-bottom:1px}
+.phone{width:330px;border-radius:22px;overflow:hidden;flex-shrink:0;box-shadow:0 8px 30px rgba(0,0,0,.6);
+       background:linear-gradient(180deg,#ecfbf4,#eef6fe 55%,#f1f6ff);padding:0 14px 14px}
+.sbar{height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 4px;font-size:10.5px;color:#7a99a3}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:4px 2px 10px}
+.ttl{font-size:17px;font-weight:700;color:#16323b}
+.gear{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.9);color:#61808c;display:flex;align-items:center;justify-content:center;font-size:12px}
+.hero{border-radius:22px;padding:15px;overflow:hidden;position:relative;
+  background:linear-gradient(135deg,#0ea47a,#10b981 42%,#22c6b4 74%,#38bdf8 130%);
+  box-shadow:0 10px 24px rgba(16,185,129,.3)}
+.hero:before{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.12);top:-58px;right:-42px}
+.hero>*{position:relative}
+.otrow{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.20);border-radius:18px;
+       padding:7px 5px 7px 11px;margin-bottom:10px}
+.otrow .st{flex:1;font-size:11.5px;color:#fff}
+.otrow .ac{font-size:11.5px;font-weight:700;color:#fff;background:rgba(255,255,255,.24);
+           padding:4px 10px;border-radius:13px}
+.hl{font-size:10.5px;color:rgba(255,255,255,.78);letter-spacing:1.1px;font-weight:600}
+.hc{font-size:11px;color:rgba(255,255,255,.72)}
+.ha{font-size:36px;font-weight:700;color:#fff;margin-top:7px;letter-spacing:-.9px;line-height:1.05}
+.ha .c{font-size:19px;font-weight:600}
+.hst{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:11px;
+      padding:5px 10px;border-radius:18px;margin-top:9px}
+.hb{height:6px;border-radius:4px;background:rgba(255,255,255,.26);margin-top:12px;overflow:hidden}
+.hb>i{display:block;height:100%;background:#fff;border-radius:4px}
+.hs{display:grid;grid-template-columns:repeat(4,1fr);margin-top:12px}
+.hs .v{font-size:11.5px;font-weight:600;color:#fff;text-align:center}
+.hs .k{font-size:9.5px;color:rgba(255,255,255,.72);text-align:center;margin-top:2px}
+.hd{height:1px;background:rgba(255,255,255,.22);margin:11px 0 8px}
+.hsch{font-size:10.5px;color:rgba(255,255,255,.78)}
+</style></head><body>
+
+<!-- ① 下班后 · 未标记 -->
+<div class="col"><div class="cap"><b>① 下班后 · 未标记</b>文案变「补记」（本次改动）</div>
+<div class="phone"><div class="sbar"><span>20:15</span><span>5G ▮▮▮</span></div>
+<div class="nav"><span class="ttl">SalaryJump</span><span class="gear">⚙</span></div>
+<div class="hero">
+  <div class="otrow"><span class="st">今天请假了吗？</span><span class="ac">补记</span></div>
+  <div class="otrow"><span class="st">今天加班了？</span><span class="ac">开始</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span class="hl">今日已赚</span><span class="hc">20:15:00</span></div>
+  <div class="ha"><span class="c">¥</span>300.00</div>
+  <div class="hst">● 今日下班 · 工资已满额</div>
+  <div class="hb"><i style="width:100%"></i></div>
+  <div class="hs">
+    <div><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥37.50</div><div class="k">每小时</div></div>
+    <div><div class="v">¥0.63</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.01</div><div class="k">每秒</div></div></div>
+  <div class="hd"></div>
+  <div class="hsch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- ② 下班后 · 已标记请假 -->
+<div class="col"><div class="cap"><b>② 下班后 · 已标记请假</b>加班行自动隐藏</div>
+<div class="phone"><div class="sbar"><span>20:16</span><span>5G ▮▮▮</span></div>
+<div class="nav"><span class="ttl">SalaryJump</span><span class="gear">⚙</span></div>
+<div class="hero">
+  <div class="otrow"><span class="st">🏖 事假 · 无薪 · 0.00 元</span><span class="ac">取消</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span class="hl">今日已赚</span><span class="hc">20:16:11</span></div>
+  <div class="ha"><span class="c">¥</span>0.00</div>
+  <div class="hst">● 事假 · 无薪 · 今日 0.00 元</div>
+  <div class="hb"><i style="width:0%"></i></div>
+  <div class="hs">
+    <div><div class="v">¥0.00</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥0.00</div><div class="k">每小时</div></div>
+    <div><div class="v">¥0.00</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.00</div><div class="k">每秒</div></div></div>
+  <div class="hd"></div>
+  <div class="hsch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- ③ 上班时段 -->
+<div class="col"><div class="cap"><b>③ 上班时段 · 未标记</b>文案「今天请假了？」</div>
+<div class="phone"><div class="sbar"><span>14:20</span><span>5G ▮▮▮</span></div>
+<div class="nav"><span class="ttl">SalaryJump</span><span class="gear">⚙</span></div>
+<div class="hero">
+  <div class="otrow"><span class="st">今天请假了？</span><span class="ac">标记</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span class="hl">今日已赚</span><span class="hc">14:20:05</span></div>
+  <div class="ha"><span class="c">¥</span>175.00</div>
+  <div class="hst">● 工作中 · 距下班 2:40</div>
+  <div class="hb"><i style="width:58%"></i></div>
+  <div class="hs">
+    <div><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥37.50</div><div class="k">每小时</div></div>
+    <div><div class="v">¥0.63</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.01</div><div class="k">每秒</div></div></div>
+  <div class="hd"></div>
+  <div class="hsch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+</body></html>

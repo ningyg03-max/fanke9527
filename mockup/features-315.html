@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070a;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:16px}
+.row{display:flex;gap:14px;align-items:flex-start}
+.tag{width:52px;flex-shrink:0;font-size:11px;color:#64748b;padding-top:10px;font-weight:600;line-height:1.5}
+.ph{width:322px;border-radius:22px;padding:0 14px 16px;background:linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26);
+    box-shadow:0 10px 30px rgba(0,0,0,.5);position:relative}
+.cap{font-size:11px;color:#7d8794;text-align:center;padding:8px 0 2px}
+.cap b{color:#e2e8f0}
+/* 锁屏 */
+.lock{display:flex;flex-direction:column;align-items:center;justify-content:center;height:600px;gap:0}
+.lock .ttl{font-size:17px;font-weight:700;color:#E8F4F2}
+.dots{display:flex;gap:18px;margin-top:20px}
+.dots i{width:13px;height:13px;border-radius:50%;background:#34D399}
+.dots i.off{background:#1F3A38}
+.hint{font-size:12px;color:#9FB8BE;margin-top:16px}
+.pad{margin-top:24px;width:100%;padding:0 18px}
+.prow{display:flex;gap:12px;margin-top:10px}
+.pkey{flex:1;height:56px;border-radius:18px;background:#14262A;display:flex;align-items:center;
+      justify-content:center;font-size:21px;font-weight:600;color:#E8F4F2}
+.pkey.bio{color:#34D399;font-size:14px}
+.pkey.del{font-size:19px;color:#9FB8BE}
+/* 设置 */
+.set{padding-top:14px}
+.sttl{font-size:19px;font-weight:700;color:#E8F4F2;margin-bottom:14px}
+.lbl{font-size:12px;color:#9FB8BE;margin-top:15px}
+.lbl:first-of-type{margin-top:0}
+.inp{height:44px;border-radius:10px;background:#0C1E1B;border:1.5px solid #1F3A38;color:#E8F4F2;
+     font-size:16px;display:flex;align-items:center;padding:0 13px;margin-top:7px}
+.note{font-size:10.5px;color:#7E9AA3;margin-top:5px;line-height:1.5}
+.srow{display:flex;gap:9px;margin-top:13px}
+.sbtn{flex:1;height:40px;border-radius:10px;background:#0C1E1B;border:1.5px solid #1F3A38;
+      display:flex;align-items:center;justify-content:center;font-size:12.5px;color:#E8F4F2}
+.sbtn.pri{color:#34D399}
+.pdrow{display:flex;align-items:center;gap:8px;margin-top:7px}
+.pdrow .t{font-size:13.5px;color:#E8F4F2}
+.pdrow .box{width:52px;height:40px;border-radius:10px;background:#0C1E1B;border:1.5px solid #1F3A38;
+            display:flex;align-items:center;justify-content:center;font-size:15px;color:#E8F4F2}
+.sw{width:46px;height:28px;border-radius:14px;background:#34D399;margin-left:auto;position:relative}
+.sw:after{content:"";position:absolute;width:22px;height:22px;border-radius:50%;background:#0C1E1B;
+          top:3px;right:3px}
+/* 战报 */
+.rp{padding-top:14px}
+.rhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.rback{height:40px;padding:0 15px;border-radius:20px;background:#12242A;border:1.5px solid #1F3E3D;
+       display:flex;align-items:center;font-size:12.5px;color:#E8F4F2}
+.rtitle{font-size:19px;font-weight:700;color:#E8F4F2}
+.navr{display:flex;align-items:center;justify-content:space-between;margin:10px 0}
+.navb{width:42px;height:38px;border-radius:19px;background:#12242A;border:1.5px solid #1F3E3D;
+      display:flex;align-items:center;justify-content:center;color:#38BDF8;font-size:18px}
+.nt{font-size:16px;font-weight:700;color:#E8F4F2}
+.hero{border-radius:22px;padding:18px;position:relative;overflow:hidden;
+      background:linear-gradient(140deg,#065F46,#0B8A6A 38%,#0E9C8C 68%,#0C7FA8)}
+.hero:before{content:"";position:absolute;width:130px;height:130px;border-radius:50%;
+             background:rgba(255,255,255,.10);top:-48px;right:-34px}
+.hero>*{position:relative}
+.hl{font-size:10.5px;color:rgba(255,255,255,.78);letter-spacing:1px;font-weight:600}
+.hbig{font-size:31px;font-weight:700;color:#fff;margin-top:7px;letter-spacing:-.6px}
+.h3{display:grid;grid-template-columns:repeat(3,1fr);margin-top:14px}
+.h3 .v{font-size:14px;font-weight:700;color:#fff;text-align:center}
+.h3 .k{font-size:9.5px;color:rgba(255,255,255,.7);text-align:center;margin-top:3px}
+.card{background:#14262A;border-radius:20px;padding:16px;margin-top:11px;position:relative;overflow:hidden}
+.card:before{content:"";position:absolute;width:120px;height:120px;border-radius:50%;
+             background:rgba(52,211,153,.07);top:-35px;right:-25px}
+.card>*{position:relative}
+.cl{font-size:10.5px;color:#8AA6B0;letter-spacing:1px;font-weight:600}
+.cv{font-size:19px;font-weight:700;color:#34D399;margin-top:8px}
+.dv{height:1px;background:#1F3A38;margin:11px 0}
+.rrow{display:flex;align-items:center;font-size:12px;color:#9FB8BE;margin-top:9px}
+.rrow .d{flex:1}
+.rrow .m{color:#34D399;font-weight:700;font-size:13px}
+</style></head><body>
+
+<div class="row">
+  <div class="tag">锁屏<br>PIN+指纹</div>
+  <div class="ph"><div class="cap"><b>① 隐私锁</b> · 4 位 PIN + 指纹</div>
+    <div class="lock">
+      <div class="ttl">🔒 SalaryJump</div>
+      <div class="dots"><i></i><i></i><i class="off"></i><i class="off"></i></div>
+      <div class="hint">输入 4 位 PIN 解锁</div>
+      <div class="pad">
+        <div class="prow"><div class="pkey">1</div><div class="pkey">2</div><div class="pkey">3</div></div>
+        <div class="prow"><div class="pkey">4</div><div class="pkey">5</div><div class="pkey">6</div></div>
+        <div class="prow"><div class="pkey">7</div><div class="pkey">8</div><div class="pkey">9</div></div>
+        <div class="prow"><div class="pkey bio">指纹</div><div class="pkey">0</div><div class="pkey del">⌫</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tag">设置<br>新增项</div>
+  <div class="ph"><div class="cap"><b>② 设置对话框</b> · 月薪 + 发薪日 + 安全</div>
+    <div class="set">
+      <div class="sttl">SalaryJump 设置</div>
+      <div class="lbl">每天工资</div>
+      <div class="inp">300.00</div>
+      <div class="lbl">月薪（自动折算日薪）</div>
+      <div class="inp">6,600.00</div>
+      <div class="note">本月 22 个工作日 · 月薪 = 日薪 × 22</div>
+      <div class="lbl">发薪日提醒</div>
+      <div class="pdrow"><span class="t">每月</span><span class="box">15</span><span class="t">号发薪</span><span class="sw"></span></div>
+      <div class="note">当天与前一天 10:00 提醒，通知里可直接打开上月战报</div>
+      <div class="srow"><div class="sbtn pri">隐私锁</div><div class="sbtn">月度战报</div></div>
+    </div>
+  </div>
+
+  <div class="tag">战报<br>月度汇总</div>
+  <div class="ph"><div class="cap"><b>③ 月度战报</b> · 上月收入汇总</div>
+    <div class="rp">
+      <div class="rhead"><span class="rback">返回</span><span class="rtitle">月度战报</span><span style="width:52px"></span></div>
+      <div class="navr"><div class="navb">‹</div><span class="nt">2026 年 9 月</span><div class="navb">›</div></div>
+      <div class="hero">
+        <div class="hl">本月累计已赚</div>
+        <div class="hbig">¥ 6,600.00</div>
+        <div class="h3">
+          <div><div class="v">22</div><div class="k">有记录天数</div></div>
+          <div><div class="v">¥300</div><div class="k">日均</div></div>
+          <div><div class="v">1</div><div class="k">请假天数</div></div>
+        </div>
+      </div>
+      <div class="card"><div class="cl">最高的一天</div><div class="cv">¥ 900.00 · 9 月 28 日</div></div>
+      <div class="card">
+        <div class="cl">每日明细</div>
+        <div class="dv"></div>
+        <div class="rrow"><span class="d">9月30日 周三</span><span class="m">¥ 300.00</span></div>
+        <div class="rrow"><span class="d">9月29日 周二</span><span class="m">¥ 300.00</span></div>
+        <div class="rrow"><span class="d">9月28日 周一</span><span class="m">¥ 900.00</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body></html>

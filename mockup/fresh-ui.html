@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><title>SalaryJump 清新版 UI · S26U</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b0d11;font-family:"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;padding:22px 18px 26px;display:flex;gap:20px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:8px}
+.cap{font-size:12.5px;text-align:center;color:#7d8794;letter-spacing:.2px}
+.cap b{color:#eef2f7;font-weight:700;display:block;font-size:13.5px;margin-bottom:2px}
+.phone{width:384px;height:832px;border-radius:26px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.65);flex-shrink:0;position:relative}
+.statusbar{height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 20px;font-size:12px}
+
+/* ══════ 旧版（v2.0）══════ */
+.old{--bg:#f5f7fb;--surface:#fff;--text:#1c2330;--muted:#717a8a;--label:#8b93a3;--border:#e1e6ee;--track:#e7ebf2;--accent:#16a34a;--blue:#2563eb}
+.old .statusbar{background:var(--bg);color:#a8b0be}
+.old .screen{background:var(--bg);padding:6px 16px;height:calc(100% - 34px)}
+.old .hdr{display:flex;justify-content:space-between;align-items:center;padding:6px 2px 2px}
+.old .apptitle{font-size:22px;font-weight:700;color:var(--text)}
+.old .btn{border:1px solid var(--border);background:#fff;border-radius:9px;color:var(--text);font-size:12.5px;padding:9px 15px}
+.old .card{background:#fff;border:1px solid var(--border);border-radius:13px;padding:18px;margin-top:13px}
+.old .lbl{font-size:11.5px;color:var(--label);letter-spacing:1.2px;font-weight:600}
+.old .amt{font-size:44px;font-weight:700;color:var(--accent);margin-top:8px;letter-spacing:-.6px}
+.old .amt .c{font-size:24px}
+.old .st{font-size:14.5px;color:var(--accent);margin-top:8px}
+.old .pbar{height:9px;border-radius:5px;background:var(--track);margin-top:15px;overflow:hidden}
+.old .pbar>i{display:block;height:100%;background:var(--accent)}
+.old .stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:15px}
+.old .stats .v{font-size:13.5px;font-weight:600;color:var(--text);text-align:center}
+.old .stats .k{font-size:11px;color:var(--label);text-align:center;margin-top:4px}
+.old .divider{height:1px;background:var(--border);margin:14px 0 10px}
+.old .sched{font-size:11.5px;color:var(--label)}
+.old .brow{display:flex;gap:8px;margin-top:13px}
+.old .bmain{flex:1;height:48px;border-radius:9px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600}
+.old .bout{width:92px;height:48px;border-radius:9px;border:1px solid var(--border);background:var(--bg);color:var(--text);display:flex;align-items:center;justify-content:center;font-size:13px}
+.old .wdark{color:#a8b0be;font-size:12px}
+
+/* ══════ 新版·清新 ══════ */
+.new{--text:#16323B;--muted:#61808C;--label:#8AA6B0;--track:#E6F2EE;
+     --accentD:#047857;--accent:#10B981;--accentL:#34D399;
+     --skyD:#0369A1;--sky:#0EA5E9;--amberD:#B45309;--amber:#F59E0B}
+.new .bgwrap{position:absolute;inset:0;background:linear-gradient(180deg,#ECFBF4 0%,#EEF6FE 52%,#F1F6FF 100%)}
+.new .statusbar{position:relative;color:#7A99A3}
+.new .screen{position:relative;padding:4px 16px;height:calc(100% - 34px)}
+.new .hdr{display:flex;justify-content:space-between;align-items:center;padding:6px 2px 4px}
+.new .logo{width:30px;height:30px;border-radius:10px;background:linear-gradient(135deg,#10B981,#06B6D4);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;box-shadow:0 4px 12px rgba(16,185,129,.35)}
+.new .apptitle{font-size:19px;font-weight:700;color:var(--text);letter-spacing:.1px}
+.new .btnset{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.9);color:var(--muted);font-size:15px;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(22,50,59,.08)}
+
+/* 彩色主卡 */
+.new .hero{position:relative;border-radius:24px;padding:20px;margin-top:14px;overflow:hidden;
+  background:linear-gradient(135deg,#0EA47A 0%,#10B981 42%,#22C6B4 74%,#38BDF8 130%);
+  box-shadow:0 12px 28px rgba(16,185,129,.30)}
+.new .hero:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;
+  background:rgba(255,255,255,.12);top:-70px;right:-50px}
+.new .hero:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;
+  background:rgba(255,255,255,.08);bottom:-60px;left:-30px}
+.new .hero>*{position:relative}
+.new .hlbl{font-size:11.5px;color:rgba(255,255,255,.78);letter-spacing:1.3px;font-weight:600}
+.new .hclock{font-size:12px;color:rgba(255,255,255,.72)}
+.new .hamt{font-size:46px;font-weight:700;color:#fff;margin-top:10px;letter-spacing:-1px;line-height:1.05}
+.new .hamt .c{font-size:24px;font-weight:600;margin-right:1px}
+.new .hst{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.20);color:#fff;font-size:12px;
+  padding:6px 12px;border-radius:20px;margin-top:11px;backdrop-filter:blur(4px)}
+.new .hpbar{height:8px;border-radius:5px;background:rgba(255,255,255,.26);margin-top:15px;overflow:hidden}
+.new .hpbar>i{display:block;height:100%;background:#fff;border-radius:5px}
+.new .hstats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:16px}
+.new .hstats .v{font-size:13.5px;font-weight:600;color:#fff;text-align:center}
+.new .hstats .k{font-size:10.5px;color:rgba(255,255,255,.72);text-align:center;margin-top:4px}
+.new .hdiv{height:1px;background:rgba(255,255,255,.22);margin:14px 0 10px}
+.new .hsched{font-size:11.5px;color:rgba(255,255,255,.78)}
+
+/* 普通卡 */
+.new .card{background:#fff;border-radius:22px;padding:19px 20px;margin-top:13px;
+  box-shadow:0 4px 18px rgba(22,50,59,.06)}
+.new .cttl{display:flex;align-items:center;gap:7px}
+.new .dot{width:7px;height:7px;border-radius:4px}
+.new .lbl{font-size:11.5px;color:var(--label);letter-spacing:1.2px;font-weight:600}
+.new .link{font-size:12.5px;color:var(--skyD)}
+.new .wamt{font-size:32px;font-weight:700;color:var(--skyD);margin-top:12px;letter-spacing:-.5px}
+.new .wamt .t{font-size:15px;color:var(--muted);font-weight:500}
+.new .pbar{height:8px;border-radius:5px;background:var(--track);margin-top:13px;overflow:hidden}
+.new .pbar>i{display:block;height:100%;background:var(--sky);border-radius:5px}
+.new .brow{display:flex;gap:9px;margin-top:15px}
+.new .bmain{flex:1;height:48px;border-radius:24px;background:linear-gradient(135deg,#0EA47A,#10B981 60%,#22C6B4);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:700;
+  box-shadow:0 6px 16px rgba(16,185,129,.32)}
+.new .bout{width:92px;height:48px;border-radius:24px;border:1.5px solid #D3E9E3;background:#F7FCFA;color:#2E5A55;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.new .next{font-size:12px;color:var(--muted);margin-top:12px}
+.new .camt{font-size:30px;font-weight:700;color:var(--amberD);margin-top:10px;letter-spacing:-.5px}
+.new .csub{font-size:12.5px;color:var(--muted);margin-top:7px}
+.new .chip{display:inline-flex;align-items:center;gap:4px;background:#FFF7EA;color:var(--amberD);font-size:11.5px;
+  padding:4px 10px;border-radius:12px;margin-left:8px;font-weight:600}
+
+/* 深色 */
+.new.dk{--text:#E8F4F2;--muted:#9FB8BE;--label:#7E9AA3;--track:#1E3336;--accentD:#5EEAD4;--skyD:#7DD3FC;--amberD:#FCD34D}
+.new.dk .bgwrap{background:linear-gradient(180deg,#0C1E1B 0%,#0D1B22 55%,#0E1A26 100%)}
+.new.dk .statusbar{color:#5E7C84}
+.new.dk .btnset{background:rgba(255,255,255,.07);color:#9FB8BE;box-shadow:none}
+.new.dk .hero{background:linear-gradient(135deg,#065F46 0%,#0B8A6A 44%,#0E9C8C 72%,#0C7FA8 128%);box-shadow:0 12px 28px rgba(0,0,0,.4)}
+.new.dk .card{background:#14262A;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+.new.dk .bout{border-color:#1F3E3D;background:#12242A;color:#BFE3DC}
+.new.dk .chip{background:rgba(252,211,77,.12)}
+</style></head><body>
+
+<!-- ══ 旧版 ══ -->
+<div class="col"><div class="cap"><b>① 现状 · 2.0</b>白卡 · 直角 · 灰底</div>
+<div class="phone old"><div class="statusbar"><span>08:29 &nbsp;10月9日 周五</span><span>&#9660; 5G &#9646;&#9646;&#9646;</span></div>
+<div class="screen">
+  <div class="hdr"><span class="apptitle">SalaryJump</span><span class="btn">设置</span></div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span class="lbl">今日已赚</span><span class="wdark">08:29:31</span></div>
+    <div class="amt"><span class="c">&yen;</span> 86.42</div>
+    <div class="st">工作中 · 距午休 03:01</div>
+    <div class="pbar"><i style="width:29%"></i></div>
+    <div class="stats">
+      <div><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+      <div><div class="v">¥37.50</div><div class="k">每小时</div></div>
+      <div><div class="v">¥0.63</div><div class="k">每分钟</div></div>
+      <div><div class="v">¥0.010</div><div class="k">每秒</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="sched">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span class="lbl">今日喝水</span><span class="wdark">记录　统计</span></div>
+    <div class="wamt"><span style="font-size:29px;font-weight:700;color:#2563eb">1250</span><span class="wdark"> / 2000 ml</span></div>
+    <div class="pbar"><i class="blue" style="width:62%"></i></div>
+    <div class="brow"><div class="bmain">喝水 +250 ml</div><div class="bout">选饮品</div></div>
+    <div class="next" style="margin-top:10px">下次提醒 09:30</div>
+  </div>
+  <div class="card">
+    <div class="lbl">累计收入</div>
+    <div class="amt" style="font-size:30px;margin-top:10px">&yen; 5,678.90</div>
+    <div class="next" style="margin-top:6px">已累计 19 天</div>
+  </div>
+</div></div></div>
+
+<!-- ══ 新版浅色 ══ -->
+<div class="col"><div class="cap"><b>② 清新版 · 浅色</b>渐变底 · 翡翠主卡 · 大圆角</div>
+<div class="phone new"><div class="bgwrap"></div>
+<div class="statusbar"><span>08:29 &nbsp;10月9日 周五</span><span>&#9660; 5G &#9646;&#9646;&#9646;</span></div>
+<div class="screen">
+  <div class="hdr">
+    <div style="display:flex;align-items:center;gap:10px"><div class="logo">&yen;</div><span class="apptitle">SalaryJump</span></div>
+    <div class="btnset">&#9881;</div>
+  </div>
+
+  <div class="hero">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="hlbl">今日已赚</span><span class="hclock">08:29:31</span>
+    </div>
+    <div class="hamt"><span class="c">&yen;</span>86.42</div>
+    <div class="hst">&#9679; 工作中 · 距午休 03:01</div>
+    <div class="hpbar"><i style="width:29%"></i></div>
+    <div class="hstats">
+      <div><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+      <div><div class="v">¥37.50</div><div class="k">每小时</div></div>
+      <div><div class="v">¥0.63</div><div class="k">每分钟</div></div>
+      <div><div class="v">¥0.010</div><div class="k">每秒</div></div>
+    </div>
+    <div class="hdiv"></div>
+    <div class="hsched">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="cttl"><span class="dot" style="background:#0EA5E9"></span><span class="lbl">今日喝水</span></div>
+      <div style="display:flex;gap:16px"><span class="link">记录</span><span class="link">统计</span></div>
+    </div>
+    <div class="wamt">1250<span class="t"> / 2000 ml</span></div>
+    <div class="pbar"><i style="width:62%"></i></div>
+    <div class="brow"><div class="bmain">喝水 +250 ml</div><div class="bout">选饮品</div></div>
+    <div class="next">下次提醒 09:30</div>
+  </div>
+
+  <div class="card">
+    <div class="cttl"><span class="dot" style="background:#F59E0B"></span><span class="lbl">累计收入</span></div>
+    <div class="camt">&yen; 5,678.90<span class="chip">19 天</span></div>
+    <div class="csub">按工作日累计 · 今天入账中</div>
+  </div>
+</div></div></div>
+
+<!-- ══ 新版深色 ══ -->
+<div class="col"><div class="cap"><b>③ 清新版 · 深色</b>跟随系统</div>
+<div class="phone new dk"><div class="bgwrap"></div>
+<div class="statusbar"><span>08:29 &nbsp;10月9日 周五</span><span>&#9660; 5G &#9646;&#9646;&#9646;</span></div>
+<div class="screen">
+  <div class="hdr">
+    <div style="display:flex;align-items:center;gap:10px"><div class="logo">&yen;</div><span class="apptitle">SalaryJump</span></div>
+    <div class="btnset">&#9881;</div>
+  </div>
+  <div class="hero">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span class="hlbl">今日已赚</span><span class="hclock">08:29:31</span></div>
+    <div class="hamt"><span class="c">&yen;</span>86.42</div>
+    <div class="hst">&#9679; 工作中 · 距午休 03:01</div>
+    <div class="hpbar"><i style="width:29%"></i></div>
+    <div class="hstats">
+      <div><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+      <div><div class="v">¥37.50</div><div class="k">每小时</div></div>
+      <div><div class="v">¥0.63</div><div class="k">每分钟</div></div>
+      <div><div class="v">¥0.010</div><div class="k">每秒</div></div>
+    </div>
+    <div class="hdiv"></div>
+    <div class="hsched">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="cttl"><span class="dot" style="background:#38BDF8"></span><span class="lbl">今日喝水</span></div>
+      <div style="display:flex;gap:16px"><span class="link">记录</span><span class="link">统计</span></div>
+    </div>
+    <div class="wamt">1250<span class="t"> / 2000 ml</span></div>
+    <div class="pbar"><i style="width:62%"></i></div>
+    <div class="brow"><div class="bmain">喝水 +250 ml</div><div class="bout">选饮品</div></div>
+    <div class="next">下次提醒 09:30</div>
+  </div>
+  <div class="card">
+    <div class="cttl"><span class="dot" style="background:#FCD34D"></span><span class="lbl">累计收入</span></div>
+    <div class="camt">&yen; 5,678.90<span class="chip">19 天</span></div>
+    <div class="csub">按工作日累计 · 今天入账中</div>
+  </div>
+</div></div></div>
+
+</body></html>

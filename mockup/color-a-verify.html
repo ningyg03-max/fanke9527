@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:14px;background:#05070a;
+     display:flex;flex-direction:column;gap:16px}
+.row{display:flex;gap:12px;align-items:flex-start}
+.rtitle{font-size:12px;color:#94a3b8;width:66px;flex-shrink:0;padding-top:8px;font-weight:600;line-height:1.5}
+.ph{width:326px;flex-shrink:0;border-radius:20px;overflow:hidden;padding:0 13px 13px}
+.hd{text-align:center;font-size:12px;font-weight:700;margin-bottom:6px;padding:4px}
+.hd.ok{color:#4ade80}.hd.bad{color:#f87171}
+.card{border-radius:18px;padding:15px;margin-top:10px}
+/* hero */
+.hero{border-radius:20px;padding:15px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;width:140px;height:140px;border-radius:50%;
+  background:rgba(255,255,255,.10);top:-52px;right:-38px}
+.hero>*{position:relative}
+.rowf{display:flex;align-items:center;justify-content:space-between}
+.lbl{font-size:10px;letter-spacing:1px;font-weight:600}
+.tm{font-size:10px}
+.big{font-size:34px;font-weight:700;letter-spacing:-1px;margin-top:5px;line-height:1}
+.big .c{font-size:17px;font-weight:600}
+.chip{display:inline-block;font-size:10px;padding:4px 9px;border-radius:15px;margin-top:8px}
+.pb{height:6px;border-radius:4px;margin-top:10px;overflow:hidden}
+.pb>i{display:block;height:100%;border-radius:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:10px}
+.stats .v{font-size:10.5px;font-weight:600;text-align:center}
+.stats .k{font-size:8.5px;text-align:center;margin-top:2px}
+.dv{height:1px;margin:9px 0 6px}
+.sch{font-size:9.5px}
+/* normal card */
+.chead{display:flex;align-items:center;justify-content:space-between;height:22px}
+.cl{display:flex;align-items:center;gap:6px}
+.dot{width:7px;height:7px;border-radius:50%}
+.cl span.t{font-size:10.5px;letter-spacing:.12em;font-weight:600}
+.lk{font-size:11px;font-weight:600}
+.nb{font-size:27px;font-weight:700;letter-spacing:-.5px;margin-top:8px;line-height:1;
+  display:flex;align-items:baseline;gap:3px}
+.un{font-size:12.5px;font-weight:400}
+.sub{font-size:10.5px;margin-top:6px}
+.dv2{height:1px;margin:11px 0 9px}
+.goal{display:flex;align-items:center;justify-content:space-between}
+.goal .n{font-size:11.5px;font-weight:600}
+.pb2{height:6px;border-radius:4px;margin-top:9px;overflow:hidden}
+.pb2>i{display:block;height:100%;border-radius:4px}
+.btns{display:flex;gap:8px;margin-top:12px}
+.b1{flex:1;height:40px;border-radius:20px;display:flex;align-items:center;justify-content:center;
+  font-size:12.5px;font-weight:700}
+.b2{width:76px;height:40px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:11px}
+.legend{display:flex;gap:14px;padding:8px 10px;background:#0f172a;border-radius:10px;font-size:11px;color:#94a3b8}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:9px;height:9px;border-radius:50%;display:block}
+</style></head><body>
+<div id="app"></div>
+<script>
+const T = {
+  dark: {bg:'linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26)', surf:'#14262A', text:'#E8F4F2',
+    muted:'#9FB8BE', label:'#7E9AA3', border:'#1F3A38', track:'#1E3336',
+    acc:'#34D399', accB:'#34D399', blue:'#38BDF8', blueB:'#38BDF8', amber:'#FCD34D',
+    chipGreen:'#122E26', chipAmber:'#2A2415',
+    softBg:'#12242A', softBorder:'#1F3E3D', softText:'#BFE3DC',
+    pillG:['#34D399','#2DD4BF'], pillB:['#38BDF8','#22D3EE'],
+    onAcc:'#04211A', onBlue:'#052E3F',
+    hero:'linear-gradient(140deg,#065F46,#0B8A6A 38%,#0E9C8C 68%,#0C7FA8)',
+    heroSub:'rgba(255,255,255,.72)', heroSub2:'rgba(255,255,255,.62)',
+    heroChip:'rgba(255,255,255,.20)', heroTrack:'rgba(255,255,255,.26)', heroLine:'rgba(255,255,255,.22)'},
+  light: {bg:'linear-gradient(180deg,#ECFBF4,#EEF6FE 55%,#F1F6FF)', surf:'#FFFFFF', text:'#16323B',
+    muted:'#61808C', label:'#8AA6B0', border:'#E3EFEC', track:'#E6F2EE',
+    acc:'#047857', accB:'#10B981', blue:'#0369A1', blueB:'#0EA5E9', amber:'#B45309',
+    chipGreen:'#ECFDF5', chipAmber:'#FFF7EA',
+    softBg:'#F7FCFA', softBorder:'#D3E9E3', softText:'#2E5A55',
+    pillG:['#10B981','#0D9488'], pillB:['#0284C7','#0891B2'],
+    onAcc:'#FFFFFF', onBlue:'#FFFFFF',
+    hero:'linear-gradient(140deg,#0EA47A,#10B981 38%,#22C6B4 68%,#38BDF8)',
+    heroSub:'rgba(255,255,255,.78)', heroSub2:'rgba(255,255,255,.72)',
+    heroChip:'rgba(255,255,255,.20)', heroTrack:'rgba(255,255,255,.26)', heroLine:'rgba(255,255,255,.22)'}
+};
+
+function hero(t){return `<div class="hero" style="background:${t.hero};box-shadow:0 8px 20px ${t===T.dark?'rgba(0,0,0,.5)':'rgba(16,185,129,.28)'}">
+  <div class="rowf"><span class="lbl" style="color:${t.heroSub}">今日已赚</span><span class="tm" style="color:${t.heroSub2}">22:41:35</span></div>
+  <div class="big" style="color:#fff"><span class="c">¥</span>650.00</div>
+  <div class="chip" style="background:${t.heroChip};color:#fff">年假 · 全薪 · 今日 650.00 元</div>
+  <div class="pb" style="background:${t.heroTrack}"><i style="width:100%;background:#fff"></i></div>
+  <div class="stats">
+    ${[['¥650.00','今日目标'],['¥81.25','每小时'],['¥1.35','每分钟'],['¥0.023','每秒']].map(([v,k])=>
+      `<div><div class="v" style="color:#fff">${v}</div><div class="k" style="color:${t.heroSub2}">${k}</div></div>`).join('')}
+  </div>
+  <div class="dv" style="background:${t.heroLine}"></div>
+  <div class="sch" style="color:${t.heroSub}">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>`;}
+
+function water(t,after){
+  const num=t.blue, dot=t.blueB, lk=t.blue, pb=t.blueB;
+  const btnBg = after ? `linear-gradient(135deg,${t.pillB[0]},${t.pillB[1]})` : `linear-gradient(135deg,${t.pillG[0]},${t.pillG[1]})`;
+  const btnTx = after ? t.onBlue : t.onAcc;
+  return `<div class="card" style="background:${t.surf}">
+  <div class="chead"><div class="cl"><span class="dot" style="background:${dot}"></span><span class="t" style="color:${t.label}">今日喝水</span></div>
+    <div style="display:flex;gap:11px"><span class="lk" style="color:${lk}">记录</span><span class="lk" style="color:${lk}">统计</span></div></div>
+  <div class="nb" style="color:${num}">2400<span class="un" style="color:${t.muted}">/ 3000 ml</span></div>
+  <div class="pb2" style="background:${t.track}"><i style="width:80%;background:${pb}"></i></div>
+  <div class="btns"><div class="b1" style="background:${btnBg};color:${btnTx};box-shadow:0 4px 10px ${after?(t===T.dark?'rgba(0,0,0,.45)':'rgba(14,165,233,.35)'):(t===T.dark?'rgba(0,0,0,.45)':'rgba(16,185,129,.35)')}">喝水 +300 ml</div>
+    <div class="b2" style="background:${t.softBg};color:${t.softText};border:1.5px solid ${t.softBorder}">选饮品</div></div>
+  <div class="sub" style="color:${t.muted}">下次提醒 10月10日 09:30 · 约 275 kcal</div>
+</div>`;}
+
+function cum(t,after){
+  const num=after?t.acc:t.amber, dot=after?t.accB:t.amber, lk=after?t.acc:t.blue;
+  const chipBg=after?t.chipGreen:t.chipAmber, prog=after?t.accB:t.accB;
+  return `<div class="card" style="background:${t.surf}">
+  <div class="chead"><div class="cl"><span class="dot" style="background:${dot}"></span><span class="t" style="color:${t.label}">累计收入</span></div>
+    <span class="lk" style="color:${lk}">明细 ›</span></div>
+  <div class="nb" style="color:${num}">¥650.00<span style="font-size:10px;padding:3px 8px;border-radius:9px;margin-left:6px;background:${chipBg};color:${num}">0 天</span></div>
+  <div class="sub" style="color:${t.muted}">按工作日累计</div>
+  <div class="dv2" style="background:${t.border}"></div>
+  <div class="goal"><span class="n" style="color:${t.text}">🎯 MacBook Pro 23,560.00</span><span class="lk" style="color:${lk};font-size:11px">设置</span></div>
+  <div class="pb2" style="background:${t.track}"><i style="width:3%;background:${prog}"></i></div>
+  <div class="sub" style="color:${t.muted}">已攒 650.00 · 还差 22,910.00 · 约还需 36 个工作日</div>
+</div>`;}
+
+function phone(t,after,label,cls){
+  return `<div><div class="hd ${cls}">${label}</div>
+  <div class="ph" style="background:${t.bg};box-shadow:0 8px 26px rgba(0,0,0,.55)">
+    ${hero(t)}${water(t,after)}${cum(t,after)}
+  </div></div>`;
+}
+
+document.getElementById('app').innerHTML = `
+<div class="row"><div class="rtitle">深色主题</div>
+  ${phone(T.dark,false,'改前','bad')}
+  ${phone(T.dark,true,'改后 ✔','ok')}
+</div>
+<div class="row"><div class="rtitle">浅色主题</div>
+  ${phone(T.light,false,'改前','bad')}
+  ${phone(T.light,true,'改后 ✔','ok')}
+</div>
+<div class="legend">
+  <span><i style="background:#34D399"></i>绿 = 钱（主卡 / 累计卡 / 日历）</span>
+  <span><i style="background:#38BDF8"></i>蓝 = 水（喝水卡）</span>
+  <span><i style="background:#FCD34D"></i>琥珀 = 特殊收入标记（出勤 2倍 / 含糖 / 警告）—— 保留</span>
+</div>`;
+</script></body></html>

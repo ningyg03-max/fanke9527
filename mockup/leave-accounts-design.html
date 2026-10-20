@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eef1f4;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:16px;align-items:center}
+.wrap{width:390px}
+.cap{font-size:13px;font-weight:700;color:#111827;margin-bottom:3px}
+.cap span{font-size:11px;font-weight:400;color:#6b7280}
+.capnote{font-size:11.5px;color:#6b7280;line-height:1.5;margin-bottom:9px}
+/* 手机屏 */
+.ph{border-radius:18px;padding:14px 14px 18px;background:linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26)}
+/* 顶栏 */
+.top{display:flex;align-items:center;height:42px;margin-bottom:12px;position:relative}
+.tbtn{font-size:13.5px;color:#2DD4BF;font-weight:600;padding:0 12px;height:34px;display:flex;align-items:center}
+.ttitle{position:absolute;left:0;right:0;text-align:center;font-size:15.5px;font-weight:700;color:#E8FFFA;pointer-events:none}
+.intro{font-size:12px;color:#7FA9A5;line-height:1.5;margin:0 2px 12px}
+/* 假期卡 */
+.lcard{border-radius:16px;padding:15px 16px;margin-bottom:12px;position:relative;
+   background:linear-gradient(160deg,#123330,#0E2A31);border:1px solid rgba(45,212,191,.16)}
+.lrow{display:flex;align-items:flex-start}
+.lico{font-size:18px;margin-right:9px;margin-top:1px}
+.lname{font-size:14.5px;font-weight:700;color:#E8FFFA;flex:1}
+.ledit{font-size:12px;color:#2DD4BF;font-weight:600;border:1px solid rgba(45,212,191,.4);
+   border-radius:14px;padding:3px 11px}
+.big{display:flex;align-items:baseline;gap:5px;margin:9px 0 7px 0}
+.big .n{font-size:31px;font-weight:700;color:#2DD4BF;letter-spacing:-.8px}
+.big .u{font-size:13px;color:#7FA9A5;font-weight:600}
+.big .rem{font-size:11.5px;color:#7FA9A5;margin-left:3px}
+.det{font-size:11.5px;color:#8FB8B4;line-height:1.55}
+.det b{color:#CFEDE8;font-weight:600}
+.bar{height:7px;border-radius:4px;background:rgba(255,255,255,.09);margin-top:9px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#14B8A6,#2DD4BF)}
+.bar.warn i{background:linear-gradient(90deg,#F59E0B,#FCD34D)}
+/* 说明 */
+.note{background:#fff;border-radius:10px;padding:10px 12px;font-size:11.5px;color:#4b5563;line-height:1.6;margin-top:4px}
+.note b{color:#047857}
+/* 弹窗 */
+.dlg{background:#132B31;border-radius:16px;padding:0;overflow:hidden;border:1px solid rgba(45,212,191,.2);margin-top:10px}
+.dt{font-size:15px;font-weight:700;color:#E8FFFA;padding:16px 18px 4px}
+.drow{display:flex;align-items:center;padding:10px 18px}
+.dlab{font-size:13px;color:#CFEDE8;flex:1}
+.dinp{width:74px;height:34px;border-radius:9px;background:rgba(255,255,255,.07);
+   border:1px solid rgba(255,255,255,.14);color:#E8FFFA;font-size:14px;font-weight:600;
+   display:flex;align-items:center;justify-content:center}
+.dinp.focus{border-color:#2DD4BF}
+.dunit{font-size:12px;color:#7FA9A5;margin-left:7px}
+.dhint{font-size:10.5px;color:#6E9793;padding:0 18px 4px 18px;line-height:1.5}
+.dsep{height:1px;background:rgba(255,255,255,.09);margin:8px 18px}
+.dcalc{display:flex;padding:7px 18px}
+.dcalc .k{font-size:12.5px;color:#8FB8B4;flex:1}
+.dcalc .v{font-size:13px;color:#CFEDE8;font-weight:600}
+.dcalc.hl .k{color:#E8FFFA}
+.dcalc.hl .v{color:#2DD4BF;font-size:15px;font-weight:700}
+.dbtns{display:flex;justify-content:flex-end;gap:4px;padding:10px 10px 13px}
+.db{font-size:13.5px;font-weight:600;padding:8px 15px;border-radius:8px;color:#2DD4BF}
+.db.ghost{color:#8FB8B4}
+/* 请假选择列表 */
+.pick{background:#132B31;border-radius:14px;overflow:hidden;border:1px solid rgba(45,212,191,.2)}
+.pit{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.06)}
+.pit:last-child{border-bottom:none}
+.pdot{width:15px;height:15px;border-radius:50%;border:2px solid #57797A;margin-right:11px;flex-shrink:0}
+.pdot.on{border-color:#2DD4BF;background:radial-gradient(circle,#2DD4BF 42%,transparent 46%)}
+.pname{font-size:13.5px;color:#E8FFFA;flex:1}
+.prem{font-size:11.5px;color:#2DD4BF;font-weight:600}
+.pnone{font-size:11.5px;color:#6E9793}
+.pay{font-size:11px;color:#7FA9A5;margin-left:6px}
+.grid2{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+</style></head><body>
+
+<!-- ═══ ① 主页面 ═══ -->
+<div class="wrap">
+<div class="cap">① 新页面「假期账户」 <span>· 入口：设置 → 薪跳设置</span></div>
+<div class="capnote">手动维护基础数据；请假时按类型自动扣减。年假/育儿假按«今年»统计，调休滚动累计。</div>
+<div class="ph">
+  <div class="top"><span class="tbtn">‹ 返回</span><span class="ttitle">假期账户</span><span class="tbtn" style="margin-left:auto;opacity:0">&nbsp;</span></div>
+  <div class="intro">维护你的假期余额。请假时标记对应类型，这里自动扣减；任何时候都能手动校正。</div>
+
+  <!-- 年假 -->
+  <div class="lcard">
+    <div class="lrow"><span class="lico">🏖</span><span class="lname">年假</span><span class="ledit">编辑</span></div>
+    <div class="big"><span class="n">6.5</span><span class="u">天</span><span class="rem">剩余</span></div>
+    <div class="det">今年总额 <b>10</b> · 调整 <b>-1</b> · 已用 <b>2.5</b>（自动）</div>
+    <div class="bar"><i style="width:65%"></i></div>
+  </div>
+
+  <!-- 育儿假 -->
+  <div class="lcard">
+    <div class="lrow"><span class="lico">👶</span><span class="lname">育儿假</span><span class="ledit">编辑</span></div>
+    <div class="big"><span class="n">8</span><span class="u">天</span><span class="rem">剩余</span></div>
+    <div class="det">今年总额 <b>10</b> · 已用 <b>2</b>（自动）</div>
+    <div class="bar"><i style="width:80%"></i></div>
+  </div>
+
+  <!-- 调休 -->
+  <div class="lcard">
+    <div class="lrow"><span class="lico">📅</span><span class="lname">调休</span><span class="ledit">编辑</span></div>
+    <div class="big"><span class="n">5</span><span class="u">天</span><span class="rem">剩余</span></div>
+    <div class="det">期初 <b>1</b> ＋ 已获 <b>6</b>（周末出勤） － 已休 <b>2</b>（请假「调休」）</div>
+  </div>
+
+  <div class="intro" style="margin:10px 2px 0">💡 请假半天按 0.5 天扣减；余额用尽时数字变琥珀色提醒。</div>
+</div>
+</div>
+
+<!-- ═══ ② 编辑弹窗 ═══ -->
+<div class="grid2">
+<div class="wrap" style="width:390px">
+<div class="cap">② 编辑「年假」<span> · 填两个数</span></div>
+<div class="capnote">「今年总额」= 公司给的额度；「手动调整」用来补录历史（填负数）或额外结转（填正数）。</div>
+<div class="ph" style="padding-top:14px">
+<div class="dlg">
+  <div class="dt">编辑「年假」</div>
+  <div class="drow"><span class="dlab">今年总额</span><span class="dinp">10</span><span class="dunit">天</span></div>
+  <div class="drow"><span class="dlab">手动调整</span><span class="dinp focus">-1</span><span class="dunit">天</span></div>
+  <div class="dhint">例：开始用本 App 前已休过 3 天 → 填 -3；去年结转 +2 天 → 填 +2。</div>
+  <div class="dsep"></div>
+  <div class="dcalc"><span class="k">已用（自动统计今年）</span><span class="v">2.5 天</span></div>
+  <div class="dcalc hl"><span class="k">剩余</span><span class="v">6.5 天</span></div>
+  <div class="dbtns"><span class="db ghost">取消</span><span class="db">保存</span></div>
+</div>
+</div>
+</div>
+
+<div class="wrap" style="width:390px">
+<div class="cap">③ 编辑「调休」<span> · 只填一个数</span></div>
+<div class="capnote">调休的获得与使用全自动，只需补录一个「期初余额」（开始用 App 前攒下的）。</div>
+<div class="ph" style="padding-top:14px">
+<div class="dlg">
+  <div class="dt">编辑「调休」</div>
+  <div class="drow"><span class="dlab">期初余额</span><span class="dinp focus">1</span><span class="dunit">天</span></div>
+  <div class="dhint">开始使用本 App 之前，手上已经攒的调休天数。</div>
+  <div class="dsep"></div>
+  <div class="dcalc"><span class="k">已获（自动·周末出勤记调休）</span><span class="v">6 天</span></div>
+  <div class="dcalc"><span class="k">已休（自动·请假「调休」）</span><span class="v">2 天</span></div>
+  <div class="dcalc hl"><span class="k">剩余</span><span class="v">5 天</span></div>
+  <div class="dbtns"><span class="db ghost">取消</span><span class="db">保存</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ═══ ④ 请假联动 ═══ -->
+<div class="wrap">
+<div class="cap">④ 联动：请假选择时直接看到剩余 <span>· 两处弹窗同步</span></div>
+<div class="capnote">标记请假时类型旁边显示剩余天数（余额为 0 的显示灰色）；选择后按整天/半天自动扣减。育儿假加入类型列表。</div>
+<div class="ph">
+<div class="pick">
+  <div class="pit"><span class="pdot on"></span><span class="pname">年假<span class="pay">· 全薪</span></span><span class="prem">剩 6.5 天</span></div>
+  <div class="pit"><span class="pdot"></span><span class="pname">育儿假<span class="pay">· 全薪</span></span><span class="prem">剩 8 天</span></div>
+  <div class="pit"><span class="pdot"></span><span class="pname">调休<span class="pay">· 全薪</span></span><span class="prem">剩 5 天</span></div>
+  <div class="pit"><span class="pdot"></span><span class="pname">婚假<span class="pay">· 全薪</span></span><span class="pnone">未设余额</span></div>
+  <div class="pit"><span class="pdot"></span><span class="pname">病假<span class="pay">· 60%</span></span><span class="pnone">未设余额</span></div>
+  <div class="pit"><span class="pdot"></span><span class="pname">事假<span class="pay">· 无薪</span></span><span class="pnone">未设余额</span></div>
+</div>
+</div>
+</div>
+
+<div class="wrap"><div class="note">
+📌 <b>自动扣减规则</b>：标记请假的当天（或日历补记）只要类型是「年假 / 育儿假 / 调休」→ 对应余额自动扣 1 天（半天扣 0.5）。<br>
+取消请假 → <b>自动退回</b>。统计口径与工资计算完全解耦（只影响余额显示，不影响请假薪酬）。
+</div></div>
+
+</body></html>

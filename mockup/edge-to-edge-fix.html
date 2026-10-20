@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+     padding:16px 10px 44px;display:flex;flex-direction:column;align-items:center}
+.phead{width:100%;max-width:392px;margin:6px auto 20px}
+.phead h1{font-size:21px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.phead p{font-size:12.5px;color:#475569;line-height:1.75;margin-top:8px}
+.pair{display:block;width:100%;max-width:392px}
+.col{display:flex;flex-direction:column;align-items:center;margin-bottom:30px}
+.cap{font-size:12.5px;font-weight:700;margin-bottom:9px;padding:4px 12px;border-radius:999px}
+.cap.bad{background:#FFE4E6;color:#BE123C}
+.cap.good{background:#D1FAE5;color:#047857}
+.phone{border-radius:40px;padding:6px;background:linear-gradient(160deg,rgba(255,255,255,.95),rgba(222,229,234,.95));
+       border:1px solid rgba(100,116,139,.25);box-shadow:0 30px 60px -40px rgba(15,23,42,.55)}
+.screen{position:relative;width:280px;height:520px;border-radius:35px;overflow:hidden;
+        background:linear-gradient(168deg,#07110F,#081518 55%,#071019)}
+@media (max-width: 640px) {
+  .screen{width:min(280px, calc(100vw - 46px));height:480px}
+  .pair{gap:26px}
+}
+.aurora{position:absolute;inset:0;
+  background:radial-gradient(46% 38% at 22% 18%,rgba(16,185,129,.55),transparent 70%),
+             radial-gradient(40% 35% at 82% 26%,rgba(34,211,238,.40),transparent 70%),
+             radial-gradient(38% 40% at 62% 88%,rgba(139,92,246,.30),transparent 72%);
+  filter:blur(26px)}
+/* 修复前：黑条 */
+.blackbar{position:absolute;top:0;left:0;right:0;height:44px;background:#0B0B0B;z-index:5}
+.blackbar .t{position:absolute;left:16px;top:13px;font-size:12px;color:#fff;font-weight:600}
+.blackbar .r{position:absolute;right:14px;top:14px;font-size:11px;color:#fff;display:flex;gap:5px}
+.sbicon{display:inline-block}
+/* 修复后：透明状态栏 */
+.statusrow{position:absolute;top:0;left:0;right:0;height:44px;z-index:5}
+.statusrow .t{position:absolute;left:16px;top:13px;font-size:12px;color:#fff;font-weight:600}
+.statusrow .r{position:absolute;right:14px;top:14px;font-size:11px;color:#fff;display:flex;gap:5px}
+/* 内容 */
+.apph{position:absolute;top:52px;left:16px;right:16px;display:flex;align-items:center;gap:8px;z-index:3}
+.logo{width:22px;height:22px;border-radius:8px;background:linear-gradient(135deg,#34D399,#2DD4BF);box-shadow:0 4px 14px -4px rgba(52,211,153,.65)}
+.apph b{font-size:13.5px;color:#EEFFF8;font-weight:700;flex:1}
+.gear{width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(255,255,255,.7)}
+.card{margin:0 14px;border-radius:24px;padding:14px;border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(152deg,rgba(255,255,255,.095),rgba(255,255,255,.032));
+      box-shadow:0 26px 60px -30px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.12)}
+.caps{display:flex;gap:6px;margin-bottom:10px}
+.cap1{height:30px;border-radius:999px;flex:1;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.085);
+      display:flex;align-items:center;justify-content:center;font-size:10.5px;color:rgba(255,255,255,.92)}
+.cap1.act{background:#fff;border-color:transparent;color:#06483B;font-weight:800}
+.hl{font-size:10.5px;color:rgba(232,255,247,.68);display:flex;align-items:center;gap:5px}
+.dot{width:5px;height:5px;border-radius:50%;background:#34D399;box-shadow:0 0 8px #34D399}
+.num{font-size:34px;font-weight:760;color:#F2FFFA;letter-spacing:-1.4px;margin-top:8px;text-shadow:0 0 36px rgba(52,211,153,.45)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;border-radius:999px;font-size:10px;
+      background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.10);color:rgba(232,255,247,.68);margin-top:9px}
+.bar{height:7px;border-radius:5px;background:rgba(255,255,255,.10);margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;width:100%;border-radius:5px;background:linear-gradient(90deg,#10B981,#34D399 50%,#2DD4BF)}
+.s4{display:flex;justify-content:space-between;margin-top:11px}
+.s4 div{display:flex;flex-direction:column;gap:3px}
+.s4 b{font-size:11px;color:#F2FFFA;font-weight:680}
+.s4 span{font-size:9px;color:rgba(232,255,247,.46)}
+.hr{height:1px;background:rgba(255,255,255,.10);margin:11px 0 8px}
+.sched{font-size:9.5px;color:rgba(232,255,247,.46)}
+/* 割裂标注 */
+.split{position:absolute;left:0;right:0;top:44px;height:2px;background:#E11D48;z-index:6}
+.splitlbl{position:absolute;right:8px;top:47px;background:#E11D48;color:#fff;font-size:9px;padding:2px 7px;border-radius:7px;z-index:6}
+/* 导航栏 */
+.navbar{position:absolute;bottom:0;left:0;right:0;height:34px;z-index:5}
+.navbar.dark{background:#0B0B0B}
+.navbar .pill{position:absolute;left:50%;transform:translateX(-50%);bottom:9px;width:86px;height:4px;border-radius:3px;background:rgba(255,255,255,.85)}
+.navnote{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:8.5px;color:rgba(255,255,255,.45);z-index:6}
+.note{width:100%;max-width:392px;background:#fff;border-radius:14px;padding:14px 16px;margin-top:22px;border:1px solid #E2E8EC}
+.note b{font-size:12.5px;color:#0F172A;display:block;margin-bottom:8px}
+.note ul{list-style:none}
+.note li{font-size:11.8px;color:#475569;line-height:1.65;padding-left:15px;position:relative;margin:5px 0}
+.note li::before{content:"";position:absolute;left:1px;top:7px;width:5px;height:5px;border-radius:50%;background:#10B981}
+.note li b{display:inline;color:#0B7A5C;font-size:11.8px;margin:0}
+</style></head><body>
+
+<div class="phead">
+  <h1>状态栏融合 · 修复对照</h1>
+  <p>问题：状态栏被涂成近黑色实心条（割裂感）。修复：<b>edge-to-edge 沉浸式</b> —— 极光延伸到屏幕最顶端，系统栏透明，图标颜色随深浅模式自动切换。</p>
+</div>
+
+<div class="pair">
+  <!-- 修复前 -->
+  <div class="col">
+    <div class="cap bad">修复前 · 黑条割裂</div>
+    <div class="phone"><div class="screen">
+      <div class="aurora"></div>
+      <div class="blackbar">
+        <span class="t">06:51 10月11日周日</span>
+        <span class="r"><span>5G</span><span class="sbicon">📶</span><span>89</span></span>
+      </div>
+      <div class="split"></div><div class="splitlbl">割裂线</div>
+      <div class="apph"><span class="logo"></span><b>SalaryJump</b><span class="gear">⚙︎</span></div>
+      <div class="card" style="margin-top:50px">
+        <div class="caps"><span class="cap1 act">⏱ 加班中</span><span class="cap1">🏖 请假</span></div>
+        <div class="hl"><i class="dot"></i>今日已赚</div>
+        <div class="num">¥ 777.78</div>
+        <div class="chip"><i class="dot"></i>已下班 · 工资已满额</div>
+        <div class="bar"><i></i></div>
+        <div class="s4"><div><b>¥777.78</b><span>今日目标</span></div><div><b>¥97.22</b><span>每小时</span></div><div><b>¥1.62</b><span>每分钟</span></div></div>
+        <div class="hr"></div><div class="sched">智能工作日 · 08:00-17:00</div>
+      </div>
+      <div class="navbar dark"><span class="pill"></span></div>
+      <div class="navnote">导航栏也是深色块</div>
+    </div></div>
+  </div>
+
+  <!-- 修复后 -->
+  <div class="col">
+    <div class="cap good">修复后 · 极光融合</div>
+    <div class="phone"><div class="screen">
+      <div class="aurora"></div>
+      <div class="statusrow">
+        <span class="t">06:51 10月11日周日</span>
+        <span class="r"><span>5G</span><span class="sbicon">📶</span><span>89</span></span>
+      </div>
+      <div class="apph"><span class="logo"></span><b>SalaryJump</b><span class="gear">⚙︎</span></div>
+      <div class="card" style="margin-top:50px">
+        <div class="caps"><span class="cap1 act">⏱ 加班中</span><span class="cap1">🏖 请假</span></div>
+        <div class="hl"><i class="dot"></i>今日已赚</div>
+        <div class="num">¥ 777.78</div>
+        <div class="chip"><i class="dot"></i>已下班 · 工资已满额</div>
+        <div class="bar"><i></i></div>
+        <div class="s4"><div><b>¥777.78</b><span>今日目标</span></div><div><b>¥97.22</b><span>每小时</span></div><div><b>¥1.62</b><span>每分钟</span></div></div>
+        <div class="hr"></div><div class="sched">智能工作日 · 08:00-17:00</div>
+      </div>
+      <div class="navbar"><span class="pill"></span></div>
+      <div class="navnote">导航栏透明，极光透出</div>
+    </div></div>
+  </div>
+</div>
+
+<div class="note">
+  <b>修复细节（全自动，无需设置）</b>
+  <ul>
+    <li>状态栏 / 导航栏<b>透明</b>：极光氛围层延伸到屏幕最顶端与最底端，无任何色块割裂</li>
+    <li>图标颜色<b>随深浅自动切换</b>：深色模式浅色图标、浅色模式深色图标</li>
+    <li>内容自动<b>避开系统栏</b>：内边距按真实 WindowInsets 动态计算（含三星挖孔屏）</li>
+    <li>滚动时内容可<b>沉浸到状态栏之下</b>（现代 app 标准行为，如 ChatGPT / Linear）</li>
+    <li>覆盖全部 <b>9 个页面</b>；三处旧的不透明配置已彻底移除</li>
+  </ul>
+</div>
+
+</body></html>

@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>外快怎么显示 · 分析与方案</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#0A1613}
+body{font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ width:384px;margin:0 auto;padding:20px;color:#E8F4F2;font-size:13px}
+h1{font-size:17px;font-weight:800;margin-bottom:6px}
+.lead{font-size:11.5px;color:#7E9AA3;line-height:1.7;margin-bottom:18px}
+.sec{margin-top:24px}
+h2{font-size:13.5px;font-weight:700;color:#CFE3DC;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.num{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+ font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.num.bad{background:linear-gradient(135deg,#9F1239,#E11D48)}
+.card{background:#102623;border-radius:16px;padding:14px;margin-bottom:10px}
+p{font-size:11.5px;color:#9FB8BE;line-height:1.75}
+p b{color:#E8F4F2}
+p .bad{color:#FF8A8A}
+code{background:#0C1F1C;border-radius:5px;padding:1px 5px;font-size:11px;color:#5EEAD4;
+ font-family:ui-monospace,Menlo,monospace}
+
+/* ── 迷你格子演示 ── */
+.demo{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.dc{width:58px}
+.dc .lbl{font-size:9.5px;color:#7E9AA3;text-align:center;margin-bottom:5px;line-height:1.3}
+.cell{height:58px;border-radius:10px;background:#16302A;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;padding:3px 2px}
+.cell.short{height:52px}
+.d{font-size:11px;line-height:1.15;color:#E8F4F2}
+.m{font-size:10px;font-weight:700;color:#34D399;line-height:1.2;margin-top:1px;letter-spacing:-.2px}
+.o{font-size:9.5px;font-weight:700;color:#FCD34D;line-height:1.2;letter-spacing:-.2px}
+.e{font-size:9.5px;font-weight:700;color:#60A5FA;line-height:1.2;letter-spacing:-.2px}
+.old-e{font-size:9.5px;font-weight:700;color:#2DD4BF;line-height:1.2}
+
+/* ── 色块对比 ── */
+.swatch{display:flex;gap:8px;margin-top:8px}
+.sw{flex:1;border-radius:10px;padding:9px 6px;text-align:center;background:#16302A}
+.sw .dot{width:20px;height:20px;border-radius:50%;margin:0 auto 6px}
+.sw .nm{font-size:10.5px;font-weight:700}
+.sw .hex{font-size:9px;color:#7E9AA3;font-family:ui-monospace,monospace;margin-top:2px}
+.sw .verdict{font-size:9.5px;margin-top:4px}
+
+table{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px}
+th{text-align:left;color:#7E9AA3;font-weight:600;padding:5px 6px;font-size:10px}
+td{padding:6px;border-top:1px solid #1F3A38;color:#9FB8BE;vertical-align:top}
+td b{color:#E8F4F2}
+.mono{font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+
+.formula{background:#0C1F1C;border-radius:10px;padding:11px 12px;font-family:ui-monospace,Menlo,monospace;
+ font-size:11px;line-height:1.9;color:#5EEAD4;margin-top:8px;white-space:pre;overflow-x:auto}
+.formula .c{color:#7E9AA3}
+.formula .ok{color:#34D399}
+.formula .k{color:#FCD34D}
+
+.badge{display:inline-block;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:6px;margin-right:5px}
+.b-rec{background:#0B7A5C;color:#fff}.b-bad{background:#7F1D1D;color:#FCA5A5}.b-ok{background:#1E3A8A;color:#BFDBFE}
+
+.ask{background:#1A2E28;border:1px solid #2A4A42;border-radius:14px;padding:13px;margin-top:16px}
+.ask h3{font-size:12.5px;color:#CFE3DC;margin-bottom:8px}
+.ask li{font-size:11.5px;color:#9FB8BE;line-height:1.9;margin-left:16px}
+.ask li b{color:#E8F4F2}
+</style></head><body>
+
+<h1>录了外快，格子怎么显示？</h1>
+<p class="lead">先说结论：<b style="color:#FF8A8A">现在的格子会「吃掉」外快</b> —— 有外快的日子，你根本看不出来。下面是问题和方案。</p>
+
+<!-- ══ 问题 1 ══ -->
+<div class="sec">
+  <h2><span class="num bad">!</span>问题①：外快在格子里看不见</h2>
+  <div class="card">
+    <p>现在的显示分支是这样的：</p>
+    <div class="formula">if (有加班)     → 显示 <span class="ok">日薪</span> + <span class="k">加班费</span>   <span class="c">// 外快被忽略！</span>
+else if (有金额)  → 显示 <span class="ok">当天总计</span>          <span class="c">// 外快混在里头，看不出有</span></div>
+
+    <div class="demo" style="margin-top:14px">
+      <div class="dc">
+        <div class="lbl">日薪300<br>+外快200</div>
+        <div class="cell short">
+          <div class="d">14</div><div class="m">500</div>
+        </div>
+        <div class="lbl" style="color:#FF8A8A;margin-top:5px">只看到 500<br>不知道有外快</div>
+      </div>
+      <div class="dc">
+        <div class="lbl">日薪300<br>+加班100<br>+外快200</div>
+        <div class="cell short">
+          <div class="d">14</div><div class="m">300</div><div class="o">+100</div>
+        </div>
+        <div class="lbl" style="color:#FF8A8A;margin-top:5px">外快 200<br><b>完全消失</b></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 问题 2 ══ -->
+<div class="sec">
+  <h2><span class="num bad">!</span>问题②：外快现有的颜色和日薪撞色</h2>
+  <div class="card">
+    <p>外快现在用 <code>COLOR_BLUE</code>，但它在<b>深色模式下和日薪的绿色几乎分不出来</b>：</p>
+    <div class="swatch">
+      <div class="sw">
+        <div class="dot" style="background:#34D399"></div>
+        <div class="nm">日薪</div>
+        <div class="hex">#34D399</div>
+      </div>
+      <div class="sw">
+        <div class="dot" style="background:#2DD4BF"></div>
+        <div class="nm">外快（现）</div>
+        <div class="hex">#2DD4BF</div>
+        <div class="verdict" style="color:#FF8A8A">色差仅 39 ✗</div>
+      </div>
+      <div class="sw">
+        <div class="dot" style="background:#FCD34D"></div>
+        <div class="nm">加班</div>
+        <div class="hex">#FCD34D</div>
+        <div class="verdict" style="color:#34D399">色差 214 ✓</div>
+      </div>
+    </div>
+    <p style="margin-top:11px">所以外快得<b>换一个真正偏蓝的颜色</b>，不能再用现在这个青绿色。</p>
+  </div>
+</div>
+
+<!-- ══ 计算 ══ -->
+<div class="sec">
+  <h2><span class="num">1</span>计算规则（这部分现在就是对的）</h2>
+  <div class="card">
+    <div class="formula"><span class="c">// 拆分定义：先算加班，日薪 = 总额扣掉其余三项</span>
+<span class="k">加班费</span> = 当天入账 − 应得          <span class="c">← 应得里已含外快</span>
+<span class="ok">日薪</span>   = 入账 − 加班费 − 外快 − 补录
+
+<span class="c">// 恒等式（任何组合都不破）</span>
+日薪 + 加班费 + 外快 + 补录 ≡ 当天入账</div>
+    <p style="margin-top:11px">
+      <b>关键点：外快不会被误算成加班。</b>因为「应得」= 外快 + 日薪，
+      加班费算的是「超出应得的部分」，外快已经先被排除了。
+      这条已有回归测试锁住（<code>外快不算加班</code> / <code>没有误判成加班</code>）。
+    </p>
+    <p style="margin-top:9px"><b>当天到手</b>包含外快 —— 那天赚的就是这些，一起计入月合计和存钱罐。</p>
+  </div>
+</div>
+
+<!-- ══ 显示方案 ══ -->
+<div class="sec">
+  <h2><span class="num">2</span>显示方案：最多三行，各占一色</h2>
+  <div class="card">
+    <p>保持你已确认的「日薪 + 加班费」两行，<b>为外快再加一行</b>。格子高度 52 → 58dp。</p>
+
+    <table>
+      <tr><th style="width:86px">情况</th><th>格子显示</th></tr>
+      <tr><td>只有日薪</td><td><span class="mono" style="color:#34D399">1008</span></td></tr>
+      <tr><td>日薪 + 加班</td><td><span class="mono" style="color:#34D399">1008</span> / <span class="mono" style="color:#FCD34D">+782</span></td></tr>
+      <tr><td>日薪 + 外快</td><td><span class="mono" style="color:#34D399">1008</span> / <span class="mono" style="color:#60A5FA">外 200</span></td></tr>
+      <tr><td>三个都有</td><td><span class="mono" style="color:#34D399">1008</span> / <span class="mono" style="color:#FCD34D">+782</span> / <span class="mono" style="color:#60A5FA">外 200</span></td></tr>
+      <tr><td>只接了私活</td><td><span class="mono" style="color:#60A5FA">外 200</span></td></tr>
+      <tr><td>调休出勤</td><td><span style="color:#FCD34D">调休</span></td></tr>
+    </table>
+
+    <div class="demo" style="margin-top:15px">
+      <div class="dc">
+        <div class="lbl">只有日薪</div>
+        <div class="cell"><div class="d">12</div><div class="m">1008</div></div>
+      </div>
+      <div class="dc">
+        <div class="lbl">日薪+加班</div>
+        <div class="cell"><div class="d">13</div><div class="m">1008</div><div class="o">+782</div></div>
+      </div>
+      <div class="dc">
+        <div class="lbl">日薪+外快</div>
+        <div class="cell"><div class="d">14</div><div class="m">1008</div><div class="e">外 200</div></div>
+      </div>
+      <div class="dc">
+        <div class="lbl">三个都有</div>
+        <div class="cell"><div class="d">15</div><div class="m">1008</div><div class="o">+782</div><div class="e">外 200</div></div>
+      </div>
+      <div class="dc">
+        <div class="lbl">只接私活</div>
+        <div class="cell"><div class="d">17</div><div class="e">外 500</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 颜色 ══ -->
+<div class="sec">
+  <h2><span class="num">3</span>外快改用「真蓝」</h2>
+  <div class="card">
+    <div class="swatch">
+      <div class="sw">
+        <div class="dot" style="background:#34D399"></div>
+        <div class="nm">日薪</div>
+        <div class="hex">#34D399</div>
+        <div class="verdict" style="color:#7E9AA3">保持</div>
+      </div>
+      <div class="sw">
+        <div class="dot" style="background:#FCD34D"></div>
+        <div class="nm">加班费</div>
+        <div class="hex">#FCD34D</div>
+        <div class="verdict" style="color:#7E9AA3">保持</div>
+      </div>
+      <div class="sw">
+        <div class="dot" style="background:#60A5FA"></div>
+        <div class="nm">外快</div>
+        <div class="hex">#60A5FA</div>
+        <div class="verdict" style="color:#34D399">新增 ✓</div>
+      </div>
+    </div>
+    <p style="margin-top:11px">三者互相的色差都足够大，深色/浅色模式下都能分清。</p>
+  </div>
+</div>
+
+<!-- ══ 详情 ══ -->
+<div class="sec">
+  <h2><span class="num">4</span>点开之后（详情卡）</h2>
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:13.5px;font-weight:700">10 月 15 日 · 周四</span>
+      <span style="font-size:12.5px;color:#2DD4BF">操作 ›</span>
+    </div>
+    <div style="font-size:11.5px;color:#9FB8BE;margin-top:4px">工作日</div>
+    <div style="display:flex;justify-content:space-between;margin-top:9px">
+      <span style="font-size:12.5px;color:#9FB8BE">日薪</span>
+      <span style="font-size:13.5px;font-weight:700">¥ 1,007.78</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:9px">
+      <span style="font-size:12.5px;color:#9FB8BE">加班费 · 3:37:20</span>
+      <span style="font-size:13.5px;font-weight:700;color:#FCD34D">¥ 781.59</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:9px">
+      <span style="font-size:12.5px;color:#9FB8BE">外快 · 修图</span>
+      <span style="font-size:13.5px;font-weight:700;color:#60A5FA">¥ 200.00</span>
+    </div>
+    <div style="height:1px;background:#1F3A38;margin-top:11px"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:10px">
+      <span style="font-size:12.5px;color:#9FB8BE">当天到手</span>
+      <span style="font-size:18px;font-weight:800;color:#34D399">¥ 1,989.37</span>
+    </div>
+  </div>
+  <p style="font-size:11px;color:#7E9AA3;margin-top:8px;padding:0 2px">
+    顺带：外快那行会带出备注（「修图」），现在这笔备注只在记账弹窗里能看到。
+  </p>
+</div>
+
+<div class="ask">
+  <h3>需要你确认</h3>
+  <ul>
+    <li><b>格子加高 52 → 58dp</b>（放得下三行）。介意的话可以只显示两个金额、外快降级成小标记。</li>
+    <li><b>外快前缀用「外」字</b>：<span class="mono">外 200</span>。比纯颜色更不容易误读，但占宽度。<br>
+        <span style="color:#7E9AA3">替代：不要前缀，纯靠蓝色区分（更省地方，但更容易看成一笔新钱）</span></li>
+    <li><b>外快颜色</b>从青绿 <span class="mono">#2DD4BF</span> 换成真蓝 <span class="mono">#60A5FA</span>。</li>
+  </ul>
+</div>
+
+</body></html>

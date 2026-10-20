@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070a;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;gap:20px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:8px}
+.cap{text-align:center;font-size:13px;font-weight:700;padding:5px;border-radius:8px}
+.cap.bad{color:#f87171;background:#2a1518}
+.cap.ok{color:#4ade80;background:#122b1f}
+/* 手机 384dp 宽，2x 渲染 = 768px */
+.ph{width:768px;border-radius:26px;padding:14px 0 20px;position:relative;
+    background:linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26)}
+/* 内容区 20dp 边距 → 40px */
+.inner{margin:0 40px;position:relative}
+/* 顶栏：高 42dp=84px，相对内容区 */
+.header{position:relative;height:84px}
+.pill{position:absolute;top:0;width:176px;height:84px;border-radius:42px;
+      background:#12242A;border:3px solid #1F3E3D;display:flex;align-items:center;justify-content:center}
+.pill.l{left:0}.pill.r{right:0}
+.pill span{font-size:26px;font-weight:400}
+.t-title{position:absolute;top:0;height:84px;display:flex;align-items:center;font-size:40px;
+         font-weight:700;color:#E8F4F2;letter-spacing:0}
+/* 标注线 */
+.mk{position:absolute;font-size:20px;color:#64748b}
+.mk.center{left:50%;top:-26px;transform:translateX(-50%);color:#94a3b8}
+.mk .ln{position:absolute;top:30px;left:50%;width:0;border-left:2px dashed #475569;height:88px}
+.mk .ln.red{border-color:#f87171}
+.note{font-size:22px;color:#94a3b8;margin-top:16px;line-height:1.6}
+.note b{color:#e2e8f0}
+/* 下方其余内容（淡显，给上下文） */
+.rest{margin:26px 40px 0;opacity:.42}
+.card{background:#14262A;border-radius:36px;padding:28px}
+.t1{font-size:32px;color:#34D399;font-weight:700}
+.t2{font-size:22px;color:#9FB8BE;margin-top:12px;line-height:1.5}
+.rowline{height:76px;background:#14262A;border-radius:24px;margin-top:14px;
+         display:flex;align-items:center;padding:0 20px;gap:16px;font-size:22px;color:#9FB8BE}
+.rowline .tm{font-family:monospace;font-size:19px;color:#E8F4F2}
+/* 标尺 */
+.ruler{position:relative;height:36px;margin-top:6px}
+.ruler .tick{position:absolute;top:0;font-size:17px;color:#475569;transform:translateX(-50%)}
+.ruler .seg{position:absolute;top:20px;height:4px;border-radius:2px}
+</style></head><body>
+
+<div class="col">
+  <div class="cap bad">改前 · 标题偏左 32dp</div>
+  <div class="ph">
+    <div class="inner">
+      <div class="header">
+        <div class="pill l"><span style="color:#E8F4F2">返回</span></div>
+        <div class="t-title" style="left:103px">喝水记录</div>
+        <div class="pill r"><span style="color:#FB7185">清空全部</span></div>
+      </div>
+      <div class="ruler">
+        <!-- 屏幕中心 384px(2x=768，内容区起点40) 内容区中心=344 -->
+        <div class="tick" style="left:344px">▼ 屏幕中心</div>
+      </div>
+    </div>
+    <div class="rest">
+      <div class="card">
+        <div class="t1">今日已喝 3000 / 3000 ml</div>
+        <div class="t2">每条记录都可以单独删除，删除后总喝水量会自动重新计算。</div>
+      </div>
+      <div class="rowline"><span class="tm">22:46:31</span><span>白开水 300 ml · 0 kcal</span></div>
+      <div class="rowline"><span class="tm">20:59:18</span><span>白开水 300 ml · 0 kcal</span></div>
+    </div>
+    <div class="note" style="margin:16px 40px 0;opacity:1">
+      标题墨迹中心 <b>160dp</b>，屏幕中心 <b>192dp</b><br>
+      差 <b style="color:#f87171">32dp</b> —— 视觉重心明显偏左
+    </div>
+  </div>
+</div>
+
+<div class="col">
+  <div class="cap ok">改后 · 标题居中</div>
+  <div class="ph">
+    <div class="inner">
+      <div class="header">
+        <div class="pill l"><span style="color:#E8F4F2">返回</span></div>
+        <div class="t-title" style="left:110.4px">喝水记录</div>
+        <div class="pill r"><span style="color:#FB7185">清空全部</span></div>
+      </div>
+      <div class="ruler">
+        <div class="tick" style="left:344px">▼ 屏幕中心</div>
+      </div>
+    </div>
+    <div class="rest">
+      <div class="card">
+        <div class="t1">今日已喝 3000 / 3000 ml</div>
+        <div class="t2">每条记录都可以单独删除，删除后总喝水量会自动重新计算。</div>
+      </div>
+      <div class="rowline"><span class="tm">22:46:31</span><span>白开水 300 ml · 0 kcal</span></div>
+      <div class="rowline"><span class="tm">20:59:18</span><span>白开水 300 ml · 0 kcal</span></div>
+    </div>
+    <div class="note" style="margin:16px 40px 0;opacity:1">
+      标题墨迹中心 <b>192dp</b> = 屏幕中心<br>
+      左右两侧按钮等宽（88dp）→ 天然对称
+    </div>
+  </div>
+</div>
+
+</body></html>

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070a;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:18px}
+.grid{display:flex;gap:14px;flex-wrap:wrap}
+.col{width:346px}
+.hd{text-align:center;margin-bottom:8px;height:46px}
+.hd .t{font-size:14px;font-weight:700;color:#eef2f7}
+.hd .s{font-size:10.5px;color:#7d8794;margin-top:3px;line-height:1.45}
+.bd{display:inline-block;font-size:9.5px;padding:1.5px 7px;border-radius:7px;margin-top:3px}
+.b-now{background:#3a1f22;color:#f87171}
+.b-new{background:#123a2c;color:#4ade80}
+.ph{border-radius:26px;padding:19px 15px 15px;background:linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26)}
+/* ── 主卡 ── */
+.hero{border-radius:24px;padding:20px;position:relative;overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,.55)}
+.hero>*{position:relative;z-index:2}
+.hero .glow{position:absolute;border-radius:50%;background:rgba(255,255,255,.10);z-index:1}
+.rowf{display:flex;align-items:center;justify-content:space-between;height:18px}
+.tl{display:flex;align-items:center;gap:7px;font-size:10.5px;letter-spacing:1.05px;font-weight:600;color:rgba(255,255,255,.78)}
+.hdot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.65)}
+.tm{font-size:10.5px;color:rgba(255,255,255,.72)}
+.big{font-size:37px;font-weight:700;color:#fff;letter-spacing:-1px;margin-top:7px;line-height:1}
+.big .c{font-size:19px;font-weight:600}
+.chip{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:10.5px;
+  padding:4.5px 10px;border-radius:16px;margin-top:10px}
+.pb{height:6px;border-radius:4px;background:rgba(255,255,255,.26);margin-top:12px;overflow:hidden}
+.pb>i{display:block;height:100%;background:#fff;border-radius:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:12px}
+.stats .v{font-size:11px;font-weight:600;color:#fff;text-align:center}
+.stats .k{font-size:9px;color:rgba(255,255,255,.7);text-align:center;margin-top:2px}
+.dv{height:1px;background:rgba(255,255,255,.2);margin:11px 0 8px}
+.sch{font-size:10px;color:rgba(255,255,255,.75)}
+/* ── 普通卡 ── */
+.card{border-radius:22px;padding:19px 20px;margin-top:11px;position:relative;overflow:hidden}
+.card.r24{border-radius:24px;padding:20px}
+.chead{display:flex;align-items:center;justify-content:space-between;height:22px}
+.cl{display:flex;align-items:center;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.cl span.t{font-size:10.5px;letter-spacing:1.05px;font-weight:600;color:#8AA6B0}
+.lks{display:flex;gap:12px}
+.lk{font-size:11.5px;font-weight:600}
+.nb{font-size:29px;font-weight:700;letter-spacing:-.5px;margin-top:9px;line-height:1;
+  display:flex;align-items:baseline;gap:3px}
+.un{font-size:13px;font-weight:400;color:#7E9AA3}
+.sub{font-size:11px;color:#7E9AA3;margin-top:7px}
+.dv2{height:1px;background:#1F3A38;margin:12px 0 10px}
+.goal{display:flex;align-items:center;justify-content:space-between}
+.goal .n{font-size:12px;font-weight:600;color:#E8F4F2}
+.pb2{height:6px;border-radius:4px;background:#1E3336;margin-top:10px;overflow:hidden}
+.pb2>i{display:block;height:100%;border-radius:4px}
+.btns{display:flex;gap:8px;margin-top:13px}
+.b1{flex:1;height:42px;border-radius:21px;display:flex;align-items:center;justify-content:center;
+  font-size:12.5px;font-weight:700;color:#052E3F;
+  background:linear-gradient(135deg,#38BDF8,#22D3EE);box-shadow:0 5px 12px rgba(14,165,233,.3)}
+.b2{width:80px;height:42px;border-radius:21px;display:flex;align-items:center;justify-content:center;
+  font-size:11.5px;color:#BFE3DC;background:#12242A;border:1.5px solid #1F3E3D}
+/* 顶部色带（方案C） */
+.ribbon{position:absolute;top:0;left:0;right:0;height:3px}
+</style></head><body>
+<div class="grid" id="app"></div>
+<script>
+const HERO_OLD='linear-gradient(140deg,#065F46,#0B8A6A 38%,#0E9C8C 68%,#0C7FA8)';
+const HERO_CALM='linear-gradient(140deg,#0A4F3D,#0D6B52 38%,#0F7A6A 68%,#0E6584)';
+
+// 卡片背景生成器
+function bg(mode, rgb){
+  const isGrey = '20,38,42';
+  if (mode==='plain') return {background:'#14262A'};
+  if (mode==='soft') return {background:
+    `radial-gradient(circle at 86% 6%, rgba(${rgb},.075), transparent 44%),`+
+    `linear-gradient(135deg, rgba(${rgb},.045), rgba(${rgb},0) 52%),#14262A`};
+  return {background:'#14262A'};
+}
+// 顶部色带
+function ribbon(mode, rgb){
+  return mode==='ribbon'
+    ? `<div class="ribbon" style="background:linear-gradient(90deg,rgba(${rgb},.85),rgba(${rgb},0) 72%)"></div>` : '';
+}
+
+function page(o){
+  // 主卡
+  const heroStyle = `background:${o.hero};`;
+  const glow = o.glow
+    ? `<div class="glow" style="width:150px;height:150px;top:-56px;right:-40px"></div>
+       <div class="glow" style="width:104px;height:104px;bottom:-46px;left:22%;background:rgba(255,255,255,.07)"></div>` : '';
+  const heroTitleDot = o.heroDot ? '<span class="hdot"></span>' : '';
+  const hero = `<div class="hero" style="${heroStyle}">${glow}
+    <div class="rowf"><span class="tl">${heroTitleDot}今日已赚</span><span class="tm">22:41:35</span></div>
+    <div class="big"><span class="c">¥</span>650.00</div>
+    <div class="chip">● 年假 · 全薪 · 今日 650.00 元</div>
+    <div class="pb"><i style="width:100%"></i></div>
+    <div class="stats">
+      ${[['¥650.00','今日目标'],['¥81.25','每小时'],['¥1.35','每分钟'],['¥0.023','每秒']].map(([v,k])=>
+        `<div><div class="v">${v}</div><div class="k">${k}</div></div>`).join('')}
+    </div>
+    <div class="dv"></div>
+    <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>`;
+
+  // 喝水卡
+  const W = {num:'#38BDF8', dot:'#38BDF8', link:'#38BDF8', pb:'#38BDF8'};
+  const wbg = bg(o.cardMode, '56,189,248');
+  const water = `<div class="card ${o.r24?'r24':''}" style="${Object.entries(wbg).map(([k,v])=>k+':'+v).join(';')}">
+    ${ribbon(o.cardMode,'56,189,248')}
+    <div class="chead"><div class="cl"><span class="dot" style="background:${W.dot}"></span><span class="t">今日喝水</span></div>
+      <div class="lks"><span class="lk" style="color:${W.link}">记录</span><span class="lk" style="color:${W.link}">统计</span></div></div>
+    <div class="nb" style="color:${W.num}">2400<span class="un">/ 3000 ml</span></div>
+    <div class="pb2"><i style="width:80%;background:${W.pb}"></i></div>
+    <div class="btns"><div class="b1">喝水 +300 ml</div><div class="b2">选饮品</div></div>
+    <div class="sub">下次提醒 10月10日 09:30 · 约 275 kcal</div>
+  </div>`;
+
+  // 累计卡
+  const C = {num:'#34D399', dot:'#34D399', link:'#34D399', prog:'#34D399'};
+  const cbg = bg(o.cardMode, '52,211,153');
+  const cum = `<div class="card ${o.r24?'r24':''}" style="${Object.entries(cbg).map(([k,v])=>k+':'+v).join(';')}">
+    ${ribbon(o.cardMode,'52,211,153')}
+    <div class="chead"><div class="cl"><span class="dot" style="background:${C.dot}"></span><span class="t">累计收入</span></div>
+      <span class="lk" style="color:${C.link}">明细 ›</span></div>
+    <div class="nb" style="color:${C.num}">¥650.00<span style="font-size:10px;padding:3px 8px;border-radius:9px;margin-left:6px;background:#122E26;color:${C.num}">0 天</span></div>
+    <div class="sub">按工作日累计</div>
+    <div class="dv2"></div>
+    <div class="goal"><span class="n">🎯 MacBook Pro 23,560.00</span><span class="lk" style="color:${C.link};font-size:11px">设置</span></div>
+    <div class="pb2"><i style="width:3%;background:${C.prog}"></i></div>
+    <div class="sub">已攒 650.00 · 还差 22,910.00 · 约还需 36 个工作日</div>
+  </div>`;
+
+  return `<div class="col"><div class="hd"><div class="t">${o.name}</div><div class="s">${o.desc}</div>
+    <span class="bd ${o.cls}">${o.tag}</span></div>
+    <div class="ph">${hero}${water}${cum}</div></div>`;
+}
+
+document.getElementById('app').innerHTML = [
+  {name:'现状', desc:'圆角 24 vs 22 · 内边距 20 vs 19<br>主卡有柔光装饰，卡片纯色', tag:'细节+质感断层', cls:'b-now',
+   hero:HERO_OLD, glow:true, heroDot:false, cardMode:'plain'},
+  {name:'方案 A · 细节对齐', desc:'圆角统一 24 · 内边距统一 20<br>主卡标题加圆点呼应', tag:'最小改动', cls:'b-new',
+   hero:HERO_OLD, glow:true, heroDot:true, cardMode:'plain', r24:true},
+  {name:'方案 B · 质感呼应', desc:'A + 卡片加同源柔光（右上光斑<br>+ 对角微渐变），与主卡同语言', tag:'推荐', cls:'b-new',
+   hero:HERO_OLD, glow:true, heroDot:true, cardMode:'soft', r24:true},
+  {name:'方案 C · 色带标识', desc:'A + 卡片顶部 3dp 渐隐色带<br>（水卡蓝 / 累计卡绿）', tag:'更外显', cls:'b-new',
+   hero:HERO_OLD, glow:true, heroDot:true, cardMode:'ribbon', r24:true},
+].map(page).join('');
+</script></body></html>

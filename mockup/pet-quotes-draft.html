@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>打工小人 · 语录扩充（待审）</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#E9F1EF}
+body{font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ width:384px;margin:0 auto;padding:16px 20px 30px;color:#16323B;font-size:13px}
+h1{font-size:17px;font-weight:800;margin-bottom:4px}
+.lead{font-size:11.5px;color:#5A7680;line-height:1.7;margin-bottom:14px}
+.sum{background:#fff;border-radius:14px;padding:12px 15px;margin-bottom:16px;
+ box-shadow:0 2px 10px rgba(15,23,42,.05);font-size:11.5px;color:#475569;line-height:1.8}
+.sum b{color:#0B7A5C}
+.sec{margin-top:20px}
+h2{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+h2 .cnt{font-size:10.5px;font-weight:600;color:#8AA6B0}
+.new{background:#D1FAE5;color:#047857;font-size:9.5px;font-weight:800;padding:2px 6px;border-radius:6px}
+.old{background:#E2E8F0;color:#64748B;font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:6px}
+.card{background:#fff;border-radius:16px;padding:6px 16px;margin-bottom:10px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.q{padding:9px 0;border-bottom:1px solid #F1F5F4;font-size:12.5px;color:#16323B;line-height:1.6;
+ display:flex;gap:9px;align-items:flex-start}
+.q:last-child{border-bottom:none}
+.q .ic{flex-shrink:0;width:16px;text-align:center;opacity:.85}
+.cond{font-size:10px;color:#8AA6B0;line-height:1.6;margin-bottom:2px}
+.grp{padding:8px 0 4px;font-size:10.5px;color:#0B7A5C;font-weight:700;letter-spacing:.03em}
+.note{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;
+ font-size:11.5px;color:#78350F;line-height:1.8;margin-top:14px}
+.note b{color:#92400E}
+.ask{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:13px 15px;margin-top:14px}
+.ask h3{font-size:12.5px;color:#1E3A8A;margin-bottom:8px}
+.ask li{font-size:11.5px;color:#334155;line-height:1.9;margin-left:16px}
+</style></head><body>
+
+<h1>打工小人 · 语录扩充</h1>
+<p class="lead">现状 15 条 → 建议扩到 <b>50 条左右</b>。带「旧」的是保留的原句，「新」是我加的。</p>
+
+<div class="sum">
+  <b>说明</b>：语录分两处 —— <b>quote()</b> 是按状态自动显示的（小人下方那行），
+  <b>pokeText()</b> 是点小人时蹦出来的。下面是两份清单。<br>
+  标 <b>★</b> 的是我认为最有感觉的几句。
+</div>
+
+<!-- ══════ 自动语录 ══════ -->
+<div class="sec">
+  <h2>一、自动语录 <span class="old">现有 15</span> → <span class="cnt">建议 40</span></h2>
+
+  <div class="card">
+    <div class="grp">发薪日</div>
+    <div class="q"><span class="ic">💰</span><span><span class="old">旧</span> 今天发工资！💰</span></div>
+    <div class="q"><span class="ic">💰</span><span><span class="old">旧</span> 发薪日到啦，晚上吃点好的</span></div>
+    <div class="q"><span class="ic">💰</span><span><span class="new">新</span> ★ 一个月就等这一天</span></div>
+    <div class="q"><span class="ic">💰</span><span><span class="new">新</span> 到账了，先别查余额，让我高兴一会</span></div>
+
+    <div class="grp">发薪前一天</div>
+    <div class="q"><span class="ic">⏰</span><span><span class="old">旧</span> 明天就发工资了，今晚睡得着</span></div>
+    <div class="q"><span class="ic">⏰</span><span><span class="new">新</span> ★ 明天到账，今天先忍住不乱花</span></div>
+
+    <div class="grp">今天请假</div>
+    <div class="q"><span class="ic">🏖</span><span><span class="old">旧</span> 今天不上班，嘿嘿</span></div>
+    <div class="q"><span class="ic">🏖</span><span><span class="old">旧</span> 请假在家，理直气壮</span></div>
+    <div class="q"><span class="ic">🏖</span><span><span class="new">新</span> 睡到自然醒，这就是人生</span></div>
+    <div class="q"><span class="ic">🏖</span><span><span class="new">新</span> ★ 手机一响就心跳，还好今天不用去</span></div>
+
+    <div class="grp">连续工作（疲劳）</div>
+    <div class="q"><span class="ic">😩</span><span><span class="old">旧</span> 连着上了 N 天，魂快散了…</span></div>
+    <div class="q"><span class="ic">😩</span><span><span class="old">旧</span> 我已经不认识床以外的东西了</span></div>
+    <div class="q"><span class="ic">😩</span><span><span class="new">新</span> ★ 上到第 N 天，我开始怀疑日历</span></div>
+    <div class="q"><span class="ic">😩</span><span><span class="old">旧</span> 连着 N 天了，有点扛不住</span></div>
+    <div class="q"><span class="ic">😩</span><span><span class="old">旧</span> 好累…但还得干</span></div>
+    <div class="q"><span class="ic">😩</span><span><span class="new">新</span> ★ 咖啡已经不起作用了</span></div>
+    <div class="q"><span class="ic">😩</span><span><span class="old">旧</span> 连着干了 N 天，还行</span></div>
+    <div class="q"><span class="ic">😩</span><span><span class="new">新</span> 有点累，但还能撑</span></div>
+
+    <div class="grp">今天加班</div>
+    <div class="q"><span class="ic">🌙</span><span><span class="old">旧</span> 今天又加班了…</span></div>
+    <div class="q"><span class="ic">🌙</span><span><span class="old">旧</span> 加班中，勿扰（钱到位了）</span></div>
+    <div class="q"><span class="ic">🌙</span><span><span class="new">新</span> ★ 这个点的钱，赚得格外清楚</span></div>
+    <div class="q"><span class="ic">🌙</span><span><span class="new">新</span> 灯还亮着，人还在这儿</span></div>
+
+    <div class="grp">存钱罐</div>
+    <div class="q"><span class="ic">🎯</span><span><span class="old">旧</span> 目标达成了！🎉</span></div>
+    <div class="q"><span class="ic">🎯</span><span><span class="new">新</span> ★ 攒够了，可以下手了</span></div>
+    <div class="q"><span class="ic">🎯</span><span><span class="old">旧</span> 存钱罐过半了，有点小骄傲</span></div>
+    <div class="q"><span class="ic">🎯</span><span><span class="new">新</span> 一半了，比想象中快</span></div>
+    <div class="q"><span class="ic">🎯</span><span><span class="old">旧</span> 攒到 1/4 了，慢慢来</span></div>
+    <div class="q"><span class="ic">🎯</span><span><span class="new">新</span> 起步了，别急</span></div>
+
+    <div class="grp">周一 / 周五 / 周末</div>
+    <div class="q"><span class="ic">😑</span><span><span class="old">旧</span> 周一…不想说话</span></div>
+    <div class="q"><span class="ic">😑</span><span><span class="old">旧</span> 又是周一，缓一缓</span></div>
+    <div class="q"><span class="ic">😑</span><span><span class="new">新</span> ★ 周一的存在就是为了衬托周五</span></div>
+    <div class="q"><span class="ic">🎉</span><span><span class="old">旧</span> 周五啦，撑住就是周末</span></div>
+    <div class="q"><span class="ic">🎉</span><span><span class="new">新</span> ★ 再熬几个小时就自由了</span></div>
+    <div class="q"><span class="ic">🎉</span><span><span class="old">旧</span> 周六！自由的空气</span></div>
+    <div class="q"><span class="ic">🎉</span><span><span class="new">新</span> 今天谁也别找我</span></div>
+    <div class="q"><span class="ic">😢</span><span><span class="old">旧</span> 想到明天要上班…</span></div>
+    <div class="q"><span class="ic">😢</span><span><span class="old">旧</span> 周末怎么这么快</span></div>
+    <div class="q"><span class="ic">😢</span><span><span class="new">新</span> ★ 快乐的时间总是按分钟算的</span></div>
+
+    <div class="grp">时段</div>
+    <div class="q"><span class="ic">🌅</span><span><span class="old">旧</span> 早…让我先醒醒</span></div>
+    <div class="q"><span class="ic">🌅</span><span><span class="new">新</span> 眼睛睁开了，脑子还没到</span></div>
+    <div class="q"><span class="ic">🌙</span><span><span class="old">旧</span> 这么晚了，早点休息</span></div>
+
+    <div class="grp">兜底</div>
+    <div class="q"><span class="ic">💼</span><span><span class="old">旧</span> 打工人的一天</span></div>
+    <div class="q"><span class="ic">💼</span><span><span class="new">新</span> ★ 平平无奇，但钱在涨</span></div>
+  </div>
+</div>
+
+<!-- ══════ 新增状态 ══════ -->
+<div class="sec">
+  <h2>二、现在完全没覆盖的状态 <span class="new">全新</span></h2>
+  <div class="card">
+    <div class="grp">今天有外快</div>
+    <div class="q"><span class="ic">💸</span><span>★ 接了笔私活，钱包鼓了点</span></div>
+    <div class="q"><span class="ic">💸</span><span>外快到账，比工资来得快</span></div>
+
+    <div class="grp">休息日出勤（周末去上班）</div>
+    <div class="q"><span class="ic">🔨</span><span>★ 别人在晒周末，我在晒工位</span></div>
+    <div class="q"><span class="ic">🔨</span><span>周末上班，代价是换来的（有补贴）</span></div>
+
+    <div class="grp">调休出勤（无薪，攒假）</div>
+    <div class="q"><span class="ic">📅</span><span>今天是来换休的，不是来赚钱的</span></div>
+
+    <div class="grp">补班日（周末被安排上班）</div>
+    <div class="q"><span class="ic">📌</span><span>★ 明明是周六，却要打卡</span></div>
+    <div class="q"><span class="ic">📌</span><span>调休上班，一分不多拿</span></div>
+
+    <div class="grp">今天还没记录</div>
+    <div class="q"><span class="ic">❓</span><span>今天还没开始记，钱在等你</span></div>
+    <div class="q"><span class="ic">❓</span><span>★ 打过卡才算今天开始</span></div>
+
+    <div class="grp">这个月一天都没记过</div>
+    <div class="q"><span class="ic">📋</span><span>这个月还是空白，去「工资日历」补上</span></div>
+  </div>
+</div>
+
+<!-- ══════ 点击语录 ══════ -->
+<div class="sec">
+  <h2>三、点击语录 <span class="old">现有 7</span> → <span class="cnt">建议 16</span></h2>
+  <div class="card">
+    <div class="grp">通用</div>
+    <div class="q"><span class="ic">👆</span><span><span class="old">旧</span> 摸鱼被抓！</span></div>
+    <div class="q"><span class="ic">👆</span><span><span class="old">旧</span> 加油！加油！</span></div>
+    <div class="q"><span class="ic">👆</span><span><span class="old">旧</span> 嘿嘿</span></div>
+    <div class="q"><span class="ic">👆</span><span><span class="old">旧</span> 戳我干嘛，快去赚钱</span></div>
+    <div class="q"><span class="ic">👆</span><span><span class="new">新</span> ★ 摸一下，钱会变多吗</span></div>
+    <div class="q"><span class="ic">👆</span><span><span class="new">新</span> 手闲了？去干活</span></div>
+
+    <div class="grp">发薪日</div>
+    <div class="q"><span class="ic">💰</span><span><span class="old">旧</span> 别戳了，我在数钱</span></div>
+    <div class="q"><span class="ic">💰</span><span><span class="new">新</span> ★ 今天身价不一样，别乱碰</span></div>
+
+    <div class="grp">疲劳时</div>
+    <div class="q"><span class="ic">😩</span><span><span class="old">旧</span> 别戳…让我躺一会</span></div>
+    <div class="q"><span class="ic">😩</span><span><span class="old">旧</span> 累…但还能再战</span></div>
+    <div class="q"><span class="ic">😩</span><span><span class="new">新</span> 一指头戳在我最后一口气上</span></div>
+
+    <div class="grp">非工作时间</div>
+    <div class="q"><span class="ic">🌙</span><span><span class="new">新</span> 下班了，别找我</span></div>
+    <div class="q"><span class="ic">🌙</span><span><span class="new">新</span> ★ 现在戳我，不计工时</span></div>
+
+    <div class="grp">存钱罐</div>
+    <div class="q"><span class="ic">🎯</span><span><span class="new">新</span> 离那个目标又近了一点</span></div>
+  </div>
+</div>
+
+<div class="note">
+  <b>三处想听你的意见：</b><br>
+  ① <b>语气</b>：我走的是「自嘲但不丧」的路子（像「周一的存在就是为了衬托周五」）。
+     如果你想要更收敛或者更毒舌，告诉我方向。<br>
+  ② <b>带数字的</b>（连着 N 天、存钱罐百分比）：保留现有的动态数字，还是改成固定文案？<br>
+  ③ <b>「补班日」「调休出勤」</b>这两类需要新增判定，是本次一起做，还是先只做纯文案的？
+</div>
+
+<div class="ask">
+  <h3>确认方式</h3>
+  <ul>
+    <li>直接说「<b>全要</b>」/「<b>划掉 X 条</b>」/「<b>改写 X 条</b>」都行</li>
+    <li>也可以先只挑 ★ 那几条 —— 我加进去，跑起来看看感觉</li>
+  </ul>
+</div>
+
+</body></html>

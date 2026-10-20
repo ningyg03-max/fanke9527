@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="35" android:compileSdkVersionCodename="15" package="com.salaryjump.app" platformBuildVersionCode="35" platformBuildVersionName="15">
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+    <application android:allowBackup="true" android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:roundIcon="@mipmap/ic_launcher_round" android:supportsRtl="true" android:theme="@style/Theme.SalaryJump">
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="true" android:name=".MainActivity" android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:exported="false" android:label="喝水记录" android:name=".WaterRecordsActivity"/>
+        <activity android:exported="false" android:label="喝水统计" android:name=".WaterStatsActivity"/>
+        <activity android:exported="false" android:label="工资日历" android:name=".SalaryCalendarActivity"/>
+        <activity android:exported="false" android:label="月度战报" android:name=".MonthlyReportActivity"/>
+        <activity android:exported="false" android:label="加班与请假" android:name=".GuideActivity"/>
+        <activity android:exported="false" android:label="加班与出勤规则" android:name=".WorkRulesActivity"/>
+        <activity android:exported="false" android:label="假期账户" android:name=".LeaveAccountsActivity"/>
+        <activity android:exported="false" android:label="年度总览" android:name=".YearlyReportActivity"/>
+        <activity android:exported="false" android:label="设置" android:name=".SettingsActivity"/>
+        <receiver android:exported="true" android:name=".SalaryWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.DATE_CHANGED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/salary_widget_info"/>
+        </receiver>
+        <service android:exported="false" android:foregroundServiceType="specialUse" android:name=".WidgetUpdateService">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="SalaryJump home screen widget live updates"/>
+        </service>
+        <receiver android:exported="false" android:name=".BackupReceiver">
+            <intent-filter>
+                <action android:name="com.salaryjump.app.BACKUP_ALARM"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:exported="false" android:name=".WaterReminderReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:exported="false" android:name=".PaydayReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+                <action android:name="com.salaryjump.app.action.PAYDAY"/>
+                <action android:name="com.salaryjump.app.action.PAYDAY_EVE"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:exported="false" android:name=".CheckInReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+                <action android:name="com.salaryjump.app.action.CHECKIN_REMIND"/>
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>

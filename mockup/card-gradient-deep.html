@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f2f4f7;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+     padding:16px;display:flex;flex-direction:column;gap:18px}
+.panel{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.hd{display:flex;align-items:center;gap:9px;margin-bottom:5px;flex-wrap:wrap}
+.hd .t{font-size:15px;font-weight:800;color:#111827}
+.bdg{font-size:10.5px;padding:2.5px 9px;border-radius:8px;font-weight:600}
+.b-ref{background:#f3f4f6;color:#4b5563}
+.b-ok{background:#d1fae5;color:#047857}
+.b-warn{background:#fef3c7;color:#92400e}
+.b-max{background:#fee2e2;color:#b91c1c}
+.b-dark{background:#1e293b;color:#94a3b8}
+.desc{font-size:11.5px;color:#6b7280;line-height:1.65;margin-bottom:12px}
+.desc b{color:#374151}
+.desc .mono{font-family:ui-monospace,monospace;font-size:10.5px;background:#f3f4f6;
+            padding:1px 5px;border-radius:4px;color:#1f2937}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.meta span{font-size:10px;padding:3px 8px;border-radius:6px;background:#f9fafb;border:1px solid #eef0f3;color:#4b5563}
+.meta span.g{background:#ecfdf5;border-color:#d1fae5;color:#047857}
+.meta span.y{background:#fffbeb;border-color:#fef3c7;color:#92400e}
+.phone{width:384px;border-radius:20px;padding:12px 20px 18px;
+       background:linear-gradient(180deg,#ECFBF4,#EEF6FE 55%,#F1F6FF);margin:0 auto}
+.phone.dark{background:linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26)}
+.hero{border-radius:24px;padding:20px;position:relative;overflow:hidden;
+      box-shadow:0 5px 14px rgba(16,185,129,.30)}
+.hero.dk{box-shadow:0 5px 14px rgba(0,0,0,.5)}
+.hero>*{position:relative;z-index:2}
+.hg{position:absolute;border-radius:50%;background:rgba(255,255,255,.12);z-index:1}
+.hg.b{background:rgba(255,255,255,.08)}
+.hrow{display:flex;align-items:center;gap:7px;height:24px}
+.dotw{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.65)}
+.hlab{font-size:11.5px;color:rgba(255,255,255,.78);letter-spacing:.12em;font-weight:600;flex:1}
+.clock{font-size:12px;color:rgba(255,255,255,.72)}
+.amt{font-size:46px;font-weight:700;color:#fff;letter-spacing:-1.5px;margin-top:6px;line-height:1}
+.amt .c{font-size:24px;font-weight:600}
+.pill{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:12px;
+      padding:6px 11px;border-radius:20px;margin-top:12px}
+.pb{height:6px;border-radius:4px;background:rgba(255,255,255,.26);margin-top:16px;overflow:hidden}
+.pb>i{display:block;height:100%;background:#fff;border-radius:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:14px}
+.stats .v{font-size:13px;font-weight:600;color:#fff;text-align:center}
+.stats .k{font-size:10.5px;color:rgba(255,255,255,.72);text-align:center;margin-top:3px}
+.dv{height:1px;background:rgba(255,255,255,.22);margin:13px 0 9px}
+.sch{font-size:11.5px;color:rgba(255,255,255,.78)}
+.card{border-radius:24px;padding:20px;margin-top:14px;box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.card.dk{box-shadow:0 3px 10px rgba(0,0,0,.35)}
+.chead{display:flex;align-items:center;gap:7px;height:24px}
+.cdot{width:7px;height:7px;border-radius:50%}
+.clab{font-size:11.5px;letter-spacing:.12em;font-weight:600;flex:1}
+.lk{font-size:12.5px;font-weight:600}
+.nb{font-size:32px;font-weight:700;letter-spacing:-1px;margin-top:9px;line-height:1;
+    display:flex;align-items:baseline;gap:3px}
+.nb .un{font-size:15px;font-weight:400}
+.pb2{height:6px;border-radius:4px;margin-top:13px;overflow:hidden}
+.pb2>i{display:block;height:100%;border-radius:4px}
+.btns{display:flex;gap:9px;margin-top:16px}
+.b1{flex:1;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center;
+    font-size:14.5px;font-weight:700;color:#fff}
+.b2{width:88px;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:12.5px}
+.sub{font-size:11.5px;margin-top:11px}
+.dv2{height:1px;margin:15px 0 13px}
+.goal{display:flex;align-items:center;justify-content:space-between}
+.goal .n{font-size:13px;font-weight:600}
+.chip{font-size:11.5px;padding:5px 10px;border-radius:12px;margin-left:9px}
+</style></head><body>
+<div id="app"></div>
+<script>
+const HERO='linear-gradient(135deg,#0EA47A,#10B981 33%,#22C6B4 66%,#2DD4BF)';
+const HERO_DK='linear-gradient(135deg,#065F46,#0B8A6A 33%,#0E9C8C 66%,#14B8A6)';
+
+function heroCard(dark){return `<div class="hero${dark?' dk':''}" style="background:${dark?HERO_DK:HERO}">
+  <div class="hg" style="width:150px;height:150px;top:-42px;right:-38px"></div>
+  <div class="hg b" style="width:110px;height:110px;bottom:-48px;left:-30px"></div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">17:23:15</span></div>
+  <div class="amt"><span class="c">¥</span>777.78</div>
+  <div class="pill">● 今天下班 · 工资已满额</div>
+  <div class="pb"><i style="width:100%"></i></div>
+  <div class="stats">
+    <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+    <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+  </div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>`;}
+
+function waterCard(o){
+  const D=o.dark, T=o.teal;
+  const C = D
+    ? {num:'#2DD4BF', dot:'#2DD4BF', link:'#2DD4BF', pb:'#2DD4BF', lab:T.lab,
+       track:'#1E3336', sub:'#9FB8BE', btn:'linear-gradient(135deg,#0D9488,#14B8A6)',
+       b2bg:'#12242A', b2tx:'#BFE3DC', b2bd:'#1F3E3D'}
+    : {num:'#0F766E', dot:'#14B8A6', link:'#0F766E', pb:'#14B8A6', lab:T.lab,
+       track:'#E6F2EE', sub:'#61808C', btn:'linear-gradient(135deg,#0D9488,#14B8A6)',
+       b2bg:'#F7FCFA', b2tx:'#2E5A55', b2bd:'#D3E9E3'};
+  return `<div class="card${D?' dk':''}" style="background:${o.w}">
+    <div class="chead"><span class="cdot" style="background:${C.dot}"></span><span class="clab" style="color:${C.lab}">今日喝水</span>
+      <span class="lk" style="color:${C.link}">记录</span><span class="lk" style="color:${C.link};margin-left:14px">统计</span></div>
+    <div class="nb" style="color:${C.num}">2350<span class="un" style="color:${C.sub}">/ 3000 ml</span></div>
+    <div class="pb2" style="background:${C.track}"><i style="width:78%;background:${C.pb}"></i></div>
+    <div class="btns"><div class="b1" style="background:${C.btn}">喝水 +550 ml</div>
+      <div class="b2" style="background:${C.b2bg};color:${C.b2tx};border:1.5px solid ${C.b2bd}">选饮品</div></div>
+    <div class="sub" style="color:${C.sub}">下次提醒 10月12日 09:30 · 约 149 kcal · 含糖 1 杯</div>
+  </div>`;}
+
+function moneyCard(o){
+  const D=o.dark, T=o.teal;
+  const C = D
+    ? {num:'#34D399', dot:'#34D399', link:'#34D399', pb:'#34D399', lab:T.lab,
+       track:'#1E3336', sub:'#9FB8BE', text:'#E8F4F2', border:'#1F3A38', chipBg:'#122E26'}
+    : {num:'#047857', dot:'#10B981', link:'#047857', pb:'#10B981', lab:T.lab,
+       track:'#E6F2EE', sub:'#61808C', text:'#16323B', border:'#E3EFEC', chipBg:'#ECFDF5'};
+  return `<div class="card${D?' dk':''}" style="background:${o.m}">
+    <div class="chead"><span class="cdot" style="background:${C.dot}"></span><span class="clab" style="color:${C.lab}">累计收入</span>
+      <span class="lk" style="color:${C.link}">明细 ›</span></div>
+    <div class="nb" style="color:${C.num}">¥ 1,427.78<span class="chip" style="background:${C.chipBg};color:${C.num}">1 天</span></div>
+    <div class="sub" style="margin-top:8px;color:${C.sub}">按工作日累计</div>
+    <div class="dv2" style="background:${C.border}"></div>
+    <div class="goal"><span class="n" style="color:${C.text}">🎯 MacBook Pro 23,560.00</span><span class="lk" style="color:${C.link}">设置</span></div>
+    <div class="pb2" style="background:${C.track}"><i style="width:6%;background:${C.pb}"></i></div>
+    <div class="sub" style="color:${C.sub}">已攒 1,427.78 · 还差 22,132.22 · 约还需 29 个工作日</div>
+  </div>`;}
+
+// ═══ 四档浓度数据 ═══
+const V = [
+  { tag:'档 1 · 11%', cls:'b-ref', t:'当前方案 ④（参照）',
+    d:'末端色 <span class="mono">#E6F7F4</span> · 柔光 12%。上一轮你看到的版本。',
+    hl:'<span>数字对比 4.94 ✓</span><span>标签 2.32 ✓</span><span class="g">文字全部达标</span>',
+    w:'linear-gradient(135deg,#FFFFFF 44%,#E6F7F4)', m:'linear-gradient(135deg,#FFFFFF 44%,#E5F7F1)',
+    glowT:'rgba(20,184,166,.12)', glowG:'rgba(16,185,129,.12)', lab:'#8AA6B0' },
+
+  { tag:'档 2 · 17%', cls:'b-ok', t:'17%（+55%）· 安全上限 ⭐',
+    d:'末端色 <span class="mono">#D7F3F0</span> · 柔光 18%。肉眼可辨的"染色感"，但文字全部保持达标 —— <b>不劣化的最深档</b>。',
+    hl:'<span>数字对比 4.68 ✓</span><span>标签 2.20 ✓</span><span class="g">文字全部达标</span>',
+    w:'linear-gradient(135deg,#FFFFFF 44%,#D7F3F0)', m:'linear-gradient(135deg,#FFFFFF 44%,#D6F3EA)',
+    glowT:'rgba(20,184,166,.18)', glowG:'rgba(16,185,129,.18)', lab:'#8AA6B0' },
+
+  { tag:'档 3 · 23%', cls:'b-warn', t:'23%（2倍）· 需要文字适配',
+    d:'末端色 <span class="mono">#C9EFEB</span> · 柔光 24%。染色明显。⚠️ 标签降到 2.09（弱于白底基准 2.57）—— 需把标签色从 <span class="mono">#8AA6B0</span> 换成 <span class="mono">#7A96A1</span>（已在此预览中应用）。',
+    hl:'<span>数字对比 4.44 ✓</span><span class="y">标签 2.09 → 适配后 2.97 ✓</span>',
+    w:'linear-gradient(135deg,#FFFFFF 44%,#C9EFEB)', m:'linear-gradient(135deg,#FFFFFF 44%,#C8EFE2)',
+    glowT:'rgba(20,184,166,.24)', glowG:'rgba(16,185,129,.24)', lab:'#7A96A1' },
+
+  { tag:'档 4 · 29%', cls:'b-max', t:'29%（2.6倍）· 上限档',
+    d:'末端色 <span class="mono">#BBEAE5</span> · 柔光 30%。染色很突出。⚠️ 需标签换 <span class="mono">#6E8A96</span> 且副文字建议加深。再深就会开始"吃掉"卡片上的灰色文字。',
+    hl:'<span>数字对比 4.17 ✓</span><span class="y">标签 1.96 → 适配后 2.79 ✓</span><span class="y">副文字 3.22（略降）</span>',
+    w:'linear-gradient(135deg,#FFFFFF 44%,#BBEAE5)', m:'linear-gradient(135deg,#FFFFFF 44%,#BAEBDA)',
+    glowT:'rgba(20,184,166,.30)', glowG:'rgba(16,185,129,.30)', lab:'#6E8A96' },
+
+  { tag:'深色对照', cls:'b-dark', t:'深色主题 · 对应档 3 浓度',
+    d:'深色下等效浓度约 11%：卡片底 <span class="mono">#14262A</span> → <span class="mono">#17393A</span> · 柔光 17%。深色只需更淡就可见。',
+    hl:'<span>深色下文字不受影响</span>',
+    dark:true,
+    w:'linear-gradient(135deg,#14262A 40%,#17393A)', m:'linear-gradient(135deg,#14262A 40%,#183936)',
+    glowT:'rgba(45,212,191,.17)', glowG:'rgba(52,211,153,.17)', lab:'#7E9AA3' },
+];
+
+document.getElementById('app').innerHTML = V.map(v=>{
+  const oW = {w:`${v.glowT?`radial-gradient(circle at 90% 4%, ${v.glowT}, transparent 52%), `:''}${v.w}`,
+              teal:{lab:v.lab}, dark:!!v.dark};
+  const oM = {m:`${v.glowG?`radial-gradient(circle at 90% 4%, ${v.glowG}, transparent 52%), `:''}${v.m}`,
+              teal:{lab:v.lab}, dark:!!v.dark};
+  return `<div class="panel">
+    <div class="hd"><span class="t">${v.t}</span><span class="bdg ${v.cls}">${v.tag}</span></div>
+    <div class="desc">${v.d}</div>
+    <div class="meta">${v.hl}</div>
+    <div style="height:12px"></div>
+    <div class="phone${v.dark?' dark':''}">
+      ${heroCard(v.dark)}${waterCard(oW)}${moneyCard(oM)}
+    </div>
+  </div>`;
+}).join('');
+</script>
+</body></html>

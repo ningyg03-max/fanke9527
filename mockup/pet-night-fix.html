@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",system-ui,sans-serif;
+     padding:18px 12px 40px;display:flex;flex-direction:column;align-items:center}
+.phead{width:100%;max-width:660px;margin:4px auto 18px}
+.phead h1{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.phead p{font-size:12px;color:#475569;line-height:1.7;margin-top:7px}
+.pair{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;max-width:660px}
+.panel{width:300px;background:#fff;border-radius:18px;border:1px solid #E2E8EC;overflow:hidden}
+.pttl{font-size:12.5px;font-weight:750;padding:11px 14px 9px;display:flex;align-items:center;gap:7px;color:#0F172A}
+.badge{font-size:10px;font-weight:700;padding:2.5px 8px;border-radius:9px}
+.badge.bad{background:#FFE4E6;color:#BE123C}
+.badge.good{background:#D1FAE5;color:#047857}
+.darkscreen{background:#0A1B1F;padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.darkcard{background:linear-gradient(152deg,rgba(255,255,255,.095),rgba(255,255,255,.032));border-radius:20px;
+  border:1px solid rgba(255,255,255,.10);padding:14px 18px;width:100%;display:flex;flex-direction:column;align-items:center;gap:6px}
+.svgbox{width:132px;height:140px}
+.mood{font-size:10.5px;color:rgba(232,255,247,.5)}
+.note{font-size:10.5px;color:#64748B;line-height:1.62;padding:11px 14px;border-top:1px solid #EEF3F2}
+.note b{color:#0B7A5C}
+code{background:#F1F5F4;border-radius:4px;padding:1px 4px;font-size:10px;color:#0F766E}
+</style></head><body>
+
+<div class="phead">
+  <h1>深色模式 · 小人可见性修复</h1>
+  <p>你的担心是对的 —— 修复前，小人<b>四肢</b>和装饰线沿用的深绿 <code>#063A2F</code> 是画在<b>背景上</b>的（不是身体上），在近黑背景（<code>#07110F</code>）上会「消失」。修复：深色模式四肢/装饰线/躺平字全部改用亮色。</p>
+</div>
+
+<div class="pair">
+  <!-- 修复前 · 深色 -->
+  <div class="panel">
+    <div class="pttl"><span class="badge bad">修复前 · 深色模式</span></div>
+    <div class="darkscreen"><div class="darkcard">
+      <div class="svgbox">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bodyN" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#34E3AC"/><stop offset="1" stop-color="#0E9C7C"/>
+          </linearGradient></defs>
+          <ellipse cx="50" cy="90" rx="16" ry="3.4" fill="rgba(0,0,0,.35)"/>
+          <ellipse cx="50" cy="60" rx="21" ry="24" fill="url(#bodyN)"/>
+          <ellipse cx="44" cy="50" rx="8" ry="6" fill="rgba(255,255,255,.30)"/>
+          <path d="M31 58 Q25 64 26 70" stroke="#063A2F" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M69 58 Q74 63 73 68" stroke="#063A2F" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <rect x="69" y="69" width="15" height="12" rx="2.5" fill="#C49A74"/>
+          <path d="M43 82 L40 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+          <path d="M57 82 L61 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="43.5" cy="57" r="2.6" fill="#063A2F"/><circle cx="56.5" cy="57" r="2.6" fill="#063A2F"/>
+          <path d="M45 67 Q47.5 64 50 67 Q52.5 70 55 67" stroke="#063A2F" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path d="M30 42 A9 9 0 0 1 44 38 A7 7 0 0 1 46 51 L31 51 A6.4 6.4 0 0 1 30 42 Z" fill="#A3B8C4"/>
+          <path d="M36 53 L35 58" stroke="#7CC6F2" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M63 44 Q65 47.6 63 51 Q61 47.6 63 44 Z" fill="#7CC6F2"/>
+        </svg>
+      </div>
+      <div class="mood">别人放假我搬砖</div>
+    </div></div>
+    <div class="note">身体亮绿很清楚，但 <b style="color:#BE123C">手臂、腿全看不见</b> —— 小人像「浮在空中」。</div>
+  </div>
+
+  <!-- 修复后 · 深色 -->
+  <div class="panel">
+    <div class="pttl"><span class="badge good">修复后 · 深色模式</span></div>
+    <div class="darkscreen"><div class="darkcard">
+      <div class="svgbox">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bodyN2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#34E3AC"/><stop offset="1" stop-color="#0E9C7C"/>
+          </linearGradient></defs>
+          <ellipse cx="50" cy="90" rx="16" ry="3.4" fill="rgba(0,0,0,.35)"/>
+          <ellipse cx="50" cy="60" rx="21" ry="24" fill="url(#bodyN2)"/>
+          <ellipse cx="44" cy="50" rx="8" ry="6" fill="rgba(255,255,255,.30)"/>
+          <path d="M31 58 Q25 64 26 70" stroke="#2FD3A4" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M69 58 Q74 63 73 68" stroke="#2FD3A4" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <rect x="69" y="69" width="15" height="12" rx="2.5" fill="#C49A74"/>
+          <path d="M43 82 L40 88" stroke="#2FD3A4" stroke-width="3" stroke-linecap="round"/>
+          <path d="M57 82 L61 88" stroke="#2FD3A4" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="43.5" cy="57" r="2.6" fill="#063A2F"/><circle cx="56.5" cy="57" r="2.6" fill="#063A2F"/>
+          <path d="M45 67 Q47.5 64 50 67 Q52.5 70 55 67" stroke="#063A2F" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path d="M30 42 A9 9 0 0 1 44 38 A7 7 0 0 1 46 51 L31 51 A6.4 6.4 0 0 1 30 42 Z" fill="#A3B8C4"/>
+          <path d="M36 53 L35 58" stroke="#7CC6F2" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M63 44 Q65 47.6 63 51 Q61 47.6 63 44 Z" fill="#7CC6F2"/>
+        </svg>
+      </div>
+      <div class="mood">别人放假我搬砖</div>
+    </div></div>
+    <div class="note">四肢改为亮绿 <code>#2FD3A4</code>：在深底上清晰可辨，小人「站得住」了。<br>（浅色模式不受影响 —— 四肢仍是深绿，与身体亮绿形成对比。）</div>
+  </div>
+</div>
+
+<div class="phead" style="margin-top:22px;max-width:660px">
+  <div style="background:#fff;border-radius:16px;padding:15px 17px;border:1px solid #E2E8EC">
+    <div style="font-size:13px;font-weight:800;color:#0F172A;margin-bottom:9px">本次修复明细（深色模式专用配色）</div>
+    <table style="width:100%;border-collapse:collapse;font-size:11.5px">
+      <tr style="text-align:left">
+        <th style="padding:6px 8px;color:#64748B;font-weight:600;border-bottom:1px solid #EEF3F2">元素</th>
+        <th style="padding:6px 8px;color:#64748B;font-weight:600;border-bottom:1px solid #EEF3F2">浅色模式</th>
+        <th style="padding:6px 8px;color:#64748B;font-weight:600;border-bottom:1px solid #EEF3F2">深色模式（修复后）</th>
+      </tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid #F4F7F6">手臂 / 腿（画在背景上）</td>
+        <td style="padding:6px 8px;border-bottom:1px solid #F4F7F6">#063A2F 深绿（不变）</td>
+        <td style="padding:6px 8px;border-bottom:1px solid #F4F7F6"><b style="color:#0B7A5C">#2FD3A4 亮绿</b></td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid #F4F7F6">通勤速度线 / 小星 / 焦虑点</td>
+        <td style="padding:6px 8px;border-bottom:1px solid #F4F7F6">深色微透（不变）</td>
+        <td style="padding:6px 8px;border-bottom:1px solid #F4F7F6"><b style="color:#0B7A5C">#6FEFC8 亮青绿</b></td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid #F4F7F6">躺平 Zzz（周末 / 请假）</td>
+        <td style="padding:6px 8px;border-bottom:1px solid #F4F7F6">青绿 / 紫（不变）</td>
+        <td style="padding:6px 8px;border-bottom:1px solid #F4F7F6"><b style="color:#0B7A5C">更亮的青绿 / 紫</b></td></tr>
+      <tr><td style="padding:6px 8px">笔记本 / 手机</td>
+        <td style="padding:6px 8px">#2E4046（不变）</td>
+        <td style="padding:6px 8px"><b style="color:#0B7A5C">#44606C 提亮</b></td></tr>
+    </table>
+    <div style="font-size:11px;color:#64748B;line-height:1.65;margin-top:10px;padding:10px 12px;background:#F1F5F8;border-radius:10px">
+      <b style="color:#0B7A5C">设计原则</b>：按「画在哪」分色 —— <b>画在身体上的</b>（眼睛、嘴）保持深色（被亮色身体衬托）；<b>画在背景上的</b>（四肢、装饰）深色模式必须够亮。浅色模式完全不变。
+    </div>
+  </div>
+</div>
+
+</body></html>

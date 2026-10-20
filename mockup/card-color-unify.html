@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f2f4f7;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+     padding:16px;display:flex;flex-direction:column;gap:20px}
+.panel{background:#fff;border-radius:16px;padding:16px 16px 18px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.hd{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.hd .t{font-size:15px;font-weight:800;color:#111827}
+.bdg{font-size:10.5px;padding:2.5px 9px;border-radius:8px;font-weight:600}
+.b-now{background:#fee2e2;color:#b91c1c}
+.b-ok{background:#d1fae5;color:#047857}
+.b-mid{background:#e0f2fe;color:#0369a1}
+.desc{font-size:11.5px;color:#6b7280;line-height:1.55;margin-bottom:12px}
+.desc b{color:#374151}
+/* 手机 */
+.phone{width:384px;border-radius:20px;padding:12px 20px 20px;
+       background:linear-gradient(180deg,#ECFBF4,#EEF6FE 55%,#F1F6FF);margin:0 auto}
+/* 主卡 */
+.hero{border-radius:24px;padding:20px;position:relative;overflow:hidden;
+      box-shadow:0 5px 14px rgba(16,185,129,.30)}
+.hero>*{position:relative;z-index:2}
+.hg{position:absolute;border-radius:50%;background:rgba(255,255,255,.12);z-index:1}
+.hg.b{background:rgba(255,255,255,.08)}
+.hrow{display:flex;align-items:center;gap:7px;height:24px}
+.dotw{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.65)}
+.hlab{font-size:11.5px;color:rgba(255,255,255,.78);letter-spacing:.12em;font-weight:600;flex:1}
+.clock{font-size:12px;color:rgba(255,255,255,.72)}
+.amt{font-size:46px;font-weight:700;color:#fff;letter-spacing:-1.5px;margin-top:6px;line-height:1}
+.amt .c{font-size:24px;font-weight:600}
+.pill{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:12px;
+      padding:6px 11px;border-radius:20px;margin-top:12px}
+.pb{height:6px;border-radius:4px;background:rgba(255,255,255,.26);margin-top:16px;overflow:hidden}
+.pb>i{display:block;height:100%;background:#fff;border-radius:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:14px}
+.stats .v{font-size:13px;font-weight:600;color:#fff;text-align:center}
+.stats .k{font-size:10.5px;color:rgba(255,255,255,.72);text-align:center;margin-top:3px}
+.dv{height:1px;background:rgba(255,255,255,.22);margin:13px 0 9px}
+.sch{font-size:11.5px;color:rgba(255,255,255,.78)}
+/* 白卡 */
+.card{border-radius:24px;padding:20px;margin-top:14px;box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.chead{display:flex;align-items:center;gap:7px;height:24px}
+.cdot{width:7px;height:7px;border-radius:50%}
+.clab{font-size:11.5px;color:#8AA6B0;letter-spacing:.12em;font-weight:600;flex:1}
+.lk{font-size:12.5px;font-weight:600}
+.nb{font-size:32px;font-weight:700;letter-spacing:-1px;margin-top:9px;line-height:1;
+    display:flex;align-items:baseline;gap:3px}
+.nb .un{font-size:15px;color:#61808C;font-weight:400}
+.pb2{height:6px;border-radius:4px;background:#E6F2EE;margin-top:13px;overflow:hidden}
+.pb2>i{display:block;height:100%;border-radius:4px}
+.btns{display:flex;gap:9px;margin-top:16px}
+.b1{flex:1;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center;
+    font-size:14.5px;font-weight:700;color:#fff}
+.b2{width:88px;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center;
+    font-size:12.5px;color:#2E5A55;background:#F7FCFA;border:1.5px solid #D3E9E3}
+.sub{font-size:11.5px;color:#61808C;margin-top:11px}
+.dv2{height:1px;background:#E3EFEC;margin:15px 0 13px}
+.goal{display:flex;align-items:center;justify-content:space-between}
+.goal .n{font-size:13px;font-weight:600;color:#16323B}
+.chip{font-size:11.5px;padding:5px 10px;border-radius:12px;margin-left:9px}
+/* 色板 */
+.pal{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+.sw{display:flex;align-items:center;gap:6px;font-size:10.5px;color:#4b5563;
+    background:#f9fafb;border:1px solid #eef0f3;border-radius:8px;padding:4px 9px}
+.sw i{width:13px;height:13px;border-radius:4px;display:block}
+.hue{margin-top:9px;position:relative;height:22px;border-radius:6px;overflow:hidden;
+     background:linear-gradient(90deg,#10B981,#14B8A6 40%,#06B6D4 70%,#0EA5E9);}
+.hue .mk{position:absolute;top:0;width:2px;height:100%;background:#111827}
+.hue .mk.a{left:0%}.hue .mk.b{left:33%}.hue .mk.c{left:85%}
+.hue .lb{position:absolute;top:26px;font-size:9.5px;color:#6b7280}
+</style></head><body>
+
+<!-- ══════ 现状 ══════ -->
+<div class="panel">
+  <div class="hd"><span class="t">现状</span><span class="bdg b-now">两套色系并立</span></div>
+  <div class="desc">主卡 + 累计卡 = <b>绿</b>（160°）· 喝水卡 = <b>蓝</b>（199°）——
+  色相差 39°，蓝绿各占一半，这是"风格割裂"的<b>色彩根源</b>。主卡渐变末端还带天蓝，像"跑去了客场"。</div>
+  <div class="phone">
+    <div class="hero" style="background:linear-gradient(135deg,#0EA47A,#10B981 33%,#22C6B4 66%,#38BDF8)">
+      <div class="hg" style="width:150px;height:150px;top:-42px;right:-38px"></div>
+      <div class="hg b" style="width:110px;height:110px;bottom:-48px;left:-30px"></div>
+      <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">17:23:15</span></div>
+      <div class="amt"><span class="c">¥</span>777.78</div>
+      <div class="pill">● 今天下班 · 工资已满额</div>
+      <div class="pb"><i style="width:100%"></i></div>
+      <div class="stats">
+        <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+        <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+        <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+        <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+      </div>
+      <div class="dv"></div>
+      <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+    </div>
+    <div class="card" style="background:#FFFFFF">
+      <div class="chead"><span class="cdot" style="background:#0EA5E9"></span><span class="clab">今日喝水</span>
+        <span class="lk" style="color:#0369A1">记录</span><span class="lk" style="color:#0369A1;margin-left:14px">统计</span></div>
+      <div class="nb" style="color:#0369A1">2350<span class="un">/ 3000 ml</span></div>
+      <div class="pb2"><i style="width:78%;background:#0EA5E9"></i></div>
+      <div class="btns"><div class="b1" style="background:linear-gradient(135deg,#0284C7,#0891B2)">喝水 +550 ml</div><div class="b2">选饮品</div></div>
+      <div class="sub">下次提醒 10月12日 09:30 · 约 149 kcal · 含糖 1 杯</div>
+    </div>
+    <div class="card" style="background:#FFFFFF">
+      <div class="chead"><span class="cdot" style="background:#10B981"></span><span class="clab">累计收入</span>
+        <span class="lk" style="color:#047857">明细 ›</span></div>
+      <div class="nb" style="color:#047857">¥ 1,427.78<span class="chip" style="background:#ECFDF5;color:#047857">1 天</span></div>
+      <div class="sub" style="margin-top:8px">按工作日累计</div>
+      <div class="dv2"></div>
+      <div class="goal"><span class="n">🎯 MacBook Pro 23,560.00</span><span class="lk" style="color:#047857">设置</span></div>
+      <div class="pb2"><i style="width:6%;background:#10B981"></i></div>
+      <div class="sub">已攒 1,427.78 · 还差 22,132.22 · 约还需 29 个工作日</div>
+    </div>
+  </div>
+  <div class="pal">
+    <span class="sw"><i style="background:#10B981"></i>#10B981 绿（钱）</span>
+    <span class="sw"><i style="background:#047857"></i>#047857 深绿（钱）</span>
+    <span class="sw"><i style="background:#0EA5E9"></i>#0EA5E9 蓝（水）</span>
+    <span class="sw"><i style="background:#0369A1"></i>#0369A1 深蓝（水）</span>
+    <span class="sw"><i style="background:#38BDF8"></i>#38BDF8 天蓝（主卡末端）</span>
+  </div>
+</div>
+
+<!-- ══════ 方案 A：全绿 ══════ -->
+<div class="panel">
+  <div class="hd"><span class="t">方案 A · 全绿统一</span><span class="bdg b-ok">单一色相 · 最彻底</span></div>
+  <div class="desc">水的蓝色全部换成<b>翡翠绿</b>——整个 App 只剩一个主色（+中性灰白）。
+  水卡与钱卡同色，<b>靠明度差</b>（数字深 / 进度亮）区分层次。主卡渐变去掉蓝端。</div>
+  <div class="phone">
+    <div class="hero" style="background:linear-gradient(135deg,#0EA47A,#10B981 33%,#22C6B4 66%,#2DD4BF)">
+      <div class="hg" style="width:150px;height:150px;top:-42px;right:-38px"></div>
+      <div class="hg b" style="width:110px;height:110px;bottom:-48px;left:-30px"></div>
+      <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">17:23:15</span></div>
+      <div class="amt"><span class="c">¥</span>777.78</div>
+      <div class="pill">● 今天下班 · 工资已满额</div>
+      <div class="pb"><i style="width:100%"></i></div>
+      <div class="stats">
+        <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+        <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+        <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+        <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+      </div>
+      <div class="dv"></div>
+      <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#FFFFFF 28%,#F0FBF5)">
+      <div class="chead"><span class="cdot" style="background:#10B981"></span><span class="clab">今日喝水</span>
+        <span class="lk" style="color:#047857">记录</span><span class="lk" style="color:#047857;margin-left:14px">统计</span></div>
+      <div class="nb" style="color:#047857">2350<span class="un">/ 3000 ml</span></div>
+      <div class="pb2"><i style="width:78%;background:#10B981"></i></div>
+      <div class="btns"><div class="b1" style="background:linear-gradient(135deg,#10B981,#0D9488)">喝水 +550 ml</div><div class="b2">选饮品</div></div>
+      <div class="sub">下次提醒 10月12日 09:30 · 约 149 kcal · 含糖 1 杯</div>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#FFFFFF 28%,#F0FBF5)">
+      <div class="chead"><span class="cdot" style="background:#10B981"></span><span class="clab">累计收入</span>
+        <span class="lk" style="color:#047857">明细 ›</span></div>
+      <div class="nb" style="color:#047857">¥ 1,427.78<span class="chip" style="background:#ECFDF5;color:#047857">1 天</span></div>
+      <div class="sub" style="margin-top:8px">按工作日累计</div>
+      <div class="dv2"></div>
+      <div class="goal"><span class="n">🎯 MacBook Pro 23,560.00</span><span class="lk" style="color:#047857">设置</span></div>
+      <div class="pb2"><i style="width:6%;background:#10B981"></i></div>
+      <div class="sub">已攒 1,427.78 · 还差 22,132.22 · 约还需 29 个工作日</div>
+    </div>
+  </div>
+  <div class="pal">
+    <span class="sw"><i style="background:#10B981"></i>#10B981 绿</span>
+    <span class="sw"><i style="background:#047857"></i>#047857 深绿</span>
+    <span class="sw"><i style="background:#2DD4BF"></i>#2DD4BF 青绿（主卡末端）</span>
+  </div>
+  <div class="hue"><span class="mk a"></span><span class="lb" style="left:0">160° 绿</span></div>
+  <div class="desc" style="margin-top:24px;margin-bottom:0">色相范围：<b>单一 160°~172°</b> · 水的蓝色完全退场。
+  缺点：喝水和收入两卡<b>完全同色</b>，"水"的清凉直觉弱一点。</div>
+</div>
+
+<!-- ══════ 方案 B：绿·青 ══════ -->
+<div class="panel">
+  <div class="hd"><span class="t">方案 B · 绿 · 青同族</span><span class="bdg b-mid">邻近色 · 推荐</span></div>
+  <div class="desc">水的颜色从天蓝（199°）换成 <b>青绿 teal</b>（173°）—— 与绿只差 13°，
+  视觉上明显是<b>一家人</b>，但"水"仍保留一点清爽的冷感。主卡渐变末尾同步收进青绿。</div>
+  <div class="phone">
+    <div class="hero" style="background:linear-gradient(135deg,#0EA47A,#10B981 33%,#22C6B4 66%,#2DD4BF)">
+      <div class="hg" style="width:150px;height:150px;top:-42px;right:-38px"></div>
+      <div class="hg b" style="width:110px;height:110px;bottom:-48px;left:-30px"></div>
+      <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">17:23:15</span></div>
+      <div class="amt"><span class="c">¥</span>777.78</div>
+      <div class="pill">● 今天下班 · 工资已满额</div>
+      <div class="pb"><i style="width:100%"></i></div>
+      <div class="stats">
+        <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+        <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+        <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+        <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+      </div>
+      <div class="dv"></div>
+      <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#FFFFFF 28%,#ECF8F6)">
+      <div class="chead"><span class="cdot" style="background:#14B8A6"></span><span class="clab">今日喝水</span>
+        <span class="lk" style="color:#0F766E">记录</span><span class="lk" style="color:#0F766E;margin-left:14px">统计</span></div>
+      <div class="nb" style="color:#0F766E">2350<span class="un">/ 3000 ml</span></div>
+      <div class="pb2"><i style="width:78%;background:#14B8A6"></i></div>
+      <div class="btns"><div class="b1" style="background:linear-gradient(135deg,#0D9488,#14B8A6)">喝水 +550 ml</div><div class="b2">选饮品</div></div>
+      <div class="sub">下次提醒 10月12日 09:30 · 约 149 kcal · 含糖 1 杯</div>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#FFFFFF 28%,#F0FBF5)">
+      <div class="chead"><span class="cdot" style="background:#10B981"></span><span class="clab">累计收入</span>
+        <span class="lk" style="color:#047857">明细 ›</span></div>
+      <div class="nb" style="color:#047857">¥ 1,427.78<span class="chip" style="background:#ECFDF5;color:#047857">1 天</span></div>
+      <div class="sub" style="margin-top:8px">按工作日累计</div>
+      <div class="dv2"></div>
+      <div class="goal"><span class="n">🎯 MacBook Pro 23,560.00</span><span class="lk" style="color:#047857">设置</span></div>
+      <div class="pb2"><i style="width:6%;background:#10B981"></i></div>
+      <div class="sub">已攒 1,427.78 · 还差 22,132.22 · 约还需 29 个工作日</div>
+    </div>
+  </div>
+  <div class="pal">
+    <span class="sw"><i style="background:#10B981"></i>#10B981 绿（钱）</span>
+    <span class="sw"><i style="background:#14B8A6"></i>#14B8A6 青绿（水）</span>
+    <span class="sw"><i style="background:#0F766E"></i>#0F766E 深青（水）</span>
+    <span class="sw"><i style="background:#2DD4BF"></i>#2DD4BF（主卡末端）</span>
+  </div>
+  <div class="hue"><span class="mk a"></span><span class="mk b"></span><span class="lb" style="left:0">160° 绿</span><span class="lb" style="left:31%">173° 青绿</span></div>
+  <div class="desc" style="margin-top:24px;margin-bottom:0">色相范围：<b>160°~173°</b>（相差 13°）· 水卡与钱卡是<b>同族的两个深浅</b>，
+  既"差不多统一"，又保留可辨识度。</div>
+</div>
+
+</body></html>

@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+     padding:14px 10px 44px;display:flex;flex-direction:column;align-items:center}
+.phead{width:100%;max-width:392px;margin:6px auto 24px}
+.phead h1{font-size:21px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.phead p{font-size:12.5px;color:#475569;line-height:1.75;margin-top:8px}
+.diag{margin-top:12px;background:#fff;border-radius:14px;padding:13px 15px;border:1px solid #E2E8EC}
+.diag b{font-size:12px;color:#0F172A;display:block;margin-bottom:7px}
+.diag ul{list-style:none}
+.diag li{font-size:11.8px;color:#475569;line-height:1.62;padding-left:14px;position:relative;margin:4px 0}
+.diag li::before{content:"✕";position:absolute;left:0;top:0;color:#E11D48;font-size:10px;font-weight:800}
+.dirblock{width:100%;max-width:392px;margin:0 auto 36px}
+.dhead{display:flex;gap:11px;align-items:flex-start;margin-bottom:14px}
+.dnum{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+      font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.dhead h2{font-size:15.5px;font-weight:800;color:#0F172A;letter-spacing:-.2px}
+.dhead p{font-size:11.5px;color:#64748B;margin-top:4px;line-height:1.5}
+.pair{display:flex;flex-direction:column;gap:24px}
+.phone{border-radius:44px;padding:7px;background:linear-gradient(160deg,rgba(255,255,255,.95),rgba(222,229,234,.95));
+       border:1px solid rgba(100,116,139,.25);box-shadow:0 36px 70px -42px rgba(15,23,42,.55)}
+.plabel{font-size:10.5px;color:#64748B;letter-spacing:.08em;margin:2px 0 9px 14px;font-weight:600}
+.screen{position:relative;border-radius:38px;overflow:hidden;isolation:isolate;
+        padding:13px 13px 17px;display:flex;flex-direction:column;gap:12px;color:var(--tx)}
+.screen>*{position:relative;z-index:2}
+.sb{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--tx3);padding:1px 9px 0}
+.sb .batt{display:flex;align-items:center;gap:6px}
+.batt i{width:20px;height:10px;border:1.2px solid var(--tx3);border-radius:3px;position:relative;display:inline-block}
+.batt i::before{content:"";position:absolute;left:1.4px;top:1.4px;bottom:1.4px;width:68%;background:var(--ac);border-radius:1.5px}
+.batt i::after{content:"";position:absolute;right:-3.4px;top:2.6px;width:2px;height:4px;background:var(--tx3);border-radius:1px}
+.apph{display:flex;align-items:center;gap:9px;padding:0 5px}
+.apph .logo{width:21px;height:21px;border-radius:7px;background:linear-gradient(135deg,#10B981,#14B8A6);
+            box-shadow:0 4px 14px -4px rgba(16,150,120,.5)}
+.apph b{font-size:13px;font-weight:700;letter-spacing:.02em}
+.apph .gear{margin-left:auto;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+            font-size:13px;color:var(--tx2);border:1px solid var(--ln2)}
+.card{border-radius:28px;padding:15px;border:1px solid var(--ln);background:var(--card);box-shadow:var(--csh);
+      -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+.caps{display:flex;gap:7px}
+.cap{height:38px;border-radius:999px;flex:1;display:flex;align-items:center;justify-content:center;
+     font-size:12.5px;white-space:nowrap;overflow:hidden;letter-spacing:-.1px;
+     background:var(--capbg);border:1px solid var(--capbd);color:var(--captx)}
+.cap.rec{background:var(--caprec);border-color:var(--caprecbd);color:var(--captx2);font-weight:700}
+.cap.act{background:var(--capactb);border-color:var(--capactbd);color:var(--capactx);font-weight:800;
+         animation:var(--capanim,none)}
+.hlabel{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--tx2);letter-spacing:.02em}
+.hlabel .clock{margin-left:auto;font-size:11px;color:var(--tx3);font-variant-numeric:tabular-nums}
+.hlabel .link{margin-left:auto;font-size:12px;color:var(--ac);font-weight:650}
+.dotbreath{width:6px;height:6px;border-radius:50%;background:var(--ac);box-shadow:0 0 8px var(--ac);
+           animation:breathK 2.4s ease-in-out infinite}
+.hero .hlabel{margin-top:12px}
+.n1{font-size:44px;font-weight:760;letter-spacing:-1.8px;line-height:1;margin-top:9px;
+    font-variant-numeric:tabular-nums;color:var(--num);text-shadow:var(--numsh)}
+.n2{font-size:30px;font-weight:760;letter-spacing:-1px;line-height:1;font-variant-numeric:tabular-nums;
+    color:var(--num);text-shadow:var(--numsh)}
+.brow{display:flex;align-items:center;gap:9px;margin-top:10px}
+.pill{font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:999px;background:var(--plbg);color:var(--ac);white-space:nowrap}
+.chiprow{margin-top:11px}
+.chip{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 11px;border-radius:999px;
+      font-size:11.5px;background:var(--chipbg);border:1px solid var(--ln);color:var(--tx2)}
+.chip .cdot{width:6px;height:6px;border-radius:50%;background:var(--ac);box-shadow:0 0 7px var(--ac)}
+.chip.amber{background:var(--ambb);border-color:var(--ambbd);color:var(--ambtx)}
+.pbar{height:8px;border-radius:6px;background:var(--trk);position:relative;overflow:hidden;margin-top:12px}
+.pbar i{position:absolute;inset:0;border-radius:6px;background:linear-gradient(90deg,#0EAE8C,#14B8A6 55%,#2DD4BF)}
+.pbar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
+               transform:translateX(-110%);animation:sheen 2.9s ease-in-out infinite}
+.s4{display:flex;justify-content:space-between;margin-top:13px;padding:0 2px}
+.s4 div{display:flex;flex-direction:column;gap:4px}
+.s4 b{font-size:13px;font-weight:680;font-variant-numeric:tabular-nums}
+.s4 span{font-size:10.5px;color:var(--tx3);letter-spacing:.02em}
+.hr{height:1px;background:var(--ln);margin:13px 0 10px}
+.sched{font-size:11px;color:var(--tx3)}
+.ms .track{position:relative;height:6px;border-radius:4px;background:var(--trk);margin:13px 4px 8px}
+.ms .track i{position:absolute;left:0;top:0;bottom:0;width:6%;border-radius:4px;background:linear-gradient(90deg,#0EAE8C,#2DD4BF)}
+.ms .track b{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);
+             background:var(--pgbg);border:2px solid var(--tx3)}
+.ms .track b:nth-of-type(1){border-color:var(--ambtx)}
+.mlab{display:flex;justify-content:space-between;font-size:10px;color:var(--tx3);padding:0 1px}
+.sub2{font-size:12px;color:var(--tx3);margin-top:8px}
+.cols{display:flex;margin-top:13px}
+.cols>div{flex:1;display:flex;flex-direction:column;gap:4px}
+.cols span{font-size:10.5px;color:var(--tx3)}
+.cols b{font-size:13.5px;font-weight:680;font-variant-numeric:tabular-nums}
+.notes{background:#fff;border-radius:16px;padding:15px 16px 13px;margin-top:20px;border:1px solid #E2E8EC}
+.nt{font-size:12.5px;font-weight:800;color:#0F172A;margin-bottom:8px}
+.nt .fix{background:#D1FAE5;color:#047857;font-size:10.5px;padding:2px 8px;border-radius:8px;margin-left:7px;font-weight:700}
+.notes ul{list-style:none}
+.notes li{font-size:11.8px;color:#475569;line-height:1.6;padding-left:15px;position:relative;margin:5px 0}
+.notes li::before{content:"";position:absolute;left:1px;top:7px;width:5px;height:5px;border-radius:50%;background:#10B981}
+.notes li b{color:#0B7A5C}
+/* 关键帧 */
+@keyframes breathK{0%,100%{opacity:.55;transform:scale(.9)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes sheen{0%{transform:translateX(-110%)}55%,100%{transform:translateX(110%)}}
+@keyframes auroraA{0%{transform:translate3d(-2%,-1%,0) rotate(0deg) scale(1)}
+  100%{transform:translate3d(3%,2%,0) rotate(9deg) scale(1.09);filter:blur(44px) hue-rotate(14deg)}}
+@keyframes pulseE{0%,100%{box-shadow:0 10px 22px -8px rgba(10,150,120,.55),0 0 0 0 rgba(16,185,129,.38)}
+  50%{box-shadow:0 10px 22px -8px rgba(10,150,120,.55),0 0 0 7px rgba(16,185,129,0)}}
+</style>
+</head><body>
+<div class="phead">
+  <h1>浅色模式重构 · v2</h1>
+  <p>深色保持 v1 不变，三版浅色按各自方向<b>重新设计</b>。本页的呼吸点、扫光、光晕漂移、胶囊辉光均为<b>真实动效</b>，建议在浏览器打开观察。</p>
+  <div class="diag">
+    <b>v1 浅色的四个通病（本版逐条修复）</b>
+    <ul>
+      <li>卡片与背景"白对白"，没有对比 —— 界面"糊"在一起</li>
+      <li>阴影太弱 → 没有纵深，卡片像贴纸</li>
+      <li>薄荷绿在浅底上发灰，没有存在感</li>
+      <li>光晕像"脏渍"浮在背景上，而不是氛围</li>
+    </ul>
+  </div>
+</div>
+<style>
+/* ══════════ A2 · Aurora Glass 浅色重构 ══════════ */
+.dA2{--tx:#0A3B31;--tx2:rgba(10,59,49,.68);--tx3:rgba(10,59,49,.48);
+    --ac:#0B9E7D;--ln:rgba(10,59,49,.10);--ln2:rgba(10,59,49,.16);
+    --card:linear-gradient(152deg,rgba(255,255,255,.86),rgba(255,255,255,.62));
+    --csh:inset 0 1px 0 rgba(255,255,255,.98),0 26px 52px -24px rgba(6,95,70,.30),0 3px 10px -5px rgba(6,95,70,.14);
+    --blur:blur(30px) saturate(180%);
+    --num:#063A2C;--numsh:0 10px 28px -10px rgba(11,158,125,.4);
+    --trk:rgba(10,59,49,.09);--chipbg:rgba(255,255,255,.72);--plbg:rgba(11,158,125,.15);
+    --capbg:rgba(10,59,49,.055);--capbd:rgba(10,59,49,.11);--captx:rgba(10,59,49,.68);
+    --caprec:rgba(11,158,125,.15);--caprecbd:rgba(11,158,125,.35);--captx2:#0A7A62;
+    --capactb:linear-gradient(135deg,#0C9F7E,#14B8A6);--capactbd:transparent;--capactx:#fff;
+    --capanim:pulseE 2.6s ease-in-out infinite;--pgbg:#FFFFFF;
+    --ambb:rgba(180,83,9,.10);--ambbd:rgba(180,83,9,.26);--ambtx:#92400E;
+    background:linear-gradient(168deg,#EAF7F2,#E8F1F7 55%,#EDEFF9)}
+.dA2::before{content:"";position:absolute;inset:-25%;z-index:1;pointer-events:none;
+  background:radial-gradient(46% 38% at 20% 14%,rgba(16,185,129,.34),transparent 68%),
+             radial-gradient(42% 36% at 84% 22%,rgba(34,211,238,.26),transparent 68%),
+             radial-gradient(40% 42% at 58% 92%,rgba(139,92,246,.17),transparent 70%);
+  filter:blur(38px);animation:auroraA 30s ease-in-out infinite alternate}
+.dA2 .card{border-color:rgba(255,255,255,.92);border-radius:30px}
+
+/* ══════════ B2 · Porcelain 浅色重构 ══════════ */
+.dB2{--tx:#0C3A30;--tx2:rgba(12,58,48,.62);--tx3:rgba(12,58,48,.44);
+    --ac:#0FA98A;--ln:rgba(15,60,50,.055);--ln2:rgba(15,60,50,.12);
+    --card:#FFFFFF;
+    --csh:0 1px 2px rgba(15,60,50,.05),0 20px 46px -18px rgba(15,70,60,.20),0 6px 16px -10px rgba(15,70,60,.10);
+    --blur:none;
+    --num:#0B332B;--numsh:none;
+    --trk:rgba(15,60,50,.08);--chipbg:rgba(15,60,50,.045);--plbg:rgba(15,169,138,.13);
+    --capbg:rgba(15,60,50,.045);--capbd:rgba(15,60,50,.09);--captx:rgba(12,58,48,.64);
+    --caprec:rgba(15,169,138,.14);--caprecbd:rgba(15,169,138,.32);--captx2:#0B7F68;
+    --capactb:#0FA98A;--capactbd:transparent;--capactx:#fff;
+    --capanim:none;--pgbg:#FFFFFF;
+    --ambb:rgba(180,83,9,.09);--ambbd:rgba(180,83,9,.22);--ambtx:#8A5A12;
+    background:linear-gradient(172deg,#F0F8F5,#EDF4F8)}
+.dB2::before{content:"";position:absolute;inset:-20%;z-index:1;pointer-events:none;
+  background:radial-gradient(52% 40% at 76% 4%,rgba(16,185,129,.16),transparent 70%),
+             radial-gradient(48% 42% at 10% 96%,rgba(45,212,191,.13),transparent 72%);
+  filter:blur(40px)}
+.dB2 .card{border-radius:32px;padding:17px;border-color:rgba(15,60,50,.045)}
+.dB2 .n1{font-weight:700}
+
+/* ══════════ C2 · Obsidian 浅色重构 ══════════ */
+.dC2{--tx:#15181A;--tx2:rgba(21,24,26,.58);--tx3:rgba(21,24,26,.40);
+    --ac:#0A8A6C;--ln:rgba(0,0,0,.07);--ln2:rgba(0,0,0,.14);
+    --card:#FFFFFF;
+    --csh:0 1px 2px rgba(10,20,15,.05),0 5px 16px -8px rgba(10,40,30,.10);
+    --blur:none;
+    --num:#141618;--numsh:none;
+    --trk:rgba(0,0,0,.08);--chipbg:rgba(0,0,0,.018);--plbg:rgba(10,138,108,.10);
+    --capbg:transparent;--capbd:rgba(0,0,0,.115);--captx:rgba(21,24,26,.62);
+    --caprec:rgba(10,138,108,.055);--caprecbd:rgba(10,138,108,.34);--captx2:#0A7A5F;
+    --capactb:rgba(10,138,108,.07);--capactbd:rgba(10,138,108,.52);--capactx:#0A7A5F;
+    --capanim:none;--pgbg:#FFFFFF;
+    --ambb:transparent;--ambbd:rgba(180,83,9,.30);--ambtx:#8A5A12;
+    background:#F7F8F8}
+.dC2::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(70% 34% at 50% -6%,rgba(16,185,129,.08),transparent 70%)}
+.dC2 .card{border-radius:20px;padding:15px 16px;border-color:rgba(0,0,0,.075)}
+.dC2 .hero .hlabel{margin-top:14px}
+.dC2 .hlabel{letter-spacing:.12em;font-size:11px}
+.dC2 .n1{background:linear-gradient(180deg,#26292B 18%,#0A8A6C 96%);-webkit-background-clip:text;background-clip:text;
+        -webkit-text-fill-color:transparent;font-weight:680;letter-spacing:-1.2px;font-size:46px}
+.dC2 .n2{background:linear-gradient(180deg,#26292B 20%,#0A8A6C 96%);-webkit-background-clip:text;background-clip:text;
+        -webkit-text-fill-color:transparent;font-weight:680}
+.dC2 .pbar{height:3px;border-radius:2px}
+.dC2 .pbar i::after{display:none}
+.dC2 .s4 span{letter-spacing:.11em}
+.dC2 .cap{height:34px;font-size:12px}
+.dC2 .chip{background:rgba(0,0,0,.015)}
+</style>
+
+<!-- ══════════════ A2 ══════════════ -->
+<div class="dirblock">
+  <div class="dhead"><span class="dnum">A2</span><div>
+    <h2>Aurora Glass · 极光玻璃（浅色重构）</h2>
+    <p>极光完整透出 + 玻璃更"实" —— 保留氛围，补上对比与纵深</p>
+  </div></div>
+  <div class="pair">
+    <div class="phone"><div class="plabel">浅色模式 · v2</div><div class="screen dA2"></div></div>
+  </div>
+  <div class="notes">
+    <div class="nt">v2 修了什么<span class="fix">四条通病全覆盖</span></div>
+    <ul>
+      <li><b>背景不再"近白雾面"</b>：改为青绿倾向的柔光渐变，三层极光（绿 34% / 青 26% / 紫 17%）完整透出并缓慢漂移</li>
+      <li><b>玻璃更"实"</b>：白色占比提到 62–86% + 白色描边（1px 近乎不透明白）→ 卡片从背景里"立"起来</li>
+      <li><b>纵深双保险</b>：白色内高光（顶部 1px 亮线）+ <b>绿色调柔影</b>（26px 投影，色相跟着主题走，不再是灰影）</li>
+      <li><b>强调色加深</b>：薄荷 → 翡翠 #0B9E7D；「加班中」渐变胶囊 + 呼吸辉光（真实动效）</li>
+      <li><b>数字</b>：深墨绿 + 极淡绿色辉光，浅色下也有"发光感"但不刺眼</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════ B2 ══════════════ -->
+<div class="dirblock">
+  <div class="dhead"><span class="dnum">B2</span><div>
+    <h2>Porcelain · 珠光瓷白（浅色重构）</h2>
+    <p>纯白瓷片 + 双层柔影 —— 白卡必须真正"白"，层次靠光影不靠描边</p>
+  </div></div>
+  <div class="pair">
+    <div class="phone"><div class="plabel">浅色模式 · v2</div><div class="screen dB2"></div></div>
+  </div>
+  <div class="notes">
+    <div class="nt">v2 修了什么<span class="fix">对比 + 纵深</span></div>
+    <ul>
+      <li><b>卡片从"半透明"改为纯白瓷片</b>：#FFFFFF 实色 —— 瓷白方向的白卡必须真正白</li>
+      <li><b>双层柔影浮起</b>：近距小影（1px/2px 定形）+ 远距大影（46px 扩散定纵深）→ 卡片像放在桌面上的瓷片，有物理感</li>
+      <li><b>背景压暗一档</b>（#F0F8F5）：拉开"背景灰绿 ↔ 卡片纯白"的明度差，杜绝白对白</li>
+      <li><b>描边减到最淡</b>（4.5% 透明度）：让圆角与阴影说话，保持"轻盈"</li>
+      <li><b>强调色</b>：青绿 #0FA98A 实色瓷釉质感；按钮为实色 + 柔影，无辉光（静音式反馈）</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════ C2 ══════════════ -->
+<div class="dirblock">
+  <div class="dhead"><span class="dnum">C2</span><div>
+    <h2>Obsidian · 曜石极简（浅色重构）</h2>
+    <p>纯白卡 + 发丝描边 + 渐变文字 —— Linear 浅色模式同款思路</p>
+  </div></div>
+  <div class="pair">
+    <div class="phone"><div class="plabel">浅色模式 · v2</div><div class="screen dC2"></div></div>
+  </div>
+  <div class="notes">
+    <div class="nt">v2 修了什么<span class="fix">精密感 + 光泽</span></div>
+    <ul>
+      <li><b>卡片改纯白 + 发丝描边</b>（7% 黑）：Linear 浅色同款 —— 层次靠描边与留白，阴影极小</li>
+      <li><b>数字改渐变文字</b>（石墨 #26292B → 翡翠 #0A8A6C，自上而下）：浅色下也有"光泽"，这是 C 方向的核心签名</li>
+      <li><b>背景</b>：#F7F8F8 中性底 + 顶部极淡绿光（8%），冷静精密</li>
+      <li><b>强调绿加深</b> #0A8A6C：浅底上足够锐利；胶囊为描边式（透明底），选中态加粗描边</li>
+      <li><b>进度线 3px 精细线</b>：去掉高光扫动，保持"几乎看不见但能感觉到"的克制</li>
+    </ul>
+  </div>
+</div>
+
+<div class="dirblock">
+  <div class="notes" style="margin-top:0">
+    <div class="nt">对比 · 三版浅色各自的性格</div>
+    <ul>
+      <li><b>A2 极光</b>：光影流转让页面"活着" —— 氛围最强，仍是三版里最有"未来感"的</li>
+      <li><b>B2 瓷白</b>：最干净、最通透 —— 白卡与灰绿底的明度节奏，像精品酒店的卫浴瓷砖</li>
+      <li><b>C2 曜石</b>：最精密、最"工具感" —— 渐变文字 + 发丝描边，浅色下的 Linear</li>
+      <li>💡 若纠结：深色用 A（氛围），浅色用 C2（精密）—— 同 App 明暗各有性格，但配色系统同源（翡翠绿 + 青绿）</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+const SB = `<div class="sb"><span>20:00</span><span class="batt">5G <i></i> 96%</span></div>
+<div class="apph"><span class="logo"></span><b>SalaryJump</b><span class="gear">\u2699\uFE0E</span></div>`;
+const HERO = `<div class="card hero">
+  <div class="caps">
+    <span class="cap act">⏱ 加班中</span>
+    <span class="cap">🏖 请假</span>
+    <span class="cap rec">💰 ¥200.00</span>
+  </div>
+  <div class="hlabel"><i class="dotbreath"></i><span>今日已赚</span><span class="clock">20:00:00</span></div>
+  <div class="n1">¥ 777.78</div>
+  <div class="chiprow"><span class="chip"><i class="cdot"></i>已下班 · 工资已满额</span></div>
+  <div class="pbar"><i></i></div>
+  <div class="s4">
+    <div><b>¥777.78</b><span>今日目标</span></div>
+    <div><b>¥97.22</b><span>每小时</span></div>
+    <div><b>¥1.62</b><span>每分钟</span></div>
+    <div><b>¥0.027</b><span>每秒</span></div>
+  </div>
+  <div class="hr"></div>
+  <div class="sched">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>`;
+const CUM = `<div class="card">
+  <div class="hlabel"><i class="dotbreath"></i><span>累计收入</span><a class="link">明细 ›</a></div>
+  <div class="brow"><div class="n2">¥ 1,427.78</div><span class="pill">已结算 1 天</span></div>
+  <div class="sub2">按工作日累计</div>
+  <div class="ms">
+    <div class="track"><i></i><b style="left:25%"></b><b style="left:50%"></b><b style="left:75%"></b><b style="left:100%"></b></div>
+    <div class="mlab"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+  </div>
+  <div class="chiprow" style="margin-top:12px"><span class="chip amber">下个里程碑 25%（¥5,890.00）· 还需 6 个工作日</span></div>
+  <div class="cols">
+    <div><span>已攒</span><b>¥1,427.78</b></div>
+    <div><span>还差</span><b>¥22,132.22</b></div>
+    <div><span>预计完成</span><b>11月19日</b></div>
+  </div>
+</div>`;
+document.querySelectorAll('.screen').forEach(function (s) {
+  s.insertAdjacentHTML('beforeend', SB + HERO + CUM);
+});
+</script>
+</body></html>

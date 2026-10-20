@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f2f4f7;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+     padding:16px;display:flex;flex-direction:column;gap:18px}
+.panel{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.hd{display:flex;align-items:center;gap:9px;margin-bottom:5px;flex-wrap:wrap}
+.hd .t{font-size:15px;font-weight:800;color:#111827}
+.bdg{font-size:10.5px;padding:2.5px 9px;border-radius:8px;font-weight:600}
+.b-ref{background:#f3f4f6;color:#4b5563}
+.b-ok{background:#d1fae5;color:#047857}
+.b-mid{background:#e0f2fe;color:#0369a1}
+.b-new{background:#fef3c7;color:#92400e}
+.desc{font-size:11.5px;color:#6b7280;line-height:1.6;margin-bottom:12px}
+.desc b{color:#374151}
+.phone{width:384px;border-radius:20px;padding:12px 20px 18px;
+       background:linear-gradient(180deg,#ECFBF4,#EEF6FE 55%,#F1F6FF);margin:0 auto}
+.phone.dark{background:linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26)}
+/* 主卡 */
+.hero{border-radius:24px;padding:20px;position:relative;overflow:hidden;
+      box-shadow:0 5px 14px rgba(16,185,129,.30)}
+.hero.dk{box-shadow:0 5px 14px rgba(0,0,0,.5)}
+.hero>*{position:relative;z-index:2}
+.hg{position:absolute;border-radius:50%;background:rgba(255,255,255,.12);z-index:1}
+.hg.b{background:rgba(255,255,255,.08)}
+.hrow{display:flex;align-items:center;gap:7px;height:24px}
+.dotw{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.65)}
+.hlab{font-size:11.5px;color:rgba(255,255,255,.78);letter-spacing:.12em;font-weight:600;flex:1}
+.clock{font-size:12px;color:rgba(255,255,255,.72)}
+.amt{font-size:46px;font-weight:700;color:#fff;letter-spacing:-1.5px;margin-top:6px;line-height:1}
+.amt .c{font-size:24px;font-weight:600}
+.pill{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:12px;
+      padding:6px 11px;border-radius:20px;margin-top:12px}
+.pb{height:6px;border-radius:4px;background:rgba(255,255,255,.26);margin-top:16px;overflow:hidden}
+.pb>i{display:block;height:100%;background:#fff;border-radius:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:14px}
+.stats .v{font-size:13px;font-weight:600;color:#fff;text-align:center}
+.stats .k{font-size:10.5px;color:rgba(255,255,255,.72);text-align:center;margin-top:3px}
+.dv{height:1px;background:rgba(255,255,255,.22);margin:13px 0 9px}
+.sch{font-size:11.5px;color:rgba(255,255,255,.78)}
+/* 白卡 */
+.card{border-radius:24px;padding:20px;margin-top:14px;box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.card.dk{box-shadow:0 3px 10px rgba(0,0,0,.35)}
+.chead{display:flex;align-items:center;gap:7px;height:24px}
+.cdot{width:7px;height:7px;border-radius:50%}
+.clab{font-size:11.5px;letter-spacing:.12em;font-weight:600;flex:1}
+.lk{font-size:12.5px;font-weight:600}
+.nb{font-size:32px;font-weight:700;letter-spacing:-1px;margin-top:9px;line-height:1;
+    display:flex;align-items:baseline;gap:3px}
+.nb .un{font-size:15px;font-weight:400}
+.pb2{height:6px;border-radius:4px;margin-top:13px;overflow:hidden}
+.pb2>i{display:block;height:100%;border-radius:4px}
+.btns{display:flex;gap:9px;margin-top:16px}
+.b1{flex:1;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center;
+    font-size:14.5px;font-weight:700;color:#fff}
+.b2{width:88px;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:12.5px}
+.sub{font-size:11.5px;margin-top:11px}
+.dv2{height:1px;margin:15px 0 13px}
+.goal{display:flex;align-items:center;justify-content:space-between}
+.goal .n{font-size:13px;font-weight:600}
+.chip{font-size:11.5px;padding:5px 10px;border-radius:12px;margin-left:9px}
+</style></head><body>
+<div id="app"></div>
+<script>
+const HERO_B = 'linear-gradient(135deg,#0EA47A,#10B981 33%,#22C6B4 66%,#2DD4BF)';
+const HERO_B_DK = 'linear-gradient(135deg,#065F46,#0B8A6A 33%,#0E9C8C 66%,#14B8A6)';
+
+function heroCard(dark){
+  return `<div class="hero${dark?' dk':''}" style="background:${dark?HERO_B_DK:HERO_B}">
+    <div class="hg" style="width:150px;height:150px;top:-42px;right:-38px"></div>
+    <div class="hg b" style="width:110px;height:110px;bottom:-48px;left:-30px"></div>
+    <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">17:23:15</span></div>
+    <div class="amt"><span class="c">¥</span>777.78</div>
+    <div class="pill">● 今天下班 · 工资已满额</div>
+    <div class="pb"><i style="width:100%"></i></div>
+    <div class="stats">
+      <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+      <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+      <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+      <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+    </div>
+    <div class="dv"></div>
+    <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>`;
+}
+
+// 喝水卡（teal 青绿系）
+function waterCard(bg, dark){
+  const C = dark
+    ? {num:'#2DD4BF', dot:'#2DD4BF', link:'#2DD4BF', pb:'#2DD4BF', lab:'#7E9AA3',
+       track:'#1E3336', sub:'#9FB8BE', btn:'linear-gradient(135deg,#0D9488,#14B8A6)',
+       b2bg:'#12242A', b2tx:'#BFE3DC', b2bd:'#1F3E3D'}
+    : {num:'#0F766E', dot:'#14B8A6', link:'#0F766E', pb:'#14B8A6', lab:'#8AA6B0',
+       track:'#E6F2EE', sub:'#61808C', btn:'linear-gradient(135deg,#0D9488,#14B8A6)',
+       b2bg:'#F7FCFA', b2tx:'#2E5A55', b2bd:'#D3E9E3'};
+  return `<div class="card${dark?' dk':''}" style="background:${bg}">
+    <div class="chead"><span class="cdot" style="background:${C.dot}"></span><span class="clab" style="color:${C.lab}">今日喝水</span>
+      <span class="lk" style="color:${C.link}">记录</span><span class="lk" style="color:${C.link};margin-left:14px">统计</span></div>
+    <div class="nb" style="color:${C.num}">2350<span class="un" style="color:${C.sub}">/ 3000 ml</span></div>
+    <div class="pb2" style="background:${C.track}"><i style="width:78%;background:${C.pb}"></i></div>
+    <div class="btns"><div class="b1" style="background:${C.btn}">喝水 +550 ml</div>
+      <div class="b2" style="background:${C.b2bg};color:${C.b2tx};border:1.5px solid ${C.b2bd}">选饮品</div></div>
+    <div class="sub" style="color:${C.sub}">下次提醒 10月12日 09:30 · 约 149 kcal · 含糖 1 杯</div>
+  </div>`;
+}
+
+// 累计卡（绿系）
+function moneyCard(bg, dark){
+  const C = dark
+    ? {num:'#34D399', dot:'#34D399', link:'#34D399', pb:'#34D399', lab:'#7E9AA3',
+       track:'#1E3336', sub:'#9FB8BE', text:'#E8F4F2', border:'#1F3A38', chipBg:'#122E26'}
+    : {num:'#047857', dot:'#10B981', link:'#047857', pb:'#10B981', lab:'#8AA6B0',
+       track:'#E6F2EE', sub:'#61808C', text:'#16323B', border:'#E3EFEC', chipBg:'#ECFDF5'};
+  return `<div class="card${dark?' dk':''}" style="background:${bg}">
+    <div class="chead"><span class="cdot" style="background:${C.dot}"></span><span class="clab" style="color:${C.lab}">累计收入</span>
+      <span class="lk" style="color:${C.link}">明细 ›</span></div>
+    <div class="nb" style="color:${C.num}">¥ 1,427.78<span class="chip" style="background:${C.chipBg};color:${C.num}">1 天</span></div>
+    <div class="sub" style="margin-top:8px;color:${C.sub}">按工作日累计</div>
+    <div class="dv2" style="background:${C.border}"></div>
+    <div class="goal"><span class="n" style="color:${C.text}">🎯 MacBook Pro 23,560.00</span><span class="lk" style="color:${C.link}">设置</span></div>
+    <div class="pb2" style="background:${C.track}"><i style="width:6%;background:${C.pb}"></i></div>
+    <div class="sub" style="color:${C.sub}">已攒 1,427.78 · 还差 22,132.22 · 约还需 29 个工作日</div>
+  </div>`;
+}
+
+const V = [
+  { tag:'参照', cls:'b-ref', t:'B 方案 · 纯白卡（现状）',
+    d:'下两卡纯白无渐变 —— 与主卡的"有材质"仍有一档差距。',
+    w:'#FFFFFF', m:'#FFFFFF', dark:false },
+
+  { tag:'①', cls:'b-mid', t:'对角渐淡 135°（与主卡同向）',
+    d:'白 → 主题色 <b>5%</b>，右下角最淡染。方向与主卡完全一致（左上→右下），三卡共享同一套"光走对角"的材质逻辑。',
+    w:'linear-gradient(135deg,#FFFFFF 42%,#E2F6F2)', m:'linear-gradient(135deg,#FFFFFF 42%,#E4F8EE)', dark:false },
+
+  { tag:'②', cls:'b-mid', t:'上染下白（垂直 180°）',
+    d:'主题色 <b>4%</b> 染在顶部 → 65% 处渐没为白。<b>色块在标题区</b>，像给卡片加了一条"属色头部"，与按钮的彩色形成上下呼应。',
+    w:'linear-gradient(180deg,#E7F8F5,#FFFFFF 65%)', m:'linear-gradient(180deg,#E8F9F0,#FFFFFF 65%)', dark:false },
+
+  { tag:'③', cls:'b-mid', t:'右上柔光（径向，呼应主卡光斑）',
+    d:'右上角一团极淡的<b>径向光斑</b>（约 13% 透明度）→ 60% 处散尽。位置与主卡右上角的柔光圆一致 —— 三卡都在"右上角发光"。',
+    w:'radial-gradient(circle at 88% 6%, rgba(20,184,166,.14), transparent 58%), #FFFFFF',
+    m:'radial-gradient(circle at 88% 6%, rgba(16,185,129,.13), transparent 58%), #FFFFFF', dark:false },
+
+  { tag:'④', cls:'b-ok', t:'对角渐淡 + 右上柔光（完整复刻主卡材质）',
+    d:'<b>两种叠加</b>：底为对角 5% 渐淡，右上再加一团柔光斑 —— 这正是主卡的材质结构（渐变 + 两处光斑），只是浓度降到 1/20。三卡成为"同一材质的不同浓度"。',
+    w:'radial-gradient(circle at 90% 4%, rgba(20,184,166,.12), transparent 52%), linear-gradient(135deg,#FFFFFF 44%,#E6F7F4)',
+    m:'radial-gradient(circle at 90% 4%, rgba(16,185,129,.11), transparent 52%), linear-gradient(135deg,#FFFFFF 44%,#E7F8F0)', dark:false },
+
+  { tag:'深色版', cls:'b-new', t:'④ 的深色主题',
+    d:'深色下同理：卡片底 <b>#14262A</b> → 微染主题色 3~4%（深色只需更淡就可见）。三卡材质一致。',
+    w:'radial-gradient(circle at 90% 4%, rgba(45,212,191,.09), transparent 55%), linear-gradient(135deg,#14262A 40%,#16332F)',
+    m:'radial-gradient(circle at 90% 4%, rgba(52,211,153,.08), transparent 55%), linear-gradient(135deg,#14262A 40%,#163328)',
+    dark:true },
+];
+
+document.getElementById('app').innerHTML = V.map(v=>`
+  <div class="panel">
+    <div class="hd"><span class="t">${v.t}</span><span class="bdg ${v.cls}">${v.tag}</span></div>
+    <div class="desc">${v.d}</div>
+    <div class="phone${v.dark?' dark':''}">
+      ${heroCard(v.dark)}${waterCard(v.w, v.dark)}${moneyCard(v.m, v.dark)}
+    </div>
+  </div>`).join('');
+</script>
+</body></html>

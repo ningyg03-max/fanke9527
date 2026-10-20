@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ padding:16px 12px 44px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:420px}
+h1{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12px;color:#475569;line-height:1.75;margin-top:7px}
+.sec{margin-top:24px}
+.hd{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.num{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+ font-weight:800;font-size:12.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+h2{font-size:15px;font-weight:800;color:#0F172A}
+.sub{font-size:11.5px;color:#64748B;margin:5px 0 12px;line-height:1.65}
+/* 手机屏 */
+.ph{border-radius:20px;padding:14px;background:linear-gradient(168deg,#EAF7F2,#E8F1F7 55%,#EDEFF9);
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.75)}
+.top{display:flex;align-items:center;height:40px;margin-bottom:6px;position:relative}
+.bk{font-size:12.5px;color:#16323B;padding:0 11px;height:32px;display:flex;align-items:center;
+ background:rgba(255,255,255,.85);border-radius:16px;border:1px solid rgba(10,59,49,.10);font-weight:500}
+.tt{position:absolute;left:0;right:0;text-align:center;font-size:16.5px;font-weight:750;color:#0A3B31;pointer-events:none}
+.bf{margin-left:auto;font-size:12.5px;color:#0B9E7D;font-weight:650;padding:0 11px;height:32px;display:flex;align-items:center;
+ background:rgba(255,255,255,.85);border-radius:16px;border:1.5px solid rgba(11,158,125,.4)}
+.mrow{display:flex;align-items:center;margin:10px 0 12px}
+.mn{width:36px;height:34px;border-radius:17px;display:flex;align-items:center;justify-content:center;
+ color:#0FA98A;font-size:16px;background:rgba(255,255,255,.85);border:1px solid rgba(10,59,49,.10)}
+.mt{flex:1;text-align:center;font-size:15.5px;font-weight:750;color:#0A3B31}
+/* 卡片 */
+.card{background:linear-gradient(152deg,rgba(255,255,255,.92),rgba(255,255,255,.7));border-radius:20px;
+ border:1px solid rgba(255,255,255,.95);box-shadow:0 14px 30px -20px rgba(6,95,70,.25);padding:14px;margin-bottom:10px}
+.empty{text-align:center;padding:26px 10px;color:#7C939C;font-size:13px}
+/* 弹窗 */
+.dlg{background:#fff;border-radius:16px;box-shadow:0 14px 36px -14px rgba(15,40,40,.35);overflow:hidden;margin-top:10px}
+.dt{font-size:15px;font-weight:750;color:#16323B;padding:16px 20px 8px}
+.dbody{padding:0 20px 6px}
+.opt{display:flex;align-items:center;gap:11px;padding:12px 2px;border-bottom:1px solid #F2F6F5}
+.opt:last-child{border-bottom:none}
+.ico{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;
+ background:rgba(10,59,49,.05);border:1px solid rgba(10,59,49,.08)}
+.ot{flex:1}
+.ot b{font-size:13.5px;color:#16323B;display:block}
+.ot span{font-size:10.5px;color:#8AA6B0}
+.arr{color:#B9CCC6;font-size:16px}
+.inp{width:100%;height:44px;border-radius:10px;border:1px solid #E3EFEC;background:#F7FBFA;padding:0 13px;
+ font-size:16px;font-weight:650;color:#16323B;display:flex;align-items:center;margin-top:8px}
+.hint{font-size:10.5px;color:#8AA6B0;line-height:1.55;margin-top:9px}
+.dbtns{display:flex;justify-content:flex-end;gap:6px;padding:10px 12px 14px}
+.db{font-size:13px;font-weight:650;color:#0FA98A;padding:9px 14px;border-radius:9px}
+.db.gh{color:#8AA6B0}
+.db.solid{background:linear-gradient(135deg,#0FA98A,#14B8A6);color:#fff;box-shadow:0 6px 14px -6px rgba(10,150,120,.5)}
+/* 日历行 */
+.crow{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.9);border-radius:14px;
+ padding:11px 13px;margin-bottom:8px;border:1px solid rgba(10,59,49,.06)}
+.crow.hl{border-color:rgba(245,158,11,.45);background:rgba(254,243,199,.5)}
+.cd{width:38px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.cd b{font-size:15px;font-weight:750;color:#16323B}
+.cd span{font-size:9px;color:#8AA6B0}
+.cm{flex:1;font-size:12.5px;font-weight:600}
+.cm.amber{color:#B45309}
+.cm.plain{color:#5B7C7C}
+.ca{font-size:14px;font-weight:720;color:#0FA98A}
+.ca.zero{color:#B9CCC6}
+/* 说明 */
+.note{background:#fff;border-radius:14px;padding:13px 15px;border:1px solid #E2E8EC;font-size:11.8px;color:#475569;line-height:1.7;margin-top:12px}
+.note b{color:#0B7A5C}
+.note code{background:#F1F5F4;border-radius:4px;padding:1px 4px;font-size:10.5px;color:#0F766E}
+.foot{background:#ECFDF5;border:1px solid #CDEEE5;border-radius:16px;padding:15px 17px;margin-top:24px;
+ font-size:12px;color:#065F46;line-height:1.85}
+.foot b{display:block;font-size:13px;margin-bottom:7px}
+</style></head><body>
+<div class="page">
+  <h1>补录历史月份收入 · 方案</h1>
+  <p class="intro">先回答：<b>目前没有月级别的入口</b>。日历只能「逐日」补记，且只能标出勤/请假/外快 ——
+  想补一个月的收入得记 20 多天，或者勉强用「外快」记一笔（但日历会显示成「外快」，语义不对）。</p>
+
+  <div class="note">
+    <b>现状能力盘点</b><br>
+    ✅ 日历可往前翻任意月份（无限制）<br>
+    ✅ 可逐日补记：出勤 / 请假 / 外快<br>
+    ❌ 没有「直接录入一笔月度金额」的入口<br>
+    ⚠️ 变通方式（记外快）语义不准 + 显示为「外快」
+  </div>
+
+  <!-- ══════ 方案 ══════ -->
+  <div class="sec">
+    <div class="hd"><span class="num">①</span><h2>入口：复用现有「补记」按钮</h2></div>
+    <div class="sub">点「补记」后，弹窗里增加第二种补录方式 —— 不动页面布局，发现性好。</div>
+    <div class="ph">
+      <div class="top"><span class="bk">‹ 返回</span><span class="tt">工资日历</span><span class="bf">补记</span></div>
+      <div class="mrow"><span class="mn">‹</span><span class="mt">2025 年 3 月</span><span class="mn">›</span></div>
+      <div class="dlg">
+        <div class="dt">补录方式</div>
+        <div class="dbody">
+          <div class="opt"><span class="ico">📅</span><div class="ot"><b>某一天</b><span>标记出勤 / 请假 / 外快</span></div><span class="arr">›</span></div>
+          <div class="opt"><span class="ico">💰</span><div class="ot"><b>整月收入</b><span>直接录入一笔月度金额</span></div><span class="arr">›</span></div>
+        </div>
+        <div class="dbtns"><span class="db gh">取消</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="hd"><span class="num">②</span><h2>录入弹窗</h2></div>
+    <div class="sub">金额 + 可选备注。自动记入「该月最后一天」，并叠加到已有金额上。</div>
+    <div class="ph">
+      <div class="dlg" style="margin-top:0">
+        <div class="dt">补录 2025 年 3 月 收入</div>
+        <div class="dbody">
+          <div class="inp" style="color:#8AA6B0;font-weight:400">输入金额…</div>
+          <div style="font-size:11px;color:#8AA6B0;margin-top:5px">元</div>
+          <div class="hint">ℹ️ 将记入 <b>3 月 31 日</b>，显示为「补录收入」；已归档月份的金额会自动并入累计</div>
+        </div>
+        <div class="dbtns"><span class="db gh">取消</span><span class="db solid">保存</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="hd"><span class="num">③</span><h2>补录后的日历效果</h2></div>
+    <div class="sub">补录那天显示「补录收入」标记（琥珀色），与其他记录明确区分。</div>
+    <div class="ph">
+      <div class="card">
+        <div style="font-size:13px;font-weight:750;color:#0A3B31;margin-bottom:9px">2025 年 3 月 · 合计 ¥ 12,000.00</div>
+        <div class="crow hl">
+          <div class="cd"><b>31</b><span>周一</span></div>
+          <div class="cm amber">补录收入</div>
+          <div class="ca">¥ 12,000.00</div>
+        </div>
+        <div class="empty">（该月其余日子无记录）</div>
+      </div>
+    </div>
+    <div class="note">
+      <b>长按该行</b> → 菜单里可「删除补录」（只扣回补录的金额，不影响那天其他记录）。
+    </div>
+  </div>
+
+  <!-- ══════ 细节 ══════ -->
+  <div class="sec">
+    <div class="hd"><span class="num">④</span><h2>规则细节（默认，可按你意见调整）</h2></div>
+    <div class="note">
+      <b>写入位置</b>：该月<b>最后一天</b>（如 3 月 31 日）—— 一个月一行，日历/月报/年度都能看到<br>
+      <b>叠加</b>：重复补录同一个月的金额会累加（不会覆盖）<br>
+      <b>累计同步</b>：已归档月份直接并入累计总额；当月补录则在归档时自然带上<br>
+      <b>不增加天数</b>：「已结算天数」不受影响（补的是钱，不是出勤天）<br>
+      <b>可删除</b>：长按补录行 →「删除补录」（精确扣回这笔金额）<br>
+      <b>月报联动</b>：月度战报/年度总览的合计会自动包含补录金额（它们都读同一份数据）
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>要确认的点</b>
+    ① 入口方案：复用「补记」按钮（推荐）还是单独加按钮？<br>
+    ② 写入位置：记到「该月最后一天」（推荐）还是让用户选一天？<br>
+    ③ 重复补录：叠加（推荐）还是覆盖？<br><br>
+    回复「确认」或指出要调整的点，我立即开发。
+  </div>
+</div>
+</body></html>

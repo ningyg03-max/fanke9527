@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ padding:16px 12px 44px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:430px}
+h1{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12px;color:#475569;line-height:1.75;margin-top:7px}
+.two{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.colw{flex:1;min-width:186px;max-width:200px}
+.tag{font-size:11px;font-weight:750;padding:3px 11px;border-radius:999px;display:inline-block;margin-bottom:8px}
+.tag.bad{background:#FFE4E6;color:#BE123C}
+.tag.good{background:#D1FAE5;color:#047857}
+.ph{border-radius:18px;padding:14px;background:linear-gradient(168deg,#EAF7F2,#E8F1F7 55%,#EDEFF9);
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.75)}
+.time{font-size:11px;color:#7C939C;text-align:center;margin-bottom:6px;font-variant-numeric:tabular-nums}
+.svgbox{width:130px;height:136px;margin:0 auto}
+.mood{font-size:11.5px;color:#0A7A62;font-weight:650;text-align:center;margin-top:4px}
+.chip{display:block;margin:10px auto 0;width:fit-content;font-size:11px;background:rgba(180,83,9,.10);
+ border:1px solid rgba(180,83,9,.22);color:#92400E;border-radius:999px;padding:5px 12px}
+.note{background:#fff;border-radius:14px;padding:13px 15px;border:1px solid #E2E8EC;font-size:11.8px;color:#475569;line-height:1.75;margin-top:22px}
+.note b{color:#0B7A5C}
+.note code{background:#F1F5F4;border-radius:4px;padding:1px 4px;font-size:10.5px;color:#0F766E}
+.foot{background:#ECFDF5;border:1px solid #CDEEE5;border-radius:16px;padding:14px 16px;margin-top:16px;font-size:12px;color:#065F46;line-height:1.8}
+.foot b{display:block;font-size:12.5px;margin-bottom:6px}
+svg{display:block;width:100%;height:100%}
+</style></head><body>
+<div class="page">
+  <h1>休息日出勤 · 下班后自动切换</h1>
+  <p class="intro">📦 <b>SalaryJump-3.54-offwork.apk</b> —— 修复：休息日出勤（苦命出勤）此前<b>全天锁死</b>，
+  现在过了下班时间（按设置的 17:00）会自动变成「<b>下班快乐</b>」。</p>
+
+  <div class="two">
+    <div class="colw">
+      <span class="tag bad">16:59 · 还在上班</span>
+      <div class="ph">
+        <div class="time">周日 16:59</div>
+        <div class="svgbox" id="p1"></div>
+        <div class="mood">别人放假我搬砖</div>
+        <div class="chip">● 周末 · 出勤 调休</div>
+      </div>
+    </div>
+    <div class="colw">
+      <span class="tag good">17:00 · 下班啦（自动切换）</span>
+      <div class="ph">
+        <div class="time">周日 17:00</div>
+        <div class="svgbox" id="p2"></div>
+        <div class="mood">下班快乐！</div>
+        <div class="chip">● 周末 · 出勤 调休</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>根因</b>：小人姿势推导里「休息日出勤」（state 7）直接返回「苦命出勤」，
+    <b>完全没有时间判断</b> → 全天都是同一姿势（你 17:02 看到的还是搬砖状态）。<br><br>
+    <b>修复</b>：给姿势推导传入「下班时间」（读设置里的 <code>work_end</code>）——
+    <code>当前时间 ≥ 下班时间</code> 时返回「下班快乐」。主卡与小组件共用同一逻辑，两处同步切换。<br><br>
+    <b>边界</b>：16:59 → 苦命出勤 ｜ 17:00 → 下班快乐（整点即切）｜ 之后保持<br>
+    <b>不受影响</b>：请假（全天在家）、工作日（本来就由计价器处理下班状态）、周末未出勤
+  </div>
+
+  <div class="foot">
+    <b>验证</b>
+    ✅ 编译 238 类 · 测试 908/908<br>
+    ✅ 反编译核对：姿势推导 / 下班时间读取 / 小组件调用<br>
+    ✅ 逻辑推演：16:59 → 苦命出勤，17:00 / 17:02 / 20:00 → 下班快乐<br><br>
+    💡 如果你想让「下班快乐」有个庆祝效果（比如小人蹦跳 + 撒花一次），
+    说一声 —— 现在用的就是下班快乐的姿势（举手 + 彩带常驻动画）。
+  </div>
+</div>
+
+<script>
+/* 苦命出勤（与 App 同源） */
+const PET_HW = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>
+<ellipse cx="50" cy="90" rx="16" ry="3.4" fill="rgba(10,30,25,.10)"/>
+<ellipse cx="50" cy="60" rx="21" ry="24" fill="url(#g1)"/>
+<ellipse cx="44" cy="50" rx="8" ry="6" fill="rgba(255,255,255,.30)"/>
+<path d="M31 58 Q25 64 26 70" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M69 58 Q74 63 73 68" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+<rect x="69" y="69" width="15" height="12" rx="2.5" fill="#B08968"/>
+<rect x="69" y="69" width="15" height="4.5" rx="2.2" fill="#8F6B4A"/>
+<path d="M73.5 69 L73.5 66.5 Q76.5 64.5 79.5 66.5 L79.5 69" stroke="#8F6B4A" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<path d="M43 82 L40 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+<path d="M57 82 L61 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+<circle cx="43.5" cy="57" r="2.6" fill="#063A2F"/><circle cx="56.5" cy="57" r="2.6" fill="#063A2F"/>
+<path d="M40.1 52.6 L45.5 54.4" stroke="#063A2F" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M59.9 52.6 L54.5 54.4" stroke="#063A2F" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M45 67 Q47.5 64 50 67 Q52.5 70 55 67" stroke="#063A2F" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<path d="M30 42 A9 9 0 0 1 44 38 A7 7 0 0 1 46 51 L31 51 A6.4 6.4 0 0 1 30 42 Z" fill="#93A7B4"/>
+<path d="M36 53 L35 58" stroke="#6FB3E0" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M41 53 L40 57.6" stroke="#6FB3E0" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M63 44 Q65 47.6 63 51 Q61 47.6 63 44 Z" fill="#7CC6F2"/>
+</svg>`;
+
+/* 下班快乐（与 App 同源） */
+const PET_OFF = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>
+<ellipse cx="50" cy="92" rx="16" ry="3.4" fill="rgba(10,30,25,.10)"/>
+<g>
+<ellipse cx="50" cy="52" rx="21" ry="23" fill="url(#g2)"/>
+<ellipse cx="44" cy="43" rx="8" ry="5.6" fill="rgba(255,255,255,.30)"/>
+<path d="M31 46 Q22 40 20 32" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M69 46 Q78 40 80 32" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M43 74 L38 80" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+<path d="M57 74 L62 80" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+<path d="M40 44 Q43.5 40 47 44" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>
+<path d="M53 44 Q56.5 40 60 44" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>
+<path d="M44 54 Q50 61 56 54" stroke="#063A2F" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+</g>
+<circle cx="24" cy="20" r="2.6" fill="#F472B6"/>
+<circle cx="76" cy="22" r="2.6" fill="#FCD34D"/>
+<circle cx="34" cy="12" r="2.2" fill="#60A5FA"/>
+<circle cx="66" cy="10" r="2.2" fill="#34D399"/>
+<path d="M50 6 L51.4 10.6 L56 12 L51.4 13.4 L50 18 L48.6 13.4 L44 12 L48.6 10.6 Z" fill="#FCD34D"/>
+</svg>`;
+
+document.getElementById('p1').innerHTML = PET_HW;
+document.getElementById('p2').innerHTML = PET_OFF;
+</script>
+</body></html>

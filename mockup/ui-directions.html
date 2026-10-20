@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+     padding:14px 10px 40px;display:flex;flex-direction:column;align-items:center}
+.phead{width:100%;max-width:392px;margin:6px auto 26px}
+.phead h1{font-size:21px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.phead p{font-size:12.5px;color:#475569;line-height:1.75;margin-top:8px}
+.phead .lg{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.phead .lg span{font-size:10.5px;padding:4px 10px;border-radius:999px;background:#fff;color:#334155;border:1px solid #D8E0E6}
+.dirblock{width:100%;max-width:392px;margin:0 auto 38px}
+.dhead{display:flex;gap:11px;align-items:flex-start;margin-bottom:16px}
+.dnum{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+      font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.dhead h2{font-size:15.5px;font-weight:800;color:#0F172A;letter-spacing:-.2px}
+.dhead p{font-size:11.5px;color:#64748B;margin-top:4px;line-height:1.5}
+.pair{display:flex;flex-direction:column;gap:26px}
+.phone{border-radius:44px;padding:7px;background:linear-gradient(160deg,rgba(255,255,255,.9),rgba(230,236,240,.9));
+       border:1px solid rgba(100,116,139,.22);box-shadow:0 36px 70px -42px rgba(15,23,42,.5)}
+.plabel{font-size:10.5px;color:#64748B;letter-spacing:.08em;margin:2px 0 9px 14px;font-weight:600}
+.screen{position:relative;border-radius:38px;overflow:hidden;isolation:isolate;
+        padding:13px 13px 17px;display:flex;flex-direction:column;gap:12px;color:var(--tx)}
+.screen>*{position:relative;z-index:2}
+/* 状态栏 */
+.sb{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--tx3);padding:1px 9px 0}
+.sb .batt{display:flex;align-items:center;gap:6px}
+.batt i{width:20px;height:10px;border:1.2px solid var(--tx3);border-radius:3px;position:relative;display:inline-block}
+.batt i::before{content:"";position:absolute;left:1.4px;top:1.4px;bottom:1.4px;width:68%;background:var(--ac);border-radius:1.5px}
+.batt i::after{content:"";position:absolute;right:-3.4px;top:2.6px;width:2px;height:4px;background:var(--tx3);border-radius:1px}
+/* 页头 */
+.apph{display:flex;align-items:center;gap:9px;padding:0 5px}
+.apph .logo{width:21px;height:21px;border-radius:7px;background:linear-gradient(135deg,#34D399,#2DD4BF);
+            box-shadow:0 4px 14px -4px rgba(52,211,153,.65)}
+.apph b{font-size:13px;font-weight:700;letter-spacing:.02em}
+.apph .gear{margin-left:auto;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+            font-size:13px;color:var(--tx2);border:1px solid var(--ln)}
+/* 卡片 */
+.card{border-radius:28px;padding:15px;border:1px solid var(--ln);background:var(--card);box-shadow:var(--csh);
+      -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+/* 胶囊 */
+.caps{display:flex;gap:7px}
+.cap{height:38px;border-radius:999px;flex:1;display:flex;align-items:center;justify-content:center;
+     font-size:12.5px;white-space:nowrap;overflow:hidden;letter-spacing:-.1px;
+     background:var(--capbg);border:1px solid var(--capbd);color:var(--captx)}
+.cap.rec{background:var(--caprec);border-color:var(--caprecbd);color:var(--captx2);font-weight:700}
+.cap.act{background:var(--capactb);border-color:var(--capactbd);color:var(--capactx);font-weight:800;
+         animation:var(--capanim,none)}
+/* 标签行 */
+.hlabel{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--tx2);letter-spacing:.02em}
+.hlabel .clock{margin-left:auto;font-size:11px;color:var(--tx3);font-variant-numeric:tabular-nums}
+.hlabel .link{margin-left:auto;font-size:12px;color:var(--ac);font-weight:650}
+.dotbreath{width:6px;height:6px;border-radius:50%;background:var(--ac);box-shadow:0 0 9px var(--ac);
+           animation:breathK 2.4s ease-in-out infinite}
+.hero .hlabel{margin-top:12px}
+/* 大数字 */
+.n1{font-size:44px;font-weight:760;letter-spacing:-1.8px;line-height:1;margin-top:9px;
+    font-variant-numeric:tabular-nums;color:var(--num);text-shadow:var(--numsh)}
+.n2{font-size:30px;font-weight:760;letter-spacing:-1px;line-height:1;font-variant-numeric:tabular-nums;
+    color:var(--num);text-shadow:var(--numsh)}
+.brow{display:flex;align-items:center;gap:9px;margin-top:10px}
+.pill{font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:999px;background:var(--plbg);color:var(--ac);white-space:nowrap}
+/* 状态胶囊（chip） */
+.chiprow{margin-top:11px}
+.chip{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 11px;border-radius:999px;
+      font-size:11.5px;background:var(--chipbg);border:1px solid var(--ln);color:var(--tx2)}
+.chip .cdot{width:6px;height:6px;border-radius:50%;background:var(--ac);box-shadow:0 0 8px var(--ac)}
+.chip.amber{background:var(--ambb);border-color:var(--ambbd);color:var(--ambtx)}
+/* 进度 */
+.pbar{height:8px;border-radius:6px;background:var(--trk);position:relative;overflow:hidden;margin-top:12px}
+.pbar i{position:absolute;inset:0;border-radius:6px;background:linear-gradient(90deg,#10B981,#34D399 50%,#2DD4BF)}
+.pbar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+               transform:translateX(-110%);animation:sheen 2.9s ease-in-out infinite}
+/* 四格 */
+.s4{display:flex;justify-content:space-between;margin-top:13px;padding:0 2px}
+.s4 div{display:flex;flex-direction:column;gap:4px}
+.s4 b{font-size:13px;font-weight:680;font-variant-numeric:tabular-nums}
+.s4 span{font-size:10.5px;color:var(--tx3);letter-spacing:.02em}
+.hr{height:1px;background:var(--ln);margin:13px 0 10px}
+.sched{font-size:11px;color:var(--tx3)}
+/* 里程碑 */
+.ms .track{position:relative;height:6px;border-radius:4px;background:var(--trk);margin:13px 4px 8px}
+.ms .track i{position:absolute;left:0;top:0;bottom:0;width:6%;border-radius:4px;background:linear-gradient(90deg,#10B981,#2DD4BF)}
+.ms .track b{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);
+             background:var(--pgbg);border:2px solid var(--tx3)}
+.ms .track b:nth-of-type(1){border-color:var(--ambtx)}
+.ms .track b:nth-of-type(2){border-color:var(--tx3)}
+.ms .track b:nth-of-type(3){border-color:var(--tx3)}
+.ms .track b:nth-of-type(4){border-color:var(--tx3)}
+.mlab{display:flex;justify-content:space-between;font-size:10px;color:var(--tx3);padding:0 1px}
+.sub2{font-size:12px;color:var(--tx3);margin-top:8px}
+.cols{display:flex;margin-top:13px}
+.cols>div{flex:1;display:flex;flex-direction:column;gap:4px}
+.cols span{font-size:10.5px;color:var(--tx3)}
+.cols b{font-size:13.5px;font-weight:680;font-variant-numeric:tabular-nums}
+/* 说明块 */
+.notes{background:#fff;border-radius:16px;padding:15px 16px 13px;margin-top:20px;border:1px solid #E2E8EC}
+.nt{font-size:12.5px;font-weight:800;color:#0F172A;margin-bottom:8px}
+.notes ul{list-style:none}
+.notes li{font-size:11.8px;color:#475569;line-height:1.6;padding-left:15px;position:relative;margin:5px 0}
+.notes li::before{content:"";position:absolute;left:1px;top:7px;width:5px;height:5px;border-radius:50%;background:#10B981}
+.impl{font-size:11px;color:#64748B;line-height:1.6;margin-top:10px;padding:9px 11px;background:#F1F5F8;border-radius:10px}
+.impl b{color:#0B7A5C}
+/* 关键帧 */
+@keyframes breathK{0%,100%{opacity:.55;transform:scale(.9)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes sheen{0%{transform:translateX(-110%)}55%,100%{transform:translateX(110%)}}
+@keyframes auroraA{0%{transform:translate3d(-2%,-1%,0) rotate(0deg) scale(1)}
+  100%{transform:translate3d(3%,2%,0) rotate(9deg) scale(1.09);filter:blur(46px) hue-rotate(16deg)}}
+@keyframes auroraB{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(-3%,2%,0) scale(1.1)}}
+@keyframes pulseW{0%,100%{box-shadow:0 10px 26px -10px rgba(255,255,255,.5),0 0 0 0 rgba(255,255,255,.32)}
+  50%{box-shadow:0 10px 26px -10px rgba(255,255,255,.5),0 0 0 7px rgba(255,255,255,0)}}
+@keyframes pulseE{0%,100%{box-shadow:0 12px 26px -10px rgba(10,150,120,.5),0 0 0 0 rgba(16,185,129,.35)}
+  50%{box-shadow:0 12px 26px -10px rgba(10,150,120,.5),0 0 0 7px rgba(16,185,129,0)}}
+</style>
+</head><body>
+<div class="phead">
+  <h1>UI 方向探索 · 3 个样例</h1>
+  <p>玻璃拟态 · 柔和光晕 · 半透明层叠 · 大圆角 · 细腻微动效 —— 每个方向都提供<b>深色 / 浅色双版本</b>（跟随系统自动切换），页面里的光晕与辉光是<b>真实动效</b>，可直接在预览里观察呼吸与漂移。</p>
+  <div class="lg"><span>✦ 深/浅自适应</span><span>✦ 微动效</span><span>✦ 磨砂层叠</span><span>✦ 大圆角</span></div>
+</div>
+<style>
+/* ══════════ A · Aurora Glass 极光玻璃 ══════════ */
+.dA{--tx:#EEFFF8;--tx2:rgba(232,255,247,.68);--tx3:rgba(232,255,247,.48);
+    --ac:#34D399;--ln:rgba(255,255,255,.10);--ln2:rgba(255,255,255,.16);
+    --card:linear-gradient(152deg,rgba(255,255,255,.095),rgba(255,255,255,.032));
+    --csh:0 26px 60px -30px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.12);
+    --blur:blur(22px) saturate(140%);
+    --num:#F2FFFA;--numsh:0 0 36px rgba(52,211,153,.45);
+    --trk:rgba(255,255,255,.10);--chipbg:rgba(255,255,255,.09);--plbg:rgba(52,211,153,.16);
+    --capbg:rgba(255,255,255,.085);--capbd:rgba(255,255,255,.14);--captx:rgba(255,255,255,.92);
+    --caprec:rgba(255,255,255,.20);--caprecbd:rgba(255,255,255,.28);--captx2:#fff;
+    --capactb:#fff;--capactbd:transparent;--capactx:#06483B;
+    --capanim:pulseW 2.6s ease-in-out infinite;--pgbg:#0B1E1A;
+    --ambb:rgba(252,211,77,.13);--ambbd:rgba(252,211,77,.30);--ambtx:#FCD34D;
+    background:linear-gradient(168deg,#07110F,#081518 55%,#071019)}
+.dA::before{content:"";position:absolute;inset:-25%;z-index:1;pointer-events:none;
+  background:radial-gradient(46% 38% at 22% 18%,rgba(16,185,129,.55),transparent 70%),
+             radial-gradient(40% 35% at 82% 26%,rgba(34,211,238,.40),transparent 70%),
+             radial-gradient(38% 40% at 62% 88%,rgba(139,92,246,.30),transparent 72%);
+  filter:blur(34px);animation:auroraA 30s ease-in-out infinite alternate}
+.dA.lt{--tx:#0C2822;--tx2:rgba(12,40,34,.62);--tx3:rgba(12,40,34,.44);
+    --ac:#0AA37F;--ln:rgba(10,60,50,.10);--ln2:rgba(10,60,50,.16);
+    --card:linear-gradient(152deg,rgba(255,255,255,.78),rgba(255,255,255,.52));
+    --csh:0 30px 70px -36px rgba(13,80,68,.50),inset 0 1px 0 rgba(255,255,255,.95);
+    --blur:blur(24px) saturate(160%);
+    --num:#083229;--numsh:0 10px 30px -12px rgba(10,140,110,.45);
+    --trk:rgba(10,60,50,.08);--chipbg:rgba(10,60,50,.055);--plbg:rgba(16,185,129,.13);
+    --capbg:rgba(10,60,50,.055);--capbd:rgba(10,60,50,.10);--captx:rgba(10,40,34,.88);
+    --caprec:rgba(10,163,127,.15);--caprecbd:rgba(10,163,127,.32);--captx2:#077257;
+    --capactb:linear-gradient(135deg,#0BA47F,#14B8A6);--capactbd:transparent;--capactx:#fff;
+    --capanim:pulseE 2.6s ease-in-out infinite;--pgbg:#F2FAF6;
+    --ambb:rgba(180,83,9,.08);--ambbd:rgba(180,83,9,.22);--ambtx:#92400E;
+    background:linear-gradient(168deg,#F2FAF6,#EEF6F8 55%,#F2F4FB)}
+.dA.lt::before{background:radial-gradient(46% 38% at 20% 16%,rgba(16,185,129,.30),transparent 70%),
+             radial-gradient(40% 35% at 84% 24%,rgba(34,211,238,.24),transparent 70%),
+             radial-gradient(38% 40% at 60% 90%,rgba(139,92,246,.16),transparent 72%)}
+
+/* ══════════ B · Porcelain 珠光瓷白 ══════════ */
+.dB{--tx:#EAF7F3;--tx2:rgba(214,240,233,.60);--tx3:rgba(214,240,233,.40);
+    --ac:#5EEAD4;--ln:rgba(255,255,255,.075);--ln2:rgba(255,255,255,.13);
+    --card:rgba(255,255,255,.052);
+    --csh:0 30px 60px -34px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.09);
+    --blur:blur(30px) saturate(120%);
+    --num:#EDFFF9;--numsh:none;
+    --trk:rgba(255,255,255,.08);--chipbg:rgba(255,255,255,.06);--plbg:rgba(94,234,212,.13);
+    --capbg:rgba(255,255,255,.06);--capbd:rgba(255,255,255,.10);--captx:rgba(234,247,243,.88);
+    --caprec:rgba(94,234,212,.16);--caprecbd:rgba(94,234,212,.30);--captx2:#B9F6E8;
+    --capactb:#DFFBF2;--capactbd:transparent;--capactx:#0A3B32;
+    --capanim:none;--pgbg:#0E181B;
+    --ambb:rgba(252,211,77,.10);--ambbd:rgba(252,211,77,.24);--ambtx:#F3D58A;
+    background:linear-gradient(172deg,#0E181B,#0C1417)}
+.dB::before{content:"";position:absolute;inset:-20%;z-index:1;pointer-events:none;
+  background:radial-gradient(50% 42% at 72% 8%,rgba(94,234,212,.20),transparent 70%),
+             radial-gradient(46% 40% at 12% 92%,rgba(45,212,191,.14),transparent 72%);
+  filter:blur(40px);animation:auroraB 36s ease-in-out infinite alternate}
+.dB.lt{--tx:#0C3A30;--tx2:rgba(12,58,48,.58);--tx3:rgba(12,58,48,.40);
+    --ac:#0FA98A;--ln:rgba(15,60,50,.055);--ln2:rgba(15,60,50,.11);
+    --card:rgba(255,255,255,.92);
+    --csh:0 26px 54px -30px rgba(18,90,75,.30),inset 0 1px 0 rgba(255,255,255,1);
+    --blur:none;
+    --num:#0C3A30;--numsh:none;
+    --trk:rgba(15,60,50,.07);--chipbg:rgba(15,60,50,.05);--plbg:rgba(15,169,138,.12);
+    --capbg:rgba(15,60,50,.05);--capbd:rgba(15,60,50,.09);--captx:rgba(12,58,48,.86);
+    --caprec:rgba(15,169,138,.14);--caprecbd:rgba(15,169,138,.28);--captx2:#0B7F68;
+    --capactb:#0FA98A;--capactbd:transparent;--capactx:#fff;
+    --capanim:none;--pgbg:#F7FBF9;
+    --ambb:rgba(180,83,9,.07);--ambbd:rgba(180,83,9,.18);--ambtx:#8A5A12;
+    background:linear-gradient(172deg,#F7FBF9,#F2F7FA)}
+.dB.lt::before{background:radial-gradient(50% 42% at 74% 6%,rgba(16,185,129,.17),transparent 70%),
+             radial-gradient(46% 40% at 10% 94%,rgba(45,212,191,.15),transparent 72%)}
+.dB .card{border-radius:32px;padding:17px}
+.dB .n1{font-weight:680;letter-spacing:-1.4px}
+
+/* ══════════ C · Obsidian 曜石极简 ══════════ */
+.dC{--tx:#EDEFEE;--tx2:rgba(237,239,238,.55);--tx3:rgba(237,239,238,.38);
+    --ac:#34D399;--ln:rgba(255,255,255,.085);--ln2:rgba(255,255,255,.15);
+    --card:rgba(255,255,255,.018);
+    --csh:none;--blur:none;
+    --num:#fff;--numsh:none;
+    --trk:rgba(255,255,255,.08);--chipbg:transparent;--plbg:rgba(52,211,153,.12);
+    --capbg:transparent;--capbd:rgba(255,255,255,.10);--captx:rgba(237,239,238,.62);
+    --caprec:rgba(52,211,153,.07);--caprecbd:rgba(52,211,153,.35);--captx2:#7BEBC4;
+    --capactb:rgba(52,211,153,.08);--capactbd:rgba(52,211,153,.55);--capactx:#5EEAD4;
+    --capanim:none;--pgbg:#0B0C0D;
+    --ambb:transparent;--ambbd:rgba(252,211,77,.32);--ambtx:#E5C56B;
+    background:#0B0C0D}
+.dC::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(70% 34% at 50% -6%,rgba(52,211,153,.16),transparent 70%)}
+.dC.lt{--tx:#16181A;--tx2:rgba(22,24,26,.55);--tx3:rgba(22,24,26,.38);
+    --ac:#0C8A6E;--ln:rgba(0,0,0,.075);--ln2:rgba(0,0,0,.14);
+    --card:rgba(255,255,255,.55);
+    --csh:none;--blur:none;
+    --num:#111;--numsh:none;
+    --trk:rgba(0,0,0,.07);--chipbg:transparent;--plbg:rgba(12,138,110,.10);
+    --capbg:transparent;--capbd:rgba(0,0,0,.10);--captx:rgba(22,24,26,.60);
+    --caprec:rgba(12,138,110,.06);--caprecbd:rgba(12,138,110,.30);--captx2:#0A7A5F;
+    --capactb:rgba(12,138,110,.06);--capactbd:rgba(12,138,110,.45);--capactx:#0A7A5F;
+    --capanim:none;--pgbg:#FAFAF9;
+    --ambb:transparent;--ambbd:rgba(180,83,9,.30);--ambtx:#8A5A12;
+    background:#FAFAF9}
+.dC.lt::before{background:radial-gradient(70% 34% at 50% -6%,rgba(16,185,129,.10),transparent 70%)}
+.dC .card{border-radius:20px;padding:15px 16px}
+.dC .hero .hlabel{margin-top:14px;letter-spacing:.14em;font-size:11px;color:var(--tx3)}
+.dC .hlabel{letter-spacing:.12em}
+.dC .n1{background:linear-gradient(180deg,#FFFFFF 22%,#A9EFD2);-webkit-background-clip:text;background-clip:text;
+        -webkit-text-fill-color:transparent;font-weight:640;letter-spacing:-1.2px;font-size:46px}
+.dC.lt .n1{background:linear-gradient(180deg,#1C2B26,#0C8A6B);-webkit-background-clip:text;background-clip:text}
+.dC .n2{background:linear-gradient(180deg,#FFFFFF 25%,#A9EFD2);-webkit-background-clip:text;background-clip:text;
+        -webkit-text-fill-color:transparent;font-weight:640}
+.dC.lt .n2{background:linear-gradient(180deg,#1C2B26,#0C8A6B);-webkit-background-clip:text;background-clip:text}
+.dC .pbar{height:3px;border-radius:2px}
+.dC .pbar i::after{display:none}
+.dC .s4 span{letter-spacing:.12em}
+.dC .cap{height:34px;font-size:12px}
+</style>
+
+<!-- ══════════════ A ══════════════ -->
+<div class="dirblock">
+  <div class="dhead"><span class="dnum">A</span><div>
+    <h2>Aurora Glass · 极光玻璃</h2>
+    <p>沉浸式氛围光晕 + 磨砂玻璃层叠 —— 最「未来感」的一版</p>
+  </div></div>
+  <div class="pair">
+    <div class="phone"><div class="plabel">深色模式</div><div class="screen dA"></div></div>
+    <div class="phone"><div class="plabel">浅色模式</div><div class="screen dA lt"></div></div>
+  </div>
+  <div class="notes">
+    <div class="nt">动效与智能反馈</div>
+    <ul>
+      <li>极光光晕缓慢漂移 + 色相呼吸（30s 循环）—— 页面「活着」的氛围层</li>
+      <li>「加班中」胶囊呼吸辉光；状态切换时尺寸/颜色弹性形变（spring 420ms）</li>
+      <li>数字变化：滚动计数，结束后 300ms 微弱光脉冲（智能反馈）</li>
+      <li>进度条高光扫过；卡片自下浮入 + 40ms 级联（生成式过渡）</li>
+      <li>点按：胶囊 0.96 回弹；打开明细时数字从卡片「放大延展」到日历（共享元素过渡）</li>
+    </ul>
+    <div class="impl">实现成本 <b>中高</b> · 磨砂 = 半透明层 + 模糊（Android 12+ RenderEffect，或预合成模糊层降开销）；光晕 = 多层径向渐变；重点是渲染性能调优</div>
+  </div>
+</div>
+<!-- ══════════════ B ══════════════ -->
+<div class="dirblock">
+  <div class="dhead"><span class="dnum">B</span><div>
+    <h2>Porcelain · 珠光瓷白</h2>
+    <p>柔和留白 + 单色系渐变 —— 最「轻盈通透」的一版，像早晨的光</p>
+  </div></div>
+  <div class="pair">
+    <div class="phone"><div class="plabel">深色模式</div><div class="screen dB"></div></div>
+    <div class="phone"><div class="plabel">浅色模式</div><div class="screen dB lt"></div></div>
+  </div>
+  <div class="notes">
+    <div class="nt">动效与智能反馈</div>
+    <ul>
+      <li>入场：慢速淡入 + 8px 上浮（500ms ease-out），像光缓缓亮起</li>
+      <li>按压缩放 0.97 + 柔影加深 —— 无辉光、无闪烁，「静音式」反馈</li>
+      <li>数字更新淡入淡出（不滚动、不跳动）；进度以柔和渐变平滑过渡</li>
+      <li>水蓝 → 青绿渐变在按钮/进度上缓慢流动（12s 循环）</li>
+      <li>强调内容以极淡的柔影「浮起」而非发光，层次靠明度差而非描边</li>
+    </ul>
+    <div class="impl">实现成本 <b>低</b> · 纯渐变 + 柔影，无模糊依赖；最接近现有绘制架构，改动量最小</div>
+  </div>
+</div>
+
+<!-- ══════════════ C ══════════════ -->
+<div class="dirblock">
+  <div class="dhead"><span class="dnum">C</span><div>
+    <h2>Obsidian · 曜石极简</h2>
+    <p>描边 + 文字渐变 + 宽字距排版 —— 最接近 ChatGPT / Linear 的「理性精密」</p>
+  </div></div>
+  <div class="pair">
+    <div class="phone"><div class="plabel">深色模式</div><div class="screen dC"></div></div>
+    <div class="phone"><div class="plabel">浅色模式</div><div class="screen dC lt"></div></div>
+  </div>
+  <div class="notes">
+    <div class="nt">动效与智能反馈</div>
+    <ul>
+      <li>细线绘制：进度线自左绘出（600ms，cubic-bezier(.2,.8,.2,1)）</li>
+      <li>数字等宽滚动（每秒跳动不抖）；状态切换仅描边/颜色过渡（180ms，快速精确）</li>
+      <li>几乎无阴影 —— 用留白与细线分层；动效克制到「几乎看不见但能感觉到」</li>
+      <li>标题与分区采用宽字距排版，冷静精密；色彩只保留一处强调绿</li>
+      <li>反馈最小化：不用弹窗，用列表行内联展开/收起（inline expand, 240ms）</li>
+    </ul>
+    <div class="impl">实现成本 <b>低</b> · 纯描边 + 文字渐变，与现有绘制架构最兼容；适合渐进式改造（先换卡片/排版，再换动效）</div>
+  </div>
+</div>
+
+<div class="dirblock">
+  <div class="notes" style="margin-top:0">
+    <div class="nt">怎么选 · 对比</div>
+    <ul>
+      <li><b>A 极光玻璃</b>：沉浸度最高、氛围最强 → 适合想要「未来感」；性能开销最大</li>
+      <li><b>B 珠光瓷白</b>：最轻盈通透、白天观感最好；安静但个性稍弱</li>
+      <li><b>C 曜石极简</b>：最接近 ChatGPT / Linear 的质感；改动成本最低</li>
+      <li>💡 推荐组合：<b>C 为主基调 + A 的少量氛围光晕点缀</b>（例如主卡背景一层极淡极光）—— 兼顾高级感与开销</li>
+    </ul>
+    <div class="impl">下一步：选定方向后，我出<b>全页面版本</b>（主卡 / 喝水 / 累计 / 日历 / 设置）的完整设计稿 + 动效规格，确认后再在 Java 自绘层实现</div>
+  </div>
+</div>
+
+<script>
+const SB = `<div class="sb"><span>20:00</span><span class="batt">5G <i></i> 96%</span></div>
+<div class="apph"><span class="logo"></span><b>SalaryJump</b><span class="gear">\u2699\uFE0E</span></div>`;
+const HERO = `<div class="card hero">
+  <div class="caps">
+    <span class="cap act">⏱ 加班中</span>
+    <span class="cap">🏖 请假</span>
+    <span class="cap rec">💰 ¥200.00</span>
+  </div>
+  <div class="hlabel"><i class="dotbreath"></i><span>今日已赚</span><span class="clock">20:00:00</span></div>
+  <div class="n1">¥ 777.78</div>
+  <div class="chiprow"><span class="chip"><i class="cdot"></i>已下班 · 工资已满额</span></div>
+  <div class="pbar"><i></i></div>
+  <div class="s4">
+    <div><b>¥777.78</b><span>今日目标</span></div>
+    <div><b>¥97.22</b><span>每小时</span></div>
+    <div><b>¥1.62</b><span>每分钟</span></div>
+    <div><b>¥0.027</b><span>每秒</span></div>
+  </div>
+  <div class="hr"></div>
+  <div class="sched">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>`;
+const CUM = `<div class="card">
+  <div class="hlabel"><i class="dotbreath"></i><span>累计收入</span><a class="link">明细 ›</a></div>
+  <div class="brow"><div class="n2">¥ 1,427.78</div><span class="pill">已结算 1 天</span></div>
+  <div class="sub2">按工作日累计</div>
+  <div class="ms">
+    <div class="track"><i></i><b style="left:25%"></b><b style="left:50%"></b><b style="left:75%"></b><b style="left:100%"></b></div>
+    <div class="mlab"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+  </div>
+  <div class="chiprow" style="margin-top:12px"><span class="chip amber">下个里程碑 25%（¥5,890.00）· 还需 6 个工作日</span></div>
+  <div class="cols">
+    <div><span>已攒</span><b>¥1,427.78</b></div>
+    <div><span>还差</span><b>¥22,132.22</b></div>
+    <div><span>预计完成</span><b>11月19日</b></div>
+  </div>
+</div>`;
+document.querySelectorAll('.screen').forEach(function (s) {
+  s.insertAdjacentHTML('beforeend', SB + HERO + CUM);
+});
+</script>
+</body></html>

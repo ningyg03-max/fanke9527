@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+     padding:14px 10px 44px;display:flex;flex-direction:column;align-items:center}
+.phead{width:100%;max-width:392px;margin:6px auto 22px}
+.phead h1{font-size:21px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.phead p{font-size:12.5px;color:#475569;line-height:1.75;margin-top:8px}
+.phead .lg{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.phead .lg span{font-size:10.5px;padding:4px 10px;border-radius:999px;background:#fff;color:#334155;border:1px solid #D8E0E6}
+.dirblock{width:100%;max-width:392px;margin:0 auto 34px}
+.dhead{display:flex;gap:11px;align-items:flex-start;margin-bottom:14px}
+.dnum{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+      font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.dhead h2{font-size:15.5px;font-weight:800;color:#0F172A;letter-spacing:-.2px}
+.dhead p{font-size:11.5px;color:#64748B;margin-top:4px;line-height:1.5}
+.pair{display:flex;flex-direction:column;gap:24px}
+.phone{border-radius:44px;padding:7px;background:linear-gradient(160deg,rgba(255,255,255,.95),rgba(222,229,234,.95));
+       border:1px solid rgba(100,116,139,.25);box-shadow:0 36px 70px -42px rgba(15,23,42,.55)}
+.plabel{font-size:10.5px;color:#64748B;letter-spacing:.08em;margin:2px 0 9px 14px;font-weight:600}
+.screen{position:relative;border-radius:38px;overflow:hidden;isolation:isolate;
+        padding:13px 13px 17px;display:flex;flex-direction:column;gap:12px;color:var(--tx)}
+.screen>*{position:relative;z-index:2}
+/* 状态栏 & 顶栏 */
+.sb{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--tx3);padding:1px 9px 0}
+.sb .batt{display:flex;align-items:center;gap:6px}
+.batt i{width:20px;height:10px;border:1.2px solid var(--tx3);border-radius:3px;position:relative;display:inline-block}
+.batt i::before{content:"";position:absolute;left:1.4px;top:1.4px;bottom:1.4px;width:68%;background:var(--ac);border-radius:1.5px}
+.batt i::after{content:"";position:absolute;right:-3.4px;top:2.6px;width:2px;height:4px;background:var(--tx3);border-radius:1px}
+.apph{display:flex;align-items:center;gap:9px;padding:0 5px}
+.apph .logo{width:21px;height:21px;border-radius:7px;background:linear-gradient(135deg,#34D399,#2DD4BF);
+            box-shadow:0 4px 14px -4px rgba(52,211,153,.65)}
+.dA2 .apph .logo{background:linear-gradient(135deg,#10B981,#14B8A6);box-shadow:0 4px 14px -4px rgba(16,150,120,.5)}
+.apph b{font-size:13px;font-weight:700;letter-spacing:.02em}
+.apph .gear{margin-left:auto;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+            font-size:13px;color:var(--tx2);border:1px solid var(--ln)}
+.apph .back{margin-right:0;font-size:13px;color:var(--ac);font-weight:600;padding:0 9px;height:28px;display:flex;align-items:center;
+            border-radius:14px;border:1px solid var(--ln);background:var(--chipbg)}
+.apph .ptitle{font-size:15px;font-weight:750;letter-spacing:-.2px}
+/* 卡片 */
+.card{border-radius:28px;padding:15px;border:1px solid var(--ln);background:var(--card);box-shadow:var(--csh);
+      -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+/* 胶囊 */
+.caps{display:flex;gap:7px}
+.cap{height:38px;border-radius:999px;flex:1;display:flex;align-items:center;justify-content:center;
+     font-size:12.5px;white-space:nowrap;overflow:hidden;letter-spacing:-.1px;
+     background:var(--capbg);border:1px solid var(--capbd);color:var(--captx)}
+.cap.rec{background:var(--caprec);border-color:var(--caprecbd);color:var(--captx2);font-weight:700}
+.cap.act{background:var(--capactb);border-color:var(--capactbd);color:var(--capactx);font-weight:800;
+         animation:var(--capanim,none)}
+/* 文本 */
+.hlabel{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--tx2);letter-spacing:.02em}
+.hlabel .clock{margin-left:auto;font-size:11px;color:var(--tx3);font-variant-numeric:tabular-nums}
+.hlabel .link{margin-left:auto;font-size:12px;color:var(--ac);font-weight:650}
+.dotbreath{width:6px;height:6px;border-radius:50%;background:var(--ac);box-shadow:0 0 8px var(--ac);
+           animation:breathK 2.4s ease-in-out infinite}
+.hero .hlabel{margin-top:12px}
+.n1{font-size:44px;font-weight:760;letter-spacing:-1.8px;line-height:1;margin-top:9px;
+    font-variant-numeric:tabular-nums;color:var(--num);text-shadow:var(--numsh)}
+.n2{font-size:30px;font-weight:760;letter-spacing:-1px;line-height:1;font-variant-numeric:tabular-nums;
+    color:var(--num);text-shadow:var(--numsh)}
+.brow{display:flex;align-items:center;gap:9px;margin-top:10px}
+.pill{font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:999px;background:var(--plbg);color:var(--ac);white-space:nowrap}
+.chiprow{margin-top:11px}
+.chip{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 11px;border-radius:999px;
+      font-size:11.5px;background:var(--chipbg);border:1px solid var(--ln);color:var(--tx2)}
+.chip .cdot{width:6px;height:6px;border-radius:50%;background:var(--ac);box-shadow:0 0 7px var(--ac)}
+.chip.amber{background:var(--ambb);border-color:var(--ambbd);color:var(--ambtx)}
+.pbar{height:8px;border-radius:6px;background:var(--trk);position:relative;overflow:hidden;margin-top:12px}
+.pbar i{position:absolute;inset:0;border-radius:6px;background:linear-gradient(90deg,#0EAE8C,#14B8A6 55%,#2DD4BF)}
+.dA .pbar i{background:linear-gradient(90deg,#10B981,#34D399 50%,#2DD4BF)}
+.pbar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
+               transform:translateX(-110%);animation:sheen 2.9s ease-in-out infinite}
+.s4{display:flex;justify-content:space-between;margin-top:13px;padding:0 2px}
+.s4 div{display:flex;flex-direction:column;gap:4px}
+.s4 b{font-size:13px;font-weight:680;font-variant-numeric:tabular-nums}
+.s4 span{font-size:10.5px;color:var(--tx3);letter-spacing:.02em}
+.hr{height:1px;background:var(--ln);margin:13px 0 10px}
+.sched{font-size:11px;color:var(--tx3)}
+/* 里程碑 */
+.ms .track{position:relative;height:6px;border-radius:4px;background:var(--trk);margin:13px 4px 8px}
+.ms .track i{position:absolute;left:0;top:0;bottom:0;width:6%;border-radius:4px;background:linear-gradient(90deg,#0EAE8C,#2DD4BF)}
+.dA .ms .track i{background:linear-gradient(90deg,#10B981,#2DD4BF)}
+.ms .track b{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);
+             background:var(--pgbg);border:2px solid var(--tx3)}
+.ms .track b:nth-of-type(1){border-color:var(--ambtx)}
+.mlab{display:flex;justify-content:space-between;font-size:10px;color:var(--tx3);padding:0 1px}
+.sub2{font-size:12px;color:var(--tx3);margin-top:8px}
+.cols{display:flex;margin-top:13px}
+.cols>div{flex:1;display:flex;flex-direction:column;gap:4px}
+.cols span{font-size:10.5px;color:var(--tx3)}
+.cols b{font-size:13.5px;font-weight:680;font-variant-numeric:tabular-nums}
+/* 日历行 */
+.calhead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px}
+.calhead b{font-size:15px;font-weight:750}
+.calhead span{font-size:12px;color:var(--ac);font-weight:700}
+.calrow{display:flex;align-items:center;gap:11px;padding:11px 2px;border-bottom:1px solid var(--ln)}
+.calrow:last-child{border-bottom:none}
+.calday{width:40px;display:flex;flex-direction:column;gap:2px;text-align:center}
+.calday b{font-size:16.5px;font-weight:750;font-variant-numeric:tabular-nums}
+.calday span{font-size:9.5px;color:var(--tx3)}
+.calmeta{flex:1;display:flex;flex-direction:column;gap:3px}
+.calmeta b{font-size:12.5px;font-weight:600}
+.calmeta span{font-size:10.5px;color:var(--tx3)}
+.calamt{font-size:14.5px;font-weight:720;color:var(--ac);font-variant-numeric:tabular-nums}
+.calamt.z{color:var(--tx3)}
+.tagm{display:inline-flex;align-items:center;height:19px;padding:0 8px;border-radius:999px;font-size:10px;font-weight:650;
+      background:var(--ambb);color:var(--ambtx);border:1px solid var(--ambbd)}
+.tagm.g{background:var(--plbg);color:var(--ac);border-color:transparent}
+.tagm.p{background:rgba(124,107,214,.13);color:#9B8AEB;border-color:transparent}
+.dA2 .tagm.p{background:rgba(124,107,214,.11);color:#6D5BD0}
+/* 设置行 */
+.setrow{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--ln)}
+.setrow:last-child{border-bottom:none}
+.sico{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;
+      background:var(--chipbg);border:1px solid var(--ln)}
+.setxt{flex:1;display:flex;flex-direction:column;gap:3px}
+.setxt b{font-size:13.5px;font-weight:700}
+.setxt span{font-size:11px;color:var(--tx3)}
+.arr{color:var(--tx3);font-size:17px}
+/* 假期卡 */
+.larow1{display:flex;align-items:center;gap:9px}
+.larow1 .lic{font-size:17px}
+.larow1 b{font-size:14px;font-weight:750;flex:1}
+.ledit{font-size:11.5px;font-weight:650;color:var(--ac);border:1px solid var(--caprecbd);border-radius:999px;padding:4px 12px}
+.labig{display:flex;align-items:baseline;gap:5px;margin-top:10px}
+.labig b{font-size:30px;font-weight:750;letter-spacing:-.8px;font-variant-numeric:tabular-nums}
+.labig span{font-size:12px;color:var(--tx3);font-weight:650}
+.labig .am{color:var(--ambtx)}
+.ladet{font-size:11px;color:var(--tx3);margin-top:7px}
+/* 弹窗 */
+.dlgwrap{margin-top:2px;border-radius:26px;border:1px solid var(--ln2);background:var(--dlgbg);box-shadow:var(--dlgsh);
+         padding:17px 16px 13px;-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+.dt{font-size:15.5px;font-weight:780;letter-spacing:-.2px}
+.drow{display:flex;align-items:center;gap:10px;margin-top:13px}
+.drow label{font-size:13.5px;flex:1;color:var(--tx2)}
+.dinp{width:84px;height:38px;border-radius:11px;border:1px solid var(--ln2);background:var(--inbg);color:var(--tx);
+      font-size:14px;font-weight:650;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.dinp.fcs{border-color:var(--ac);box-shadow:0 0 0 3px var(--fcs);animation:none}
+.dunit{font-size:12px;color:var(--tx3)}
+.dhint{font-size:10.5px;color:var(--tx3);line-height:1.55;margin-top:9px}
+.dsep{height:1px;background:var(--ln);margin:12px 0 9px}
+.dcalc{display:flex;justify-content:space-between;font-size:12px;color:var(--tx3);margin-top:6px}
+.dcalc.hl{font-size:13.5px;color:var(--tx);font-weight:700;margin-top:8px}
+.dcalc.hl b{color:var(--ac);font-size:15px}
+.dbtns{display:flex;justify-content:flex-end;gap:6px;margin-top:12px}
+.db{font-size:13px;font-weight:700;padding:9px 15px;border-radius:11px;color:var(--ac)}
+.db.gh{color:var(--tx3)}
+.db.solid{background:var(--capactb);color:var(--capactx);box-shadow:var(--btnsh)}
+/* 动效关键帧 */
+@keyframes breathK{0%,100%{opacity:.55;transform:scale(.9)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes sheen{0%{transform:translateX(-110%)}55%,100%{transform:translateX(110%)}}
+@keyframes auroraA{0%{transform:translate3d(-2%,-1%,0) rotate(0deg) scale(1)}
+  100%{transform:translate3d(3%,2%,0) rotate(9deg) scale(1.09);filter:blur(44px) hue-rotate(14deg)}}
+@keyframes pulseE{0%,100%{box-shadow:0 10px 22px -8px rgba(10,150,120,.55),0 0 0 0 rgba(16,185,129,.38)}
+  50%{box-shadow:0 10px 22px -8px rgba(10,150,120,.55),0 0 0 7px rgba(16,185,129,0)}}
+@keyframes pulseW{0%,100%{box-shadow:0 10px 26px -10px rgba(255,255,255,.5),0 0 0 0 rgba(255,255,255,.32)}
+  50%{box-shadow:0 10px 26px -10px rgba(255,255,255,.5),0 0 0 7px rgba(255,255,255,0)}}
+</style>
+</head><body>
+<div class="phead">
+  <h1>全页面版 · Aurora Glass</h1>
+  <p>深浅统一 <b>A 极光玻璃</b>：深色用 A，浅色用 A2 重构版。四屏 + 弹窗全部玻璃化，页面里的光晕漂移、呼吸点、扫光、胶囊辉光均为<b>真实动效</b>。</p>
+  <div class="lg"><span>✦ 极光氛围层</span><span>✦ 磨砂玻璃层叠</span><span>✦ 深浅自适应</span><span>✦ 全屏统一语言</span></div>
+</div>
+<style>
+/* ══════════ 深色 · Aurora（A 原版） ══════════ */
+.dA{--tx:#EEFFF8;--tx2:rgba(232,255,247,.68);--tx3:rgba(232,255,247,.46);
+    --ac:#34D399;--ln:rgba(255,255,255,.10);--ln2:rgba(255,255,255,.16);
+    --card:linear-gradient(152deg,rgba(255,255,255,.095),rgba(255,255,255,.032));
+    --csh:0 26px 60px -30px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.12);
+    --blur:blur(22px) saturate(140%);
+    --num:#F2FFFA;--numsh:0 0 36px rgba(52,211,153,.45);
+    --trk:rgba(255,255,255,.10);--chipbg:rgba(255,255,255,.09);--plbg:rgba(52,211,153,.16);
+    --capbg:rgba(255,255,255,.085);--capbd:rgba(255,255,255,.14);--captx:rgba(255,255,255,.92);
+    --caprec:rgba(255,255,255,.20);--caprecbd:rgba(255,255,255,.28);--captx2:#fff;
+    --capactb:#fff;--capactbd:transparent;--capactx:#06483B;
+    --capanim:pulseW 2.6s ease-in-out infinite;--pgbg:#0B1E1A;
+    --ambb:rgba(252,211,77,.13);--ambbd:rgba(252,211,77,.30);--ambtx:#FCD34D;
+    --dlgbg:linear-gradient(155deg,rgba(14,42,45,.96),rgba(10,32,38,.96));--dlgsh:0 34px 70px -30px rgba(0,0,0,.9);
+    --inbg:rgba(255,255,255,.07);--fcs:rgba(52,211,153,.16);--btnsh:0 8px 22px -8px rgba(255,255,255,.4);
+    background:linear-gradient(168deg,#07110F,#081518 55%,#071019)}
+.dA::before{content:"";position:absolute;inset:-25%;z-index:1;pointer-events:none;
+  background:radial-gradient(46% 38% at 22% 18%,rgba(16,185,129,.55),transparent 70%),
+             radial-gradient(40% 35% at 82% 26%,rgba(34,211,238,.40),transparent 70%),
+             radial-gradient(38% 40% at 62% 88%,rgba(139,92,246,.30),transparent 72%);
+  filter:blur(34px);animation:auroraA 30s ease-in-out infinite alternate}
+
+/* ══════════ 浅色 · Aurora v2（A2 重构） ══════════ */
+.dA2{--tx:#0A3B31;--tx2:rgba(10,59,49,.68);--tx3:rgba(10,59,49,.48);
+    --ac:#0B9E7D;--ln:rgba(10,59,49,.10);--ln2:rgba(10,59,49,.16);
+    --card:linear-gradient(152deg,rgba(255,255,255,.86),rgba(255,255,255,.62));
+    --csh:inset 0 1px 0 rgba(255,255,255,.98),0 26px 52px -24px rgba(6,95,70,.30),0 3px 10px -5px rgba(6,95,70,.14);
+    --blur:blur(30px) saturate(180%);
+    --num:#063A2C;--numsh:0 10px 28px -10px rgba(11,158,125,.4);
+    --trk:rgba(10,59,49,.09);--chipbg:rgba(255,255,255,.72);--plbg:rgba(11,158,125,.15);
+    --capbg:rgba(10,59,49,.055);--capbd:rgba(10,59,49,.11);--captx:rgba(10,59,49,.68);
+    --caprec:rgba(11,158,125,.15);--caprecbd:rgba(11,158,125,.35);--captx2:#0A7A62;
+    --capactb:linear-gradient(135deg,#0C9F7E,#14B8A6);--capactbd:transparent;--capactx:#fff;
+    --capanim:pulseE 2.6s ease-in-out infinite;--pgbg:#FFFFFF;
+    --ambb:rgba(180,83,9,.10);--ambbd:rgba(180,83,9,.26);--ambtx:#92400E;
+    --dlgbg:linear-gradient(155deg,rgba(255,255,255,.96),rgba(247,252,250,.94));--dlgsh:0 30px 64px -26px rgba(6,95,70,.35);
+    --inbg:rgba(10,59,49,.045);--fcs:rgba(11,158,125,.14);--btnsh:0 10px 20px -8px rgba(10,150,120,.45);
+    background:linear-gradient(168deg,#EAF7F2,#E8F1F7 55%,#EDEFF9)}
+.dA2::before{content:"";position:absolute;inset:-25%;z-index:1;pointer-events:none;
+  background:radial-gradient(46% 38% at 20% 14%,rgba(16,185,129,.34),transparent 68%),
+             radial-gradient(42% 36% at 84% 22%,rgba(34,211,238,.26),transparent 68%),
+             radial-gradient(40% 42% at 58% 92%,rgba(139,92,246,.17),transparent 70%);
+  filter:blur(38px);animation:auroraA 30s ease-in-out infinite alternate}
+.dA .card{border-radius:30px}
+.dA2 .card{border-radius:30px}
+</style>
+
+<!-- ══════ 深色四屏 ══════ -->
+<div class="dirblock">
+  <div class="dhead"><span class="dnum">A</span><div>
+    <h2>深色 · Aurora Glass</h2><p>极光氛围 + 磨砂玻璃 —— 沉浸、未来</p>
+  </div></div>
+  <div class="pair">
+    <div class="phone"><div class="plabel">主界面 · 深色</div><div class="screen dA" data-screen="main"></div></div>
+    <div class="phone"><div class="plabel">工资日历 · 深色</div><div class="screen dA" data-screen="cal"></div></div>
+    <div class="phone"><div class="plabel">假期账户 · 深色（含编辑弹窗）</div><div class="screen dA" data-screen="leave"></div></div>
+    <div class="phone"><div class="plabel">设置 · 深色</div><div class="screen dA" data-screen="set"></div></div>
+  </div>
+</div>
+
+<!-- ══════ 浅色四屏 ══════ -->
+<div class="dirblock">
+  <div class="dhead"><span class="dnum">A2</span><div>
+    <h2>浅色 · Aurora Glass（v2 重构）</h2><p>同款极光语言，青绿柔光底 + 翡翠强调 —— 通透、有光</p>
+  </div></div>
+  <div class="pair">
+    <div class="phone"><div class="plabel">主界面 · 浅色</div><div class="screen dA2" data-screen="main"></div></div>
+    <div class="phone"><div class="plabel">工资日历 · 浅色</div><div class="screen dA2" data-screen="cal"></div></div>
+    <div class="phone"><div class="plabel">假期账户 · 浅色（含编辑弹窗）</div><div class="screen dA2" data-screen="leave"></div></div>
+    <div class="phone"><div class="plabel">设置 · 浅色</div><div class="screen dA2" data-screen="set"></div></div>
+  </div>
+</div>
+<!-- ══════ 动效与实现规格 ══════ -->
+<div class="dirblock">
+  <div style="background:#fff;border-radius:16px;padding:16px 17px 14px;border:1px solid #E2E8EC">
+    <div style="font-size:13px;font-weight:800;color:#0F172A;margin-bottom:10px">动效规格 · 实现清单</div>
+    <table style="width:100%;border-collapse:collapse;font-size:11.5px">
+      <tr style="text-align:left"><th style="padding:7px 6px;color:#64748B;font-weight:600;border-bottom:1px solid #EEF3F2">动效</th>
+      <th style="padding:7px 6px;color:#64748B;font-weight:600;border-bottom:1px solid #EEF3F2">参数</th>
+      <th style="padding:7px 6px;color:#64748B;font-weight:600;border-bottom:1px solid #EEF3F2">实现</th></tr>
+      <tr><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">极光漂移</td><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">30s 循环 · alternate</td><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">多层径向渐变 + ValueAnimator 平移/旋转</td></tr>
+      <tr><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">呼吸点</td><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">2.4s · 缩放 0.9→1.06</td><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">动画 Drawable（省电、无重绘整页）</td></tr>
+      <tr><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">进度扫光</td><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">2.9s · 120° 高光扫过</td><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">LinearGradient 平移（自绘进度条内）</td></tr>
+      <tr><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">胶囊呼吸辉光</td><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">2.6s · 光晕 0→7px 扩散</td><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">shadowLayer 脉动（"加班中"专用）</td></tr>
+      <tr><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">数字变化</td><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">滚动 300ms + 光脉冲 300ms</td><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">计数字幕 + 结束后一次辉光脉冲</td></tr>
+      <tr><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">卡片入场</td><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">上浮 12px + 淡入 400ms · 级联 40ms</td><td style="padding:7px 6px;border-bottom:1px solid #F4F7F6">ViewPropertyAnimator（只动一次，不常驻）</td></tr>
+      <tr><td style="padding:7px 6px">点按反馈</td><td style="padding:7px 6px">缩放 0.96 · 回弹 spring 420ms</td><td style="padding:7px 6px">onTouch 缩放 + OvershootInterpolator</td></tr>
+    </table>
+    <div style="font-size:11px;color:#64748B;line-height:1.65;margin-top:11px;padding:10px 12px;background:#F1F5F8;border-radius:10px">
+      <b style="color:#0B7A5C">性能策略</b>：全屏极光同时跑 3 层 ValueAnimator —— 用 <b>预渲染位图 + 平移/旋转</b>（每帧成本≈一次贴图）而非重算渐变；
+      模糊仅 Android 12+ 开启（RenderEffect），低版本自动降级为「高透明度渐变层」（视觉近似，零模糊开销）；所有循环动效在<b>息屏/后台暂停</b>。
+    </div>
+  </div>
+</div>
+
+<script>
+const SB = m => `<div class="sb"><span>20:00</span><span class="batt">5G <i></i> 96%</span></div>`;
+const HEAD = (t, back) => `<div class="apph">`
+  + (back ? `<span class="back">‹ 返回</span><span class="ptitle">${t}</span>` : ``)
+  + (back ? `` : `<span class="logo"></span><b>SalaryJump</b>`)
+  + (back ? `` : `<span class="gear">\u2699\uFE0E</span>`)
+  + `</div>`;
+const HERO = `<div class="card hero">
+  <div class="caps">
+    <span class="cap act">⏱ 加班中</span>
+    <span class="cap">🏖 请假</span>
+    <span class="cap rec">💰 ¥200.00</span>
+  </div>
+  <div class="hlabel"><i class="dotbreath"></i><span>今日已赚</span><span class="clock">20:00:00</span></div>
+  <div class="n1">¥ 777.78</div>
+  <div class="chiprow"><span class="chip"><i class="cdot"></i>已下班 · 工资已满额</span></div>
+  <div class="pbar"><i></i></div>
+  <div class="s4">
+    <div><b>¥777.78</b><span>今日目标</span></div>
+    <div><b>¥97.22</b><span>每小时</span></div>
+    <div><b>¥1.62</b><span>每分钟</span></div>
+    <div><b>¥0.027</b><span>每秒</span></div>
+  </div>
+  <div class="hr"></div>
+  <div class="sched">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>`;
+const CUM = `<div class="card">
+  <div class="hlabel"><i class="dotbreath"></i><span>累计收入</span><a class="link">明细 ›</a></div>
+  <div class="brow"><div class="n2">¥ 1,427.78</div><span class="pill">已结算 1 天</span></div>
+  <div class="sub2">按工作日累计</div>
+  <div class="ms">
+    <div class="track"><i></i><b style="left:25%"></b><b style="left:50%"></b><b style="left:75%"></b><b style="left:100%"></b></div>
+    <div class="mlab"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+  </div>
+  <div class="chiprow" style="margin-top:12px"><span class="chip amber">下个里程碑 25%（¥5,890.00）· 还需 6 个工作日</span></div>
+  <div class="cols">
+    <div><span>已攒</span><b>¥1,427.78</b></div>
+    <div><span>还差</span><b>¥22,132.22</b></div>
+    <div><span>预计完成</span><b>11月19日</b></div>
+  </div>
+</div>`;
+const CAL = `<div class="card">
+  <div class="calhead"><b>2026 年 10 月</b><span>合计 ¥ 8,890.23</span></div>
+  <div class="calrow"><div class="calday"><b>10</b><span>周六</span></div><div class="calmeta"><b>出勤 · 调休</b><span>今天</span></div><div class="calamt z">¥ 0.00</div></div>
+  <div class="calrow"><div class="calday"><b>9</b><span>周五</span></div><div class="calmeta"><b>工作日</b><span>加班 2:30</span></div><div class="calamt">¥ 890.28</div></div>
+  <div class="calrow"><div class="calday"><b>8</b><span>周四</span></div><div class="calmeta"><b>病假 · 60%</b><span>· 外快</span></div><div class="calamt">¥ 666.67</div></div>
+  <div class="calrow"><div class="calday"><b>7</b><span>周三</span></div><div class="calmeta"><b>工作日</b><span>· 外快</span></div><div class="calamt">¥ 977.78</div></div>
+  <div class="calrow"><div class="calday"><b>6</b><span>周二</span></div><div class="calmeta"><b>工作日</b><span>标准日</span></div><div class="calamt">¥ 777.78</div></div>
+  <div class="calrow"><div class="calday"><b>3</b><span>周六</span></div><div class="calmeta"><b>出勤 · 3 倍</b><span>法定节假日</span></div><div class="calamt">¥ 2,333.34</div></div>
+  <div class="calrow"><div class="calday"><b>1</b><span>周四</span></div><div class="calmeta"><b>出勤 · 3 倍</b><span>法定节假日</span></div><div class="calamt">¥ 2,333.34</div></div>
+</div>`;
+const LEAVE = `<div class="card">
+  <div class="larow1"><span class="lic">🏖</span><b>年假</b><span class="ledit">编辑</span></div>
+  <div class="labig"><b>8.5</b><span>天 · 剩余</span></div>
+  <div class="ladet">今年总额 10 · 调整 -1 · 已用 1.5</div>
+  <div class="pbar" style="margin-top:10px"><i style="width:85%"></i></div>
+</div>
+<div class="card">
+  <div class="larow1"><span class="lic">👶</span><b>育儿假</b><span class="ledit">设置</span></div>
+  <div class="labig"><b class="am" style="color:var(--tx3)">未设置</b></div>
+  <div class="ladet">点「设置」录入年度额度，之后请假自动扣减</div>
+</div>
+<div class="dlgwrap">
+  <div class="dt">编辑「年假」</div>
+  <div class="drow"><label>今年总额</label><span class="dinp">10</span><span class="dunit">天</span></div>
+  <div class="drow"><label>手动调整</label><span class="dinp fcs">-1</span><span class="dunit">天</span></div>
+  <div class="dhint">开始用本 App 前已休过 3 天 → 填 -3；去年结转 +2 天 → 填 +2</div>
+  <div class="dsep"></div>
+  <div class="dcalc"><span>已用（自动统计今年）</span><span>1.5 天</span></div>
+  <div class="dcalc hl"><span>剩余</span><span><b>7.5 天</b></span></div>
+  <div class="dbtns"><span class="db gh">取消</span><span class="db solid">保存</span></div>
+</div>`;
+const SET = `<div class="card" style="padding:6px 15px">
+  <div class="setrow"><span class="sico">💼</span><div class="setxt"><b>薪跳设置</b><span>工资 · 月薪 · 时间 · 加班 · 发薪日</span></div><span class="arr">›</span></div>
+  <div class="setrow"><span class="sico">💧</span><div class="setxt"><b>喝水设置</b><span>提醒 · 饮品 · 热量 · 参考表</span></div><span class="arr">›</span></div>
+  <div class="setrow"><span class="sico">🔧</span><div class="setxt"><b>工具与安全</b><span>节假日 · 备份 · 隐私锁 · 攻略</span></div><span class="arr">›</span></div>
+</div>
+<div class="card" style="padding:6px 15px">
+  <div class="setrow"><span class="sico">📅</span><div class="setxt"><b>假期账户</b><span>年假 · 育儿假 · 调休 余额维护</span></div><span class="arr">›</span></div>
+  <div class="setrow"><span class="sico">⏰</span><div class="setxt"><b>打卡提醒</b><span>每天 20:00 · 已开启</span></div><span class="chip" style="height:24px"><i class="cdot" style="width:5px;height:5px"></i>开启</span></div>
+  <div class="setrow"><span class="sico">🎯</span><div class="setxt"><b>目标存钱罐</b><span>MacBook Pro · 6%</span></div><span class="arr">›</span></div>
+</div>`;
+const TPL = {main: HEAD() + HERO + CUM, cal: HEAD('工资日历', true) + CAL, leave: HEAD('假期账户', true) + LEAVE, set: HEAD('设置', true) + SET};
+document.querySelectorAll('[data-screen]').forEach(function (el) {
+  el.innerHTML = `<div class="sb"><span>20:00</span><span class="batt">5G <i></i> 96%</span></div>` + TPL[el.dataset.screen];
+});
+</script>
+</body></html>

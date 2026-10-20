@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f2f4f7;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:22px;align-items:center}
+.wrap{width:384px}
+.cap{font-size:13.5px;font-weight:700;color:#111827;margin-bottom:2px;display:flex;align-items:center;gap:8px}
+.bdg{font-size:10px;padding:2px 8px;border-radius:7px;font-weight:600}
+.b-now{background:#fee2e2;color:#b91c1c}
+.b-new{background:#d1fae5;color:#047857}
+.b-mid{background:#e0f2fe;color:#0369a1}
+.b-ok{background:#fef3c7;color:#92400e}
+.sub{font-size:11.5px;color:#6b7280;line-height:1.5;margin-bottom:10px}
+.ph{border-radius:20px;padding:12px 20px 20px;background:linear-gradient(180deg,#ECFBF4,#EEF6FE 55%,#F1F6FF)}
+/* 卡片 */
+.card{border-radius:24px;padding:20px;background:#fff;
+      background:radial-gradient(circle at 90% 4%, rgba(16,185,129,.11), transparent 52%),linear-gradient(135deg,#FFFFFF 44%,#E7F8F0);
+      box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.chead{display:flex;align-items:center;height:24px;margin-bottom:6px}
+.cdot{width:7px;height:7px;border-radius:50%;background:#10B981;margin-right:7px}
+.clab{font-size:11.5px;color:#8AA6B0;letter-spacing:.12em;font-weight:600;flex:1}
+.lk{font-size:12.5px;color:#047857;font-weight:600}
+.nb{font-size:32px;font-weight:700;color:#047857;letter-spacing:-1px;margin-top:9px;line-height:1;
+    display:flex;align-items:baseline;gap:3px}
+.nb .un{font-size:15px;color:#61808C;font-weight:400}
+.chip{font-size:11.5px;padding:5px 10px;border-radius:12px;margin-left:9px;background:#ECFDF5;color:#047857}
+.dv{height:1px;background:#E3EFEC;margin:15px 0 13px}
+.subT{font-size:12px;color:#61808C;margin-top:8px}
+.goal{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;color:#16323B}
+.pb2{height:7px;border-radius:4px;background:#E6F2EE;margin-top:10px;overflow:hidden}
+.pb2>i{display:block;height:100%;border-radius:4px;background:#10B981}
+/* ═══ 方案通用 ═══ */
+.gsec{margin-top:0}
+.gtitle{display:flex;align-items:baseline;justify-content:space-between}
+.gname{font-size:13.5px;font-weight:700;color:#16323B}
+.gpct{font-size:22px;font-weight:800;color:#047857;letter-spacing:-.5px}
+.gpct small{font-size:12px;font-weight:700}
+.bar{height:9px;border-radius:5px;background:#E6F2EE;margin-top:10px;overflow:hidden;position:relative}
+.bar>i{display:block;height:100%;border-radius:5px;
+       background:linear-gradient(90deg,#10B981,#34D399)}
+.cols{display:flex;margin-top:12px}
+.cols>div{flex:1}
+.cols .k{font-size:10.5px;color:#8AA6B0;letter-spacing:.05em}
+.cols .v{font-size:14px;font-weight:700;color:#16323B;margin-top:3px}
+.cols .v.g{color:#047857}
+.cols .v.m{color:#61808C;font-weight:600}
+.date{font-size:11.5px;color:#61808C;margin-top:10px}
+.date b{color:#047857}
+/* 圆环 */
+.ringsec{display:flex;align-items:center;gap:16px}
+.ring{width:78px;height:78px;flex-shrink:0;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .pct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .pct b{font-size:18px;font-weight:800;color:#047857;line-height:1}
+.ring .pct span{font-size:8.5px;color:#8AA6B0;margin-top:2px}
+.ringtxt{flex:1}
+.ringtxt .n{font-size:14px;font-weight:700;color:#16323B}
+.ringtxt .a{font-size:12.5px;color:#61808C;margin-top:5px}
+.ringtxt .a b{color:#047857;font-weight:700}
+.ringtxt .d{font-size:11.5px;color:#8AA6B0;margin-top:5px}
+/* 独立卡 */
+.standalone{border-radius:24px;padding:18px;color:#fff;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0EA47A,#10B981 40%,#22C6B4 78%,#2DD4BF);
+  box-shadow:0 5px 14px rgba(16,185,129,.28)}
+.standalone:before{content:"";position:absolute;width:140px;height:140px;border-radius:50%;
+  background:rgba(255,255,255,.13);top:-48px;right:-36px}
+.standalone>*{position:relative}
+.sa-top{display:flex;align-items:center;justify-content:space-between}
+.sa-name{font-size:13.5px;font-weight:700}
+.sa-pct{font-size:20px;font-weight:800;letter-spacing:-.5px}
+.sa-amt{font-size:26px;font-weight:800;margin-top:6px;letter-spacing:-.5px}
+.sa-amt small{font-size:14px;font-weight:600;opacity:.75}
+.sa-bar{height:8px;border-radius:4px;background:rgba(255,255,255,.28);margin-top:12px;overflow:hidden}
+.sa-bar>i{display:block;height:100%;border-radius:4px;background:#fff}
+.sa-sub{font-size:11.5px;color:rgba(255,255,255,.85);margin-top:9px;display:flex;justify-content:space-between}
+/* 里程碑 */
+.ms{position:relative;height:26px;margin-top:10px}
+.msline{position:absolute;top:11px;left:0;right:0;height:3px;border-radius:2px;background:#E6F2EE}
+.msfill{position:absolute;top:11px;left:0;height:3px;border-radius:2px;
+        background:linear-gradient(90deg,#10B981,#34D399)}
+.msdot{position:absolute;top:5px;width:15px;height:15px;border-radius:50%;
+       background:#fff;border:3px solid #E6F2EE;transform:translateX(-50%)}
+.msdot.done{border-color:#10B981;background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.18)}
+.msdot.next{border-color:#FCD34D;background:#fff;box-shadow:0 0 0 4px rgba(252,211,77,.28)}
+.mslbl{position:absolute;top:-1px;font-size:9px;color:#8AA6B0;transform:translateX(-50%)}
+.mstag{display:inline-block;font-size:11px;background:#FFFBEB;color:#B45309;
+       padding:4px 9px;border-radius:10px;margin-top:6px;font-weight:600}
+</style></head><body>
+
+<!-- ══════ 现状 ══════ -->
+<div class="wrap"><div class="cap">现状 <span class="bdg b-now">信息平铺</span></div>
+<div class="sub">百分比不可见 · 三条信息挤成一行 · 进度条细（7dp）且无参照</div>
+<div class="ph"><div class="card">
+  <div class="chead"><span class="cdot"></span><span class="clab">累计收入</span><span class="lk">明细 ›</span></div>
+  <div class="nb" style="color:#047857">¥ 1,427.78<span class="chip">1 天</span></div>
+  <div class="subT">按工作日累计</div>
+  <div class="dv"></div>
+  <div class="goal"><span>🎯 MacBook Pro 23,560.00</span><span class="lk" style="font-size:12px">设置</span></div>
+  <div class="pb2"><i style="width:6%"></i></div>
+  <div class="subT">已攒 1,427.78 · 还差 22,132.22 · 约还需 29 个工作日</div>
+</div></div></div>
+
+<!-- ══════ 方案 A ══════ -->
+<div class="wrap"><div class="cap">方案 A · 数据分栏 <span class="bdg b-new">轻量优化</span></div>
+<div class="sub">保持结构，拆成三栏 + 百分比数字 + 具体完成日期。改动最小，信息最清晰。</div>
+<div class="ph"><div class="card">
+  <div class="chead"><span class="cdot"></span><span class="clab">累计收入</span><span class="lk">明细 ›</span></div>
+  <div class="nb" style="color:#047857">¥ 1,427.78<span class="chip">1 天</span></div>
+  <div class="subT">按工作日累计</div>
+  <div class="dv"></div>
+  <div class="gtitle">
+    <span class="gname">🎯 MacBook Pro</span>
+    <span class="gpct">6.1<small>%</small></span>
+  </div>
+  <div class="bar"><i style="width:6.1%"></i></div>
+  <div class="cols">
+    <div><div class="k">已攒</div><div class="v g">¥1,427.78</div></div>
+    <div><div class="k">还差</div><div class="v m">¥22,132.22</div></div>
+    <div style="text-align:right"><div class="k">预计完成</div><div class="v">11月24日</div></div>
+  </div>
+  <div class="date">按当前速度（¥777.78/工作日），还需 <b>29 个工作日</b></div>
+</div></div></div>
+
+<!-- ══════ 方案 B ══════ -->
+<div class="wrap"><div class="cap">方案 B · 进度环 <span class="bdg b-mid">视觉化</span></div>
+<div class="sub">左侧圆环显示百分比，右侧信息。有"仪表盘"感，占用高度小。</div>
+<div class="ph"><div class="card">
+  <div class="chead"><span class="cdot"></span><span class="clab">累计收入</span><span class="lk">明细 ›</span></div>
+  <div class="nb" style="color:#047857">¥ 1,427.78<span class="chip">1 天</span></div>
+  <div class="subT">按工作日累计</div>
+  <div class="dv"></div>
+  <div class="ringsec">
+    <div class="ring">
+      <svg width="78" height="78">
+        <circle cx="39" cy="39" r="33" fill="none" stroke="#E6F2EE" stroke-width="8"/>
+        <circle cx="39" cy="39" r="33" fill="none" stroke="#10B981" stroke-width="8"
+                stroke-linecap="round" stroke-dasharray="207.3" stroke-dashoffset="194.7"/>
+      </svg>
+      <div class="pct"><b>6.1%</b><span>已完成</span></div>
+    </div>
+    <div class="ringtxt">
+      <div class="n">🎯 MacBook Pro</div>
+      <div class="a">已攒 <b>¥1,427.78</b> / ¥23,560</div>
+      <div class="d">还需 29 个工作日 ≈ 11月24日</div>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;margin-top:2px"><span class="lk" style="font-size:11.5px">设置目标</span></div>
+</div></div></div>
+
+<!-- ══════ 方案 C ══════ -->
+<div class="wrap"><div class="cap">方案 C · 独立渐变卡 <span class="bdg b-ok">存在感强</span></div>
+<div class="sub">存钱罐从累计卡里独立出来，做成渐变强调卡。目标感最强，但增加一屏高度。</div>
+<div class="ph"><div class="card" style="margin-bottom:12px">
+  <div class="chead"><span class="cdot"></span><span class="clab">累计收入</span><span class="lk">明细 ›</span></div>
+  <div class="nb" style="color:#047857">¥ 1,427.78<span class="chip">1 天</span></div>
+  <div class="subT">按工作日累计</div>
+</div>
+<div class="standalone">
+  <div class="sa-top">
+    <span class="sa-name">🎯 MacBook Pro</span>
+    <span class="sa-pct">6.1%</span>
+  </div>
+  <div class="sa-amt">¥1,427.78 <small>/ ¥23,560</small></div>
+  <div class="sa-bar"><i style="width:6.1%"></i></div>
+  <div class="sa-sub"><span>还差 ¥22,132.22</span><span>约 11月24日完成</span></div>
+</div></div></div>
+
+<!-- ══════ 方案 D ══════ -->
+<div class="wrap"><div class="cap">方案 D · 里程碑游戏化 <span class="bdg b-ok">动力感</span></div>
+<div class="sub">进度条带 25/50/75/100% 里程碑节点，高亮"下一个目标"。适合长期目标。</div>
+<div class="ph"><div class="card">
+  <div class="chead"><span class="cdot"></span><span class="clab">累计收入</span><span class="lk">明细 ›</span></div>
+  <div class="nb" style="color:#047857">¥ 1,427.78<span class="chip">1 天</span></div>
+  <div class="subT">按工作日累计</div>
+  <div class="dv"></div>
+  <div class="gtitle">
+    <span class="gname">🎯 MacBook Pro 23,560</span>
+    <span class="gpct">6.1<small>%</small></span>
+  </div>
+  <div class="ms">
+    <div class="msline"></div>
+    <div class="msfill" style="width:6.1%"></div>
+    <div class="msdot done" style="left:0"></div>
+    <div class="msdot next" style="left:25%"></div>
+    <div class="msdot" style="left:50%"></div>
+    <div class="msdot" style="left:75%"></div>
+    <div class="msdot" style="left:100%"></div>
+    <div class="mslbl" style="left:0">0%</div>
+    <div class="mslbl" style="left:25%">25%</div>
+    <div class="mslbl" style="left:50%">50%</div>
+    <div class="mslbl" style="left:75%">75%</div>
+    <div class="mslbl" style="left:100%">100%</div>
+  </div>
+  <div class="mstag">下个里程碑：25%（¥5,890） · 还需 6 个工作日</div>
+  <div class="date">已攒 ¥1,427.78 · 还差 ¥22,132.22</div>
+</div></div></div>
+
+</body></html>

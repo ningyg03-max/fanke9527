@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b0d11;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:18px;
+     display:flex;gap:16px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:7px}
+.cap{font-size:12px;color:#7d8794;text-align:center}
+.cap b{display:block;font-size:13px;color:#eef2f7;font-weight:700;margin-bottom:2px}
+.phone{width:384px;border-radius:24px;overflow:hidden;flex-shrink:0;box-shadow:0 10px 40px rgba(0,0,0,.6);
+       background:linear-gradient(180deg,#ecfbf4,#eef6fe 55%,#f1f6ff);padding:0 16px 20px}
+.sbar{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 4px;font-size:11px;color:#7a99a3}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:5px 2px 12px}
+.ttl{font-size:19px;font-weight:700;color:#16323b}
+.gear{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.9);color:#61808c;
+      display:flex;align-items:center;justify-content:center;font-size:14px}
+.hero{border-radius:24px;padding:20px;overflow:hidden;position:relative;
+  background:linear-gradient(135deg,#0ea47a,#10b981 42%,#22c6b4 74%,#38bdf8 130%);
+  box-shadow:0 12px 28px rgba(16,185,129,.3)}
+.hero:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.12);top:-70px;right:-50px}
+.hero:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08);bottom:-60px;left:-30px}
+.hero>*{position:relative}
+.otrow{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.20);border-radius:20px;
+       padding:9px 6px 9px 14px;margin-bottom:14px}
+.otrow .st{flex:1;font-size:13px;color:#fff}
+.otrow .ac{font-size:13px;font-weight:700;color:#fff;background:rgba(255,255,255,.24);
+           padding:5px 12px;border-radius:14px}
+.hl{font-size:11.5px;color:rgba(255,255,255,.78);letter-spacing:1.3px;font-weight:600}
+.hc{font-size:12px;color:rgba(255,255,255,.72)}
+.ha{font-size:46px;font-weight:700;color:#fff;margin-top:10px;letter-spacing:-1px;line-height:1.05}
+.ha .c{font-size:24px;font-weight:600}
+.hst{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:12px;
+      padding:6px 12px;border-radius:20px;margin-top:11px}
+.hb{height:8px;border-radius:5px;background:rgba(255,255,255,.26);margin-top:15px;overflow:hidden}
+.hb>i{display:block;height:100%;background:#fff;border-radius:5px}
+.hs{display:grid;grid-template-columns:repeat(4,1fr);margin-top:16px}
+.hs .v{font-size:13.5px;font-weight:600;color:#fff;text-align:center}
+.hs .k{font-size:10.5px;color:rgba(255,255,255,.72);text-align:center;margin-top:4px}
+.hd{height:1px;background:rgba(255,255,255,.22);margin:14px 0 10px}
+.hsch{font-size:11.5px;color:rgba(255,255,255,.78)}
+/* 日历片段 */
+.calcard{background:#fff;border-radius:16px;padding:14px 16px;margin-top:12px}
+.calrow{display:flex;align-items:center;padding:9px 0;border-bottom:1px solid #eef4f2}
+.calrow:last-child{border-bottom:none}
+.cday{width:44px;font-size:17px;font-weight:700;color:#16323b}
+.cday.today{color:#047857}
+.cwk{width:40px;font-size:10.5px;color:#8aa6b0}
+.cname{flex:1;font-size:13.5px;color:#16323b}
+.cname.hw{color:#b45309;font-weight:600}
+.camt{font-size:15px;font-weight:700;color:#047857}
+</style></head><body>
+
+<!-- ① 未打卡 -->
+<div class="col"><div class="cap"><b>① 法定节假日 · 未打卡</b>点「打卡」记为出勤</div>
+<div class="phone"><div class="sbar"><span>10:20</span><span>5G ▮▮▮</span></div>
+<div class="nav"><span class="ttl">SalaryJump</span><span class="gear">⚙</span></div>
+<div class="hero">
+  <div class="otrow"><span class="st">法定节假日 · 今天出勤了？</span><span class="ac">打卡</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span class="hl">今日已赚</span><span class="hc">10:20:33</span></div>
+  <div class="ha"><span class="c">¥</span>0.00</div>
+  <div class="hst">● 国庆节 · 今天不累计</div>
+  <div class="hb"><i style="width:0%"></i></div>
+  <div class="hs">
+    <div><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥37.50</div><div class="k">每小时</div></div>
+    <div><div class="v">¥0.63</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.01</div><div class="k">每秒</div></div></div>
+  <div class="hd"></div>
+  <div class="hsch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- ② 法定 3 倍 -->
+<div class="col"><div class="cap"><b>② 法定节假日 · 已打卡 3 倍</b>10/1 上班 → ¥900</div>
+<div class="phone"><div class="sbar"><span>10:21</span><span>5G ▮▮▮</span></div>
+<div class="nav"><span class="ttl">SalaryJump</span><span class="gear">⚙</span></div>
+<div class="hero">
+  <div class="otrow"><span class="st">✅ 出勤 3 倍 · ¥900.00</span><span class="ac">取消</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span class="hl">今日已赚</span><span class="hc">10:21:07</span></div>
+  <div class="ha"><span class="c">¥</span>900.00</div>
+  <div class="hst">● 国庆节 · 出勤 3 倍结算</div>
+  <div class="hb"><i style="width:100%"></i></div>
+  <div class="hs">
+    <div><div class="v">¥900.00</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥112.50</div><div class="k">每小时</div></div>
+    <div><div class="v">¥1.88</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.03</div><div class="k">每秒</div></div></div>
+  <div class="hd"></div>
+  <div class="hsch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- ③ 调休 2 倍 + 日历 -->
+<div class="col"><div class="cap"><b>③ 调休日 · 2 倍 + 工资日历</b>10/4 上班 → ¥600</div>
+<div class="phone"><div class="sbar"><span>10:22</span><span>5G ▮▮▮</span></div>
+<div class="nav"><span class="ttl">SalaryJump</span><span class="gear">⚙</span></div>
+<div class="hero">
+  <div class="otrow"><span class="st">✅ 出勤 2 倍 · ¥600.00</span><span class="ac">取消</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span class="hl">今日已赚</span><span class="hc">10:22:15</span></div>
+  <div class="ha"><span class="c">¥</span>600.00</div>
+  <div class="hst">● 国庆节、中秋节 · 出勤 2 倍结算</div>
+  <div class="hb"><i style="width:100%"></i></div>
+  <div class="hs">
+    <div><div class="v">¥600.00</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥75.00</div><div class="k">每小时</div></div>
+    <div><div class="v">¥1.25</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.02</div><div class="k">每秒</div></div></div>
+  <div class="hd"></div>
+  <div class="hsch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>
+<div class="calcard">
+  <div class="calrow"><span class="cday">4</span><span class="cwk">周六</span><span class="cname hw">出勤 · 2 倍</span><span class="camt">¥ 600.00</span></div>
+  <div class="calrow"><span class="cday">3</span><span class="cwk">周五</span><span class="cname hw">出勤 · 3 倍</span><span class="camt">¥ 900.00</span></div>
+  <div class="calrow"><span class="cday">2</span><span class="cwk">周四</span><span class="cname hw">出勤 · 3 倍</span><span class="camt">¥ 900.00</span></div>
+  <div class="calrow"><span class="cday">1</span><span class="cwk">周三</span><span class="cname hw">出勤 · 3 倍</span><span class="camt">¥ 900.00</span></div>
+</div>
+</div></div>
+
+</body></html>

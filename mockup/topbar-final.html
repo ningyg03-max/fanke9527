@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070a;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+     padding:20px;display:flex;flex-direction:column;gap:18px}
+/* 手机：384dp 宽，1.8x → 691px */
+.ph{width:691px;border-radius:34px;padding:0 0 26px;
+    background:linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26);position:relative}
+.cap{position:absolute;top:-14px;left:0;font-size:15px;font-weight:700;padding:3px 10px;border-radius:8px}
+.cap.ok{color:#4ade80;background:#122b1f;border:1px solid #1d4a33}
+.cap.note{color:#94a3b8;background:#141d26;border:1px solid #263240;left:auto;right:0}
+/* 内容区 20dp 边距 → 36px */
+.inner{margin:0 36px;padding-top:44px}
+/* 顶栏：42dp 高 → 76px */
+.hd{position:relative;height:76px}
+.pill{position:absolute;top:0;width:158px;height:76px;border-radius:38px;
+      background:#12242A;border:3px solid #1F3E3D;display:flex;align-items:center;justify-content:center}
+.pill.l{left:0}.pill.r{right:0}
+.pill span{font-size:23px;color:#E8F4F2}
+.pill.r span{color:#FB7185}
+/* 标题：水平垂直居中 */
+.ttl{position:absolute;left:0;right:0;top:0;height:76px;display:flex;align-items:center;
+     justify-content:center;font-size:36px;font-weight:700;color:#E8F4F2}
+/* 下方内容 */
+.card{background:#14262A;border-radius:29px;padding:30px 26px;margin-top:26px}
+.t1{font-size:29px;font-weight:700}
+.t2{font-size:20px;color:#9FB8BE;margin-top:10px;line-height:1.5}
+/* 月份导航 */
+.navrow{display:flex;align-items:center;justify-content:space-between;margin-top:24px}
+.navbtn{width:80px;height:72px;border-radius:36px;background:#12242A;border:3px solid #1F3E3D;
+        display:flex;align-items:center;justify-content:center;color:#38BDF8;font-size:30px}
+.navttl{font-size:31px;font-weight:700;color:#E8F4F2}
+/* 行 */
+.recrow{background:#14262A;border-radius:24px;margin-top:18px;height:92px;
+        display:flex;align-items:center;padding:0 22px;gap:16px;font-size:21px;color:#9FB8BE}
+.recrow .tm{font-family:monospace;font-size:18px;color:#E8F4F2}
+.recrow .del{margin-left:auto;width:158px;height:72px;border-radius:36px;background:#12242A;
+             border:3px solid #1F3E3D;display:flex;align-items:center;justify-content:center;
+             color:#FB7185;font-size:23px}
+/* 范围按钮 */
+.rng{display:flex;gap:12px;margin-top:24px}
+.rng div{flex:1;height:72px;border-radius:36px;background:#12242A;border:3px solid #1F3E3D;
+         display:flex;align-items:center;justify-content:center;font-size:22px;color:#9FB8BE}
+.rng div.on{background:#0ea5e9;border-color:#0ea5e9;color:#052E3F;font-weight:700}
+/* 轴线标注 */
+.axis{position:relative;height:22px;margin-top:10px}
+.axis .c{position:absolute;left:50%;transform:translateX(-50%);font-size:15px;color:#64748b}
+.axis .c:before{content:"";position:absolute;left:50%;top:100%;width:0;border-left:2px dashed #475569;height:26px}
+</style></head><body>
+
+<!-- ① 喝水记录 -->
+<div class="ph"><div class="cap ok">① 喝水记录 · 已居中</div><div class="cap note">左右按钮天然等宽 88dp → 标题正居中</div>
+  <div class="inner">
+    <div class="hd">
+      <div class="pill l"><span>返回</span></div>
+      <div class="ttl">喝水记录</div>
+      <div class="pill r"><span>清空全部</span></div>
+    </div>
+    <div class="axis"><span class="c">屏幕中心</span></div>
+    <div class="card" style="margin-top:36px">
+      <div class="t1" style="color:#34D399">今日已喝 3000 / 3000 ml</div>
+      <div class="t2">每条记录都可以单独删除，删除后总喝水量会自动重新计算。</div>
+    </div>
+    <div class="recrow"><span class="tm">22:46:31</span><span>白开水 300 ml · 0 kcal</span><span class="del">删除</span></div>
+  </div>
+</div>
+
+<!-- ② 喝水统计 -->
+<div class="ph"><div class="cap ok">② 喝水统计 · 已居中</div><div class="cap note">右侧不再用 64dp 窄占位，改为与「返回」同构造</div>
+  <div class="inner">
+    <div class="hd">
+      <div class="pill l"><span>返回</span></div>
+      <div class="ttl">喝水统计</div>
+      <!-- 右侧空 -->
+    </div>
+    <div class="axis"><span class="c">屏幕中心</span></div>
+    <div class="rng" style="margin-top:36px"><div class="on">今日</div><div>近7天</div><div>近30天</div></div>
+    <div class="card" style="margin-top:24px">
+      <div class="t1" style="color:#38BDF8">2400 ml</div>
+      <div class="t2">目标 3000 ml · 完成 80%</div>
+    </div>
+  </div>
+</div>
+
+<!-- ③ 工资日历 -->
+<div class="ph"><div class="cap ok">③ 工资日历 · 已居中</div><div class="cap note">修掉 36dp 左偏 + 右侧补对称占位</div>
+  <div class="inner">
+    <div class="hd">
+      <div class="pill l"><span>返回</span></div>
+      <div class="ttl">工资日历</div>
+      <!-- 右侧空 -->
+    </div>
+    <div class="axis"><span class="c">屏幕中心</span></div>
+    <div class="navrow" style="margin-top:36px">
+      <div class="navbtn">‹</div><span class="navttl">2026 年 10 月</span><div class="navbtn">›</div>
+    </div>
+    <div class="card" style="margin-top:24px">
+      <div class="t2" style="margin:0"><span style="color:#34D399;font-size:20px">●</span> 本月合计</div>
+      <div class="t1" style="color:#34D399;font-size:44px;margin-top:12px">¥ 650.00</div>
+      <div class="t2">工作 1 个工作日 · 日均 650.00 元</div>
+    </div>
+  </div>
+</div>
+
+</body></html>

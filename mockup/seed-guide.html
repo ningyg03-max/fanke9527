@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+     padding:16px 10px 40px;display:flex;flex-direction:column;align-items:center}
+.phead{width:100%;max-width:392px;margin:6px auto 18px}
+.phead h1{font-size:20px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.phead p{font-size:12.5px;color:#475569;line-height:1.7;margin-top:8px}
+.ph{width:100%;max-width:392px;border-radius:24px;padding:16px 14px 18px;margin-bottom:18px;
+    background:linear-gradient(168deg,#07110F,#081518 55%,#071019);position:relative;overflow:hidden}
+.ph::before{content:"";position:absolute;inset:-25%;z-index:0;
+  background:radial-gradient(46% 38% at 22% 18%,rgba(16,185,129,.45),transparent 70%),
+             radial-gradient(40% 35% at 82% 26%,rgba(34,211,238,.34),transparent 70%),
+             radial-gradient(38% 40% at 62% 88%,rgba(139,92,246,.25),transparent 72%);
+  filter:blur(34px)}
+.ph>*{position:relative;z-index:2}
+.ttl{font-size:16.5px;font-weight:750;color:#E8F4F2;text-align:center;margin-bottom:14px}
+.card{background:linear-gradient(152deg,rgba(255,255,255,.095),rgba(255,255,255,.032));border-radius:20px;
+      padding:14px 16px;border:1px solid rgba(255,255,255,.10);margin-bottom:12px}
+.ch{display:flex;align-items:center;gap:6px;font-size:11.5px;color:rgba(232,255,247,.65)}
+.ch .dot{width:6px;height:6px;border-radius:50%;background:#34D399;box-shadow:0 0 8px #34D399}
+.cb{font-size:26px;font-weight:750;color:#F2FFFA;margin-top:8px;letter-spacing:-.8px}
+.cs{font-size:12px;color:rgba(232,255,247,.5);margin-top:6px}
+.drow{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.045);border-radius:14px;
+      padding:11px 13px;margin-bottom:8px;border:1px solid rgba(255,255,255,.07)}
+.drow.hl{border-color:rgba(52,211,153,.5);background:rgba(52,211,153,.08)}
+.dd{width:40px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.dd b{font-size:16px;font-weight:750;color:#E8F4F2}
+.dd span{font-size:9.5px;color:rgba(232,255,247,.45)}
+.dm{flex:1;font-size:13px;font-weight:600}
+.dm.amber{color:#FCD34D}.dm.purple{color:#B8A5F5}.dm.plain{color:rgba(232,255,247,.78)}
+.da{font-size:14.5px;font-weight:720;color:#34D399;font-variant-numeric:tabular-nums}
+.da.zero{color:rgba(232,255,247,.45)}
+.tag{font-size:9.5px;padding:2px 8px;border-radius:8px;margin-left:6px;font-weight:700;vertical-align:1.5px}
+.tag.g{background:rgba(52,211,153,.20);color:#5EEAD4}
+.steps{width:100%;max-width:392px}
+.step{display:flex;gap:11px;background:#fff;border-radius:14px;padding:13px 15px;margin-bottom:10px;border:1px solid #E2E8EC}
+.sn{width:26px;height:26px;border-radius:9px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+    font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sb{flex:1}
+.sb b{font-size:13px;color:#0F172A;display:block;margin-bottom:4px}
+.sb p{font-size:11.8px;color:#475569;line-height:1.6}
+.sb code{font-family:ui-monospace,Menlo,monospace;font-size:11px;background:#F1F5F4;padding:1px 5px;border-radius:4px;color:#0B7A5C}
+.note{width:100%;max-width:392px;background:#ECFDF5;border-radius:14px;padding:13px 15px;border:1px solid #CDEEE5}
+.note b{font-size:12.5px;color:#065F46;display:block;margin-bottom:7px}
+.note li{font-size:11.8px;color:#047857;line-height:1.65;margin:4px 0 4px 15px}
+.note li b{display:inline;color:#047857}
+</style></head><body>
+
+<div class="phead">
+  <h1>历史数据补录 · 安装即完成</h1>
+  <p>无法直接改你手机里的数据（自动化权限被限制），所以做了这个<b>「安装即自动补录」版</b>：装上打开一次，三条记录自动加好（只跑一次，不会重复）。</p>
+</div>
+
+<!-- ══════ 补录后效果 ══════ -->
+<div class="ph">
+  <div class="ttl">安装打开后 · 日历自动变成这样</div>
+  <div class="drow hl" style="margin-top:2px"><div class="dd"><b>9</b><span>周五</span></div><div class="dm purple">育儿假 · 全薪<span class="tag g">自动补录</span></div><div class="da">¥ 1,007.78</div></div>
+  <div class="drow hl"><div class="dd"><b>8</b><span>周四</span></div><div class="dm purple">育儿假 · 全薪<span class="tag g">自动补录</span></div><div class="da">¥ 1,007.78</div></div>
+  <div class="drow hl"><div class="dd"><b>6</b><span>周二</span></div><div class="dm amber">出勤 · 调休<span class="tag g">自动补录</span></div><div class="da zero">¥ 0.00</div></div>
+  <div class="cs" style="margin-top:10px">另有你原有的记录（10/7、10/10 等）保持不变</div>
+</div>
+
+<!-- ══════ 步骤 ══════ -->
+<div class="steps">
+  <div class="step"><span class="sn">1</span><div class="sb">
+    <b>装这个包（3.37.1）</b>
+    <p>覆盖安装即可。它也可以先确认月薪：设置 → 薪跳设置 → 月薪应为 <code>18140</code>；就算没设，包里也会自动对齐。</p>
+  </div></div>
+  <div class="step"><span class="sn">2</span><div class="sb">
+    <b>打开一次 App</b>
+    <p>补录自动完成，无需任何操作。（内部只执行一次，以后打开不会再改）</p>
+  </div></div>
+  <div class="step"><span class="sn">3</span><div class="sb">
+    <b>核对结果</b>
+    <p>工资日历：10/8、10/9 显示「育儿假 · 全薪 ¥1,007.78」，10/6 显示「出勤 · 调休」；<br>假期账户：调休 +1 天、育儿假已用 +2 天。</p>
+  </div></div>
+</div>
+
+<div class="note" style="margin-top:10px">
+  <b>💰 金额计算依据（月薪 18140）</b>
+  <ul>
+    <li>10 月共 <b>18 个工作日</b> → 日薪 = 18140 ÷ 18 = <b>¥1,007.78</b></li>
+    <li>10/8、10/9 育儿假（全薪）→ 按新工资<b>重算为 ¥1,007.78/天</b>（原来按旧工资 788.89，两天共补 <b>+¥437.78</b> 进累计）</li>
+    <li>10/6 出勤 → 你公司周末/假期出勤记<b>调休</b>（不直接计薪）→ <b>调休 +1 天</b>，金额 ¥0.00</li>
+    <li>其它已结算的日子（如 10/10）保持原金额；如需一并按 18140 重算，说一声即可</li>
+  </ul>
+</div>
+
+</body></html>

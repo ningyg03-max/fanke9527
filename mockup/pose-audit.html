@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ padding:16px 10px 40px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:520px}
+h1{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12px;color:#475569;line-height:1.7;margin-top:7px}
+table{width:100%;border-collapse:collapse;font-size:11.5px;background:#fff;border-radius:14px;overflow:hidden;margin-top:16px;
+ box-shadow:0 4px 14px -10px rgba(15,40,40,.3)}
+th{background:#F1F5F4;color:#46626B;font-weight:650;padding:9px 10px;text-align:left;font-size:11px}
+td{padding:9px 10px;border-top:1px solid #EEF3F2;color:#16323B;line-height:1.5}
+td.fix{background:#FFFBEB}
+.ok{color:#047857;font-weight:700}
+.bad{color:#BE123C;font-weight:700;text-decoration:line-through}
+.tag{font-size:9.5px;font-weight:750;padding:2px 7px;border-radius:7px;margin-left:5px}
+.tag.f{background:#FEF3C7;color:#92400E}
+.tag.n{background:#E0F2FE;color:#075985}
+.note{background:#fff;border-radius:14px;padding:13px 15px;border:1px solid #E2E8EC;font-size:11.8px;color:#475569;line-height:1.7;margin-top:14px}
+.note b{color:#0B7A5C}
+.foot{background:#ECFDF5;border:1px solid #CDEEE5;border-radius:14px;padding:13px 15px;margin-top:14px;font-size:12px;color:#065F46;line-height:1.75}
+</style></head><body>
+<div class="page">
+  <h1>小人状态 · 全组合排查结果</h1>
+  <p class="intro">你问「所有状态都改了吗」→ 我做了 9 状态 × 星期 × 时段 的全组合扫描，
+  <b>又发现 2 个同类缺口</b>并已修复（3.55）。</p>
+
+  <table>
+    <tr><th style="width:38%">场景</th><th>修复前</th><th>修复后</th></tr>
+    <tr><td>周日 出勤 16:59</td><td class="ok">苦命出勤</td><td class="ok">苦命出勤</td></tr>
+    <tr><td>周日 出勤 17:00+</td><td class="bad">苦命出勤（锁死）</td><td class="ok">下班快乐 <span class="tag f">3.54 修</span></td></tr>
+    <tr><td>周六 出勤 19:00</td><td class="bad">苦命出勤（锁死）</td><td class="ok">下班快乐 <span class="tag f">3.54 修</span></td></tr>
+    <tr><td><b>周一 加班中</b></td><td class="bad">面瘫（被覆盖）</td><td class="ok">黑眼圈搬砖 <span class="tag f">3.55 修</span></td></tr>
+    <tr><td><b>周五 加班中</b></td><td class="bad">欢呼（被覆盖）</td><td class="ok">黑眼圈搬砖 <span class="tag f">3.55 修</span></td></tr>
+    <tr><td>周三 加班中</td><td class="ok">黑眼圈搬砖</td><td class="ok">黑眼圈搬砖</td></tr>
+    <tr><td>周日 未出勤 17:30</td><td class="ok">周日晚焦虑</td><td class="ok">周日晚焦虑（锚点改下班时间）<span class="tag n">统一</span></td></tr>
+    <tr><td>周一 上午/下午/下班后</td><td class="ok">生无可恋周一</td><td class="ok">生无可恋周一</td></tr>
+    <tr><td>周五 下午/下班后</td><td class="ok">欢呼 + 彩带</td><td class="ok">欢呼 + 彩带</td></tr>
+    <tr><td>请假（任意日）</td><td class="ok">家里躺</td><td class="ok">家里躺</td></tr>
+  </table>
+
+  <div class="note">
+    <b>新发现的两个缺口（3.55 修复）</b><br>
+    周一/周五的「星期氛围」判断是<b>无条件返回</b> → 把「加班中」覆盖掉了：
+    周一加班显示面瘫、周五加班显示欢呼。<br><br>
+    <b>修复原则</b>：<b>事实状态优先于氛围状态</b> —— 加班是"还在工作"的事实，
+    不该被氛围盖掉。新判定链：<br>
+    请假 → 休息日出勤 → <b>加班</b> → 休息日 → 周一/周五氛围 → 时段姿势
+  </div>
+
+  <div class="note">
+    <b>顺带统一</b>：「周日晚焦虑」的触发锚点原本硬编码 17:00 → 改用你设置的<b>下班时间</b>
+    （与「休息日出勤下班切换」统一锚点）。<br><br>
+    <b>新增文档</b>：<code>notes/pet-pose-matrix.md</code> —— 完整行为矩阵，
+    以后改小人逻辑前对照它防回归。
+  </div>
+
+  <div class="foot">
+    🎁 <b>SalaryJump-3.55-poses.apk</b> —— 编译 238 类 · 测试 908/908 · 全组合扫描通过<br>
+    现在可以放心了：<b>9 种状态 × 所有时间组合都已校对</b>。
+  </div>
+</div>
+</body></html>

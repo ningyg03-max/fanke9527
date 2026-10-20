@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+  body{margin:0;background:#eef6f4;font-family:"PingFang SC","Noto Sans CJK SC",sans-serif;padding:12px}
+  /* 1dp = 1px in this simulation (384dp wide) */
+  .phone{width:384px;background:linear-gradient(180deg,#ecfbf4,#eef6fe 60%,#f1f6ff);padding:0;box-sizing:border-box}
+  .screen{padding:0 20px 10px}
+  .card{background:#fff;border-radius:16px;margin-top:10px;padding:0}
+  .row{display:flex;align-items:center;padding:12px 12px 12px 16px}
+  .time{font-family:"DejaVu Sans Mono",monospace;font-weight:700;font-size:16px;color:#16323b;white-space:nowrap;flex-shrink:0}
+  .info{font-size:13.5px;color:#047857;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1 1 auto;margin-left:10px;min-width:0}
+  .btn{font-size:13px;color:#be123c;border:1.5px solid #d3e9e3;background:#f7fcfa;border-radius:19px;
+       padding:8px 11px;white-space:nowrap;flex-shrink:0;margin-left:12px;box-sizing:content-box}
+  .hdr{font-size:12px;color:#61808c;padding:14px 4px 2px;display:flex;justify-content:space-between}
+  .cap{font-size:11px;color:#8aa6b0;margin-top:2px}
+</style></head><body>
+<div class="phone"><div class="screen">
+  <div class="hdr"><span>模拟 · 384dp 宽（与 S26U 一致）</span><span>实测溢出情况</span></div>
+
+  <div class="cap">① 东方树叶茶 500 ml · 0 kcal</div>
+  <div class="card"><div class="row">
+    <span class="time">14:57:06</span>
+    <span class="info">东方树叶茶 500 ml · 0 kcal</span>
+    <span class="btn">删除</span>
+  </div></div>
+
+  <div class="cap">② 白开水 550 ml · 0 kcal</div>
+  <div class="card"><div class="row">
+    <span class="time">09:44:16</span>
+    <span class="info">白开水 550 ml · 0 kcal</span>
+    <span class="btn">删除</span>
+  </div></div>
+
+  <div class="cap">③ 最长情况：8字自定义名 + 大容量 + 高热量</div>
+  <div class="card"><div class="row">
+    <span class="time">23:59:59</span>
+    <span class="info">精酿啤酒 1500 ml · 825 kcal</span>
+    <span class="btn">删除</span>
+  </div></div>
+
+  <div class="cap">④ 极端：超长名被省略号截断（时间戳仍完整）</div>
+  <div class="card"><div class="row">
+    <span class="time">09:44:16</span>
+    <span class="info">东方树叶乌龙茶特浓 1500 ml · 825 kcal</span>
+    <span class="btn">删除</span>
+  </div></div>
+</div></div>
+</body></html>

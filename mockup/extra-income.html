@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f2f4f7;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:20px;align-items:center}
+.wrap{width:384px}
+.cap{font-size:13.5px;font-weight:700;color:#111827;margin-bottom:2px;display:flex;align-items:center;gap:8px}
+.bdg{font-size:10px;padding:2px 8px;border-radius:7px;font-weight:600}
+.b-now{background:#fee2e2;color:#b91c1c}
+.b-new{background:#d1fae5;color:#047857}
+.sub{font-size:11.5px;color:#6b7280;line-height:1.5;margin-bottom:10px}
+.ph{border-radius:20px;padding:12px 20px 20px;background:linear-gradient(180deg,#ECFBF4,#EEF6FE 55%,#F1F6FF)}
+/* 主卡 */
+.hero{border-radius:24px;padding:20px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0EA47A,#10B981 33%,#22C6B4 66%,#2DD4BF);
+  box-shadow:0 5px 14px rgba(16,185,129,.28)}
+.hero:before{content:"";position:absolute;width:150px;height:150px;border-radius:50%;
+  background:rgba(255,255,255,.12);top:-48px;right:-38px}
+.hero:after{content:"";position:absolute;width:110px;height:110px;border-radius:50%;
+  background:rgba(255,255,255,.07);bottom:-50px;left:-30px}
+.hero>*{position:relative;z-index:2}
+.hrow{display:flex;align-items:center;height:24px;margin-bottom:14px}
+.dotw{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.65);margin-right:7px}
+.hlab{font-size:11.5px;color:rgba(255,255,255,.78);letter-spacing:.12em;font-weight:600;flex:1}
+.clock{font-size:12px;color:rgba(255,255,255,.72)}
+/* 外快行 */
+.exrow{display:flex;align-items:center;background:rgba(255,255,255,.20);border-radius:20px;
+       padding:9px 6px 9px 14px;margin-bottom:14px}
+.exrow .st{flex:1;font-size:13px;color:#fff}
+.exrow .ac{font-size:13px;font-weight:700;color:#fff;background:rgba(255,255,255,.24);
+           padding:5px 12px;border-radius:14px}
+.amt{font-size:46px;font-weight:700;color:#fff;letter-spacing:-1.5px;line-height:1;
+  display:flex;align-items:baseline;gap:2px}
+.amt .c{font-size:24px;font-weight:600}
+.chip{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:12px;
+      padding:6px 11px;border-radius:20px;margin-top:12px}
+.pb{height:6px;border-radius:4px;background:rgba(255,255,255,.26);margin-top:16px;overflow:hidden}
+.pb>i{display:block;height:100%;background:#fff;border-radius:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:14px}
+.stats .v{font-size:13px;font-weight:600;color:#fff;text-align:center}
+.stats .k{font-size:10.5px;color:rgba(255,255,255,.72);text-align:center;margin-top:3px}
+.dv{height:1px;background:rgba(255,255,255,.22);margin:13px 0 9px}
+.sch{font-size:11.5px;color:rgba(255,255,255,.78)}
+/* 弹窗 */
+.dlg{width:340px;margin:0 auto;border-radius:18px;background:#fff;padding:20px;
+     box-shadow:0 12px 40px rgba(0,0,0,.22)}
+.dt{font-size:17px;font-weight:700;color:#16323B;margin-bottom:4px}
+.ds{font-size:11.5px;color:#8AA6B0;margin-bottom:14px}
+.dl{font-size:12px;color:#61808C;margin-top:14px;margin-bottom:6px}
+.din{height:46px;border-radius:10px;background:#EFF7F6;border:1px solid #E3EFEC;
+     display:flex;align-items:center;padding:0 14px;font-size:20px;color:#16323B;font-weight:700}
+.din.small{font-size:14px;font-weight:400;height:42px}
+.chips{display:flex;gap:8px;margin-top:10px}
+.qc{flex:1;height:36px;border-radius:18px;background:#F7FCFA;border:1.5px solid #D3E9E3;
+    display:flex;align-items:center;justify-content:center;font-size:12.5px;color:#16323B}
+.acts{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+.act{height:40px;padding:0 20px;border-radius:9px;display:flex;align-items:center;font-size:14px;
+     background:#EFF7F6;border:1px solid #E3EFEC;color:#16323B}
+.act.pri{background:#047857;border-color:#047857;color:#fff;font-weight:600}
+/* 日历小示意 */
+.cal{background:#fff;border-radius:18px;padding:14px 16px;box-shadow:0 3px 10px rgba(0,0,0,.05)}
+.cr{display:flex;align-items:center;padding:7px 0;font-size:12.5px}
+.cr .d{width:36px;color:#16323B;font-weight:700;font-size:14px}
+.cr .w{width:32px;color:#8AA6B0;font-size:10.5px}
+.cr .n{flex:1;color:#16323B}
+.cr .n.ex{color:#B45309;font-weight:600}
+.cr .m{color:#047857;font-weight:700}
+.cr .m small{color:#8AA6B0;font-weight:400;font-size:10.5px}
+</style></head><body>
+
+<!-- ═══ ① 主卡（无外快） ═══ -->
+<div class="wrap"><div class="cap">① 主卡 · 未记外快 <span class="bdg b-new">新增一行</span></div>
+<div class="sub">和「今天加班了？」同款胶囊行，位置在金额上方（加班/请假行附近）。</div>
+<div class="ph"><div class="hero">
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">17:23:15</span></div>
+
+  <div class="exrow"><span class="st">💰 今天赚外快了？</span><span class="ac">记一笔</span></div>
+
+  <div class="amt"><span class="c">¥</span>777.78</div>
+  <div class="chip">● 今日下班 · 工资已满额</div>
+  <div class="pb"><i style="width:100%"></i></div>
+  <div class="stats">
+    <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+    <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+  </div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- ═══ ② 主卡（已记外快） ═══ -->
+<div class="wrap"><div class="cap">② 主卡 · 已记外快 <span class="bdg b-new">计入总额</span></div>
+<div class="sub">外快 <b>加进大数字</b>（777.78 + 200 = 977.78），行内显示外快金额与备注。</div>
+<div class="ph"><div class="hero">
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">17:23:15</span></div>
+
+  <div class="exrow"><span class="st">💰 外快 ¥200.00 · 帮朋友修图</span><span class="ac">编辑</span></div>
+
+  <div class="amt"><span class="c">¥</span>977.78</div>
+  <div class="chip">● 今日下班 · 工资满额 + 外快</div>
+  <div class="pb"><i style="width:100%"></i></div>
+  <div class="stats">
+    <div><div class="v">¥977.78</div><div class="k">今日合计</div></div>
+    <div><div class="v">¥777.78</div><div class="k">工资部分</div></div>
+    <div><div class="v">¥200.00</div><div class="k">外快</div></div>
+    <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+  </div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- ═══ ③ 记一笔弹窗 ═══ -->
+<div class="wrap"><div class="cap">③ 记一笔弹窗</div>
+<div class="sub">金额 + 可填备注（备注会显示在行内，如「帮朋友修图」）。</div>
+<div class="dlg">
+  <div class="dt">记一笔外快</div>
+  <div class="ds">今天（10月10日）额外赚到的钱</div>
+
+  <div class="dl">金额</div>
+  <div class="din">¥ 200.00</div>
+  <div class="chips">
+    <div class="qc">+50</div><div class="qc">+100</div><div class="qc">+200</div><div class="qc">+500</div>
+  </div>
+
+  <div class="dl">备注（可选）</div>
+  <div class="din small" style="color:#8AA6B0">帮朋友修图</div>
+
+  <div class="acts"><div class="act">取消</div><div class="act pri">保存</div></div>
+</div></div>
+
+<!-- ═══ ④ 是否计入累计（决策点） ═══ -->
+<div class="wrap"><div class="cap">④ 关键抉择：外快算不算「真实收入」？</div>
+<div class="sub">这决定外快是否进入 <b>累计收入 / 存钱罐 / 工资日历</b>。</div>
+
+<div style="background:#fff;border-radius:16px;padding:16px;box-shadow:0 3px 10px rgba(0,0,0,.05);margin-bottom:12px">
+  <div style="font-size:13.5px;font-weight:700;color:#047857;margin-bottom:6px">✓ 方案 A：计入（推荐）</div>
+  <div style="font-size:12px;color:#61808C;line-height:1.6">
+    外快 = 真实到手的钱 → 累计收入增加、存钱罐进度前进、工资日历显示。<br>
+    <b style="color:#16323B">适合</b>：想用存钱罐攒真实存款（现在的用法）。<br>
+    日历里显示为「外快 +¥200」（琥珀色标记）。
+  </div>
+  <div class="cal" style="margin-top:12px">
+    <div class="cr"><span class="d">10</span><span class="w">周六</span><span class="n ex">外快 +¥200</span><span class="m">¥200.00</span></div>
+    <div class="cr"><span class="d">09</span><span class="w">周五</span><span class="n">工作日</span><span class="m">¥777.78</span></div>
+  </div>
+</div>
+
+<div style="background:#fff;border-radius:16px;padding:16px;box-shadow:0 3px 10px rgba(0,0,0,.05)">
+  <div style="font-size:13.5px;font-weight:700;color:#61808C;margin-bottom:6px">方案 B：不计入</div>
+  <div style="font-size:12px;color:#61808C;line-height:1.6">
+    外快只在主卡显示（今日视角），不影响累计、存钱罐、日历。<br>
+    <b style="color:#16323B">适合</b>：外快只是"顺手记一下"，不想和工资混在一起统计。
+  </div>
+</div>
+</div>
+
+</body></html>

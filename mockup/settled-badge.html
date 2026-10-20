@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eef1f4;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:14px;align-items:center}
+.wrap{width:388px}
+.lbl{font-size:12.5px;font-weight:700;margin-bottom:8px;color:#111827}
+.lbl .b{background:#FFE4E6;color:#BE123C;padding:2px 8px;border-radius:8px;font-size:11px;margin-right:6px}
+.lbl .a{background:#D1FAE5;color:#047857;padding:2px 8px;border-radius:8px;font-size:11px;margin-right:6px}
+.card{background:linear-gradient(160deg,#0E2B2A,#0D2E36 60%,#0C3038);border-radius:18px;
+      padding:16px 18px;box-shadow:0 4px 16px rgba(6,30,30,.35)}
+.hd{display:flex;align-items:center;margin-bottom:4px}
+.dot{width:7px;height:7px;border-radius:50%;background:#2DD4BF;margin-right:7px}
+.hlab{font-size:12.5px;color:#E8FFFA;font-weight:600;flex:1}
+.link{font-size:12px;color:#2DD4BF}
+.amtrow{display:flex;align-items:center;gap:9px;margin-top:10px}
+.amt{font-size:30px;font-weight:700;color:#2DD4BF;letter-spacing:-1px}
+.chip{font-size:11.5px;font-weight:700;color:#2DD4BF;background:rgba(45,212,191,.14);
+      padding:5px 10px;border-radius:12px;white-space:nowrap}
+.chip.old{color:#2DD4BF}
+.sub{font-size:12.5px;color:#7FA9A5;margin-top:8px}
+/* 小组件 */
+.wdg{background:linear-gradient(160deg,#12201F,#0F272B);border-radius:16px;padding:14px 15px;
+     box-shadow:0 4px 14px rgba(6,30,30,.3);font-family:system-ui}
+.w1{display:flex;justify-content:space-between;font-size:12px;color:#8FB8B4;margin-bottom:6px}
+.w1 b{color:#CFEDE8;font-weight:600;font-size:13px}
+.w2{font-size:26px;font-weight:700;color:#2DD4BF}
+.w3{font-size:12.5px;color:#E8FFFA;margin-top:6px}
+.w3 .q{color:#8FB8B4}
+.wline{height:5px;border-radius:3px;background:linear-gradient(90deg,#2DD4BF 40%,rgba(255,255,255,.10) 40%);margin-top:8px}
+.note{background:#fff;border-radius:10px;padding:10px 12px;font-size:11.5px;color:#4b5563;line-height:1.6}
+.note b{color:#047857}
+</style></head><body>
+
+<div class="wrap">
+<div class="lbl"><span class="b">改前</span>主卡 · 累计角标</div>
+<div class="card">
+  <div class="hd"><span class="dot"></span><span class="hlab">累计收入</span><span class="link">明细 ›</span></div>
+  <div class="amtrow"><span class="amt">¥ 1,427.78</span><span class="chip old">1 天</span></div>
+  <div class="sub">按工作日累计</div>
+</div>
+</div>
+
+<div class="wrap">
+<div class="lbl"><span class="a">改后</span>主卡 · 累计角标</div>
+<div class="card">
+  <div class="hd"><span class="dot"></span><span class="hlab">累计收入</span><span class="link">明细 ›</span></div>
+  <div class="amtrow"><span class="amt">¥ 1,427.78</span><span class="chip">已结算 1 天</span></div>
+  <div class="sub">按工作日累计</div>
+</div>
+</div>
+
+<div class="wrap">
+<div class="lbl"><span class="a">改后</span>桌面小组件 · 同步变更</div>
+<div class="wdg">
+  <div class="w1"><b>SalaryJump</b><span>20:34:07</span></div>
+  <div class="w2">¥ 777.78</div>
+  <div class="w3">已下班 · 今日工资已满额</div>
+  <div class="wline"></div>
+  <div class="w3" style="font-size:12px;margin-top:8px">累计 ¥ 1,427.78 · 已结算 1 天</div>
+</div>
+</div>
+
+<div class="wrap"><div class="note">
+📖 <b>「已结算 N 天」的语义</b>：N = 已经结算进累计金额的计薪天数。<br>
+每个工作日（或计薪的休息日出勤）结算时 +1；<b>今天发生的收入次日打开 App 时才结算</b>。<br>
+调休出勤、普通休息日不加天数；外快/加班费只加钱、不加天。
+</div></div>
+
+</body></html>

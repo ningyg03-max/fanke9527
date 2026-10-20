@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ padding:16px 12px 44px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:680px}
+h1{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12px;color:#475569;line-height:1.75;margin-top:7px}
+.badge-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.badge-row span{font-size:10.5px;padding:4px 10px;border-radius:999px;background:#fff;color:#334155;border:1px solid #D8E0E6}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+@media (max-width:560px){.grid{grid-template-columns:repeat(2,1fr)}}
+.cell{background:linear-gradient(168deg,#F3FBF7,#EFF4FA);border-radius:18px;border:1px solid #E2E8EC;
+ padding:12px 10px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(15,40,40,.05)}
+.cell .nm{font-size:12.5px;font-weight:750;color:#0F172A}
+.cell .wh{font-size:10px;color:#0B7A5C;background:rgba(16,185,129,.1);padding:2.5px 9px;border-radius:9px;font-weight:650}
+.svgbox{width:112px;height:118px}
+.svgbox svg{width:100%;height:100%;display:block}
+.cell .cap{font-size:10px;color:#64748B;text-align:center;line-height:1.5;min-height:26px}
+.note{background:#ECFDF5;border:1px solid #CDEEE5;border-radius:16px;padding:14px 16px;margin-top:20px;
+ font-size:12px;color:#065F46;line-height:1.75}
+.note b{display:block;font-size:12.5px;margin-bottom:6px}
+.foot{font-size:10.5px;color:#94A3B8;margin-top:14px;text-align:center;line-height:1.6}
+</style></head><body>
+<div class="page">
+  <h1>打工小人 · 动效预览</h1>
+  <p class="intro">这是新版 APK 里小人动画的 1:1 移植（同一套参数与几何）。全部动效<b>持续循环</b>：呼吸起伏、眨眼、以及每个姿势的专属动作（走路 / 敲键盘 / 冒热气 / 雨滴 / 飘 Zzz / 蹦跳撒花）。</p>
+  <div class="badge-row">
+    <span>✦ 呼吸起伏</span><span>✦ 眨眼</span><span>✦ 走路摆腿</span><span>✦ 敲键盘</span>
+    <span>✦ 热气上升</span><span>✦ 雨滴下落</span><span>✦ Zzz 飘散</span><span>✦ 蹦跳撒花</span>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="note">
+    <b>实现方式（与网页预览同参数）</b>
+    主卡小人由 <b>ValueAnimator 逐帧驱动</b>（约 60fps），持续累加真实时间 t 注入绘制库；窗口不可见 / 后台时<b>自动暂停</b>（省电）。
+    小组件是 RemoteViews，无法跑动画 → 保持静态渲染，但姿势与主卡完全一致。
+  </div>
+  <div class="foot">预览为浅色模式配色；深色模式使用另一套更亮的前景色，动画逻辑完全相同。</div>
+</div>
+
+<script>
+/* ═══════ 调色板（浅色，与 Java Palette.LIGHT 一致） ═══════ */
+const C = {
+  bodyTop:'#2ECFA0', bodyBottom:'#0C8B6F',
+  face:'#063A2F', faceFaint:'rgba(6,58,47,.55)',
+  limb:'#063A2F', bgFaint:'rgba(6,58,47,.55)',
+  zzz:'rgba(11,158,125,.55)', zzzLeave:'rgba(124,107,214,.55)',
+  caseColor:'#B08968', caseDark:'#8F6B4A',
+  laptop:'#2E4046', laptopLight:'#48626A',
+  bowl:'#FFFFFF', rice:'#F7F3E8', pillow:'#DCE9F2',
+  cloud:'#93A7B4', rain:'#6FB3E0', moon:'#FCD34D',
+  shadow:'rgba(10,30,25,.10)',
+  conf:['#F472B6','#FCD34D','#60A5FA','#34D399','#FB923C']
+};
+
+/* ═══════ 基础零件（1:1 移植） ═══════ */
+function shadow(cy, scale){ const w=16*Math.max(.4,scale===undefined?1:scale);
+  return `<ellipse cx="50" cy="${cy}" rx="${w}" ry="3.4" fill="${C.shadow}"/>`; }
+function body(cx,cy,rx,ry,gi){
+  return `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${gi})"/>
+  <ellipse cx="${(cx-rx*.62+1).toFixed(1)}" cy="${(cy-ry*.57).toFixed(1)}" rx="${(rx*.285).toFixed(1)}" ry="${(ry*.21).toFixed(1)}" fill="rgba(255,255,255,.30)"/>`; }
+function eyesN(cx,cy,dx,blink){
+  if(blink) return `<line x1="${cx-dx-2.6}" y1="${cy}" x2="${cx-dx+2.6}" y2="${cy}" stroke="${C.face}" stroke-width="2" stroke-linecap="round"/>
+    <line x1="${cx+dx-2.6}" y1="${cy}" x2="${cx+dx+2.6}" y2="${cy}" stroke="${C.face}" stroke-width="2" stroke-linecap="round"/>`;
+  return `<circle cx="${cx-dx}" cy="${cy}" r="2.7" fill="${C.face}"/><circle cx="${cx+dx}" cy="${cy}" r="2.7" fill="${C.face}"/>`; }
+function eyesHappy(cx,cy,dx){
+  return `<path d="M${cx-dx-3} ${cy+1.5} Q${cx-dx} ${cy-3.5} ${cx-dx+3} ${cy+1.5}" stroke="${C.face}" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M${cx+dx-3} ${cy+1.5} Q${cx+dx} ${cy-3.5} ${cx+dx+3} ${cy+1.5}" stroke="${C.face}" stroke-width="2" fill="none" stroke-linecap="round"/>`; }
+function eyesSad(cx,cy,dx,blink){
+  if(blink) return `<line x1="${cx-dx-2.6}" y1="${cy+1}" x2="${cx-dx+2.6}" y2="${cy+1}" stroke="${C.face}" stroke-width="2" stroke-linecap="round"/>
+    <line x1="${cx+dx-2.6}" y1="${cy+1}" x2="${cx+dx+2.6}" y2="${cy+1}" stroke="${C.face}" stroke-width="2" stroke-linecap="round"/>`;
+  return `<circle cx="${cx-dx}" cy="${cy+1}" r="2.6" fill="${C.face}"/><circle cx="${cx+dx}" cy="${cy+1}" r="2.6" fill="${C.face}"/>
+    <line x1="${cx-dx-3.4}" y1="${cy-3.4}" x2="${cx-dx+2}" y2="${cy-1.6}" stroke="${C.face}" stroke-width="1.6" stroke-linecap="round"/>
+    <line x1="${cx+dx+3.4}" y1="${cy-3.4}" x2="${cx+dx-2}" y2="${cy-1.6}" stroke="${C.face}" stroke-width="1.6" stroke-linecap="round"/>`; }
+function mouth(cx,cy,kind){
+  if(kind===0) return `<path d="M${cx-4} ${cy} Q${cx} ${cy+4} ${cx+4} ${cy}" stroke="${C.face}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+  if(kind===1) return `<path d="M${cx-6} ${cy-1} Q${cx} ${cy+7} ${cx+6} ${cy-1}" stroke="${C.face}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+  if(kind===2) return `<circle cx="${cx}" cy="${cy+1}" r="2.6" fill="${C.face}"/>`;
+  if(kind===3) return `<line x1="${cx-4.5}" y1="${cy+1}" x2="${cx+4.5}" y2="${cy+1}" stroke="${C.face}" stroke-width="2" stroke-linecap="round"/>`;
+  if(kind===4) return `<path d="M${cx-5} ${cy+2} Q${cx-2.5} ${cy-1} ${cx} ${cy+2} Q${cx+2.5} ${cy+5} ${cx+5} ${cy+2}" stroke="${C.face}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+  return `<path d="M${cx-4.5} ${cy-1} Q${cx} ${cy+5.5} ${cx+4.5} ${cy-1} Z" fill="${C.face}"/>`; }
+function legsStand(y0){ return `<line x1="43" y1="${y0}" x2="41.5" y2="${y0+7}" stroke="${C.limb}" stroke-width="3" stroke-linecap="round"/>
+  <line x1="57" y1="${y0}" x2="58.5" y2="${y0+7}" stroke="${C.limb}" stroke-width="3" stroke-linecap="round"/>`; }
+function legsWalk(y0,t){ const sw=Math.sin(t*7)*3.6;
+  return `<line x1="43" y1="${y0}" x2="${(37+sw).toFixed(1)}" y2="${y0+6}" stroke="${C.limb}" stroke-width="3" stroke-linecap="round"/>
+  <line x1="57" y1="${y0}" x2="${(63-sw).toFixed(1)}" y2="${y0+3}" stroke="${C.limb}" stroke-width="3" stroke-linecap="round"/>`; }
+function caseBag(x,y){
+  return `<rect x="${x}" y="${y}" width="15" height="12" rx="2.5" fill="${C.caseColor}"/>
+  <rect x="${x}" y="${y}" width="15" height="4.5" rx="2.2" fill="${C.caseDark}"/>
+  <path d="M${x+4.5} ${y} L${x+4.5} ${y-2.5} Q${x+7.5} ${y-4.5} ${x+9.5} ${y-2.5} L${x+9.5} ${y}" stroke="${C.caseDark}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`; }
+function laptop(cx,topY){
+  return `<rect x="${cx-16}" y="${topY+9}" width="32" height="4" rx="2" fill="${C.laptop}"/>
+  <rect x="${cx-12}" y="${topY}" width="24" height="9" rx="1.6" fill="${C.laptopLight}"/>`; }
+function sparkle(cx,cy,r,color){
+  return `<path d="M${cx} ${cy-r} L${cx+r*.3} ${cy-r*.3} L${cx+r} ${cy} L${cx+r*.3} ${cy+r*.3} L${cx} ${cy+r} L${cx-r*.3} ${cy+r*.3} L${cx-r} ${cy} L${cx-r*.3} ${cy-r*.3} Z" fill="${color}"/>`; }
+function cloud(cx,cy,sc){
+  return `<circle cx="${cx-6*sc}" cy="${cy+sc}" r="${6.4*sc}" fill="${C.cloud}"/>
+  <circle cx="${cx}" cy="${cy-2*sc}" r="${7.6*sc}" fill="${C.cloud}"/>
+  <circle cx="${cx+6.6*sc}" cy="${cy+1.2*sc}" r="${5.8*sc}" fill="${C.cloud}"/>
+  <rect x="${cx-12*sc}" y="${cy+sc}" width="${24*sc}" height="${5.4*sc}" rx="${3*sc}" fill="${C.cloud}"/>`; }
+function sweat(cx,cy,op){
+  const o = op===undefined ? '' : ` fill-opacity="${op.toFixed(2)}"`;
+  return `<path d="M${cx} ${cy} Q${cx+2.4} ${cy+3} ${cx} ${cy+4.8} Q${cx-2.4} ${cy+3} ${cx} ${cy} Z" fill="#7CC6F2"${o}/>`; }
+function sweatDrop(cx,cy,t,off){
+  const ph=(t/1.9+off)%1;
+  return sweat(cx, cy+ph*7.5, Math.max(0,1-ph*.75)); }
+function steam(x,y,t){
+  let out='';
+  for(let i=0;i<2;i++){ const ph=(t/2.3+i*.5)%1, yy=y-ph*9, a=Math.min(1,(200*(1-ph)+40)/255);
+    out += `<path d="M${x+i*4} ${yy} Q${x+i*4+1.2} ${yy-2.6} ${x+i*4} ${yy-5.2}" stroke="#B9C6CE" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-opacity="${a.toFixed(2)}"/>`; }
+  return out; }
+function rainLines(t,xs,y0,y1){
+  let out='';
+  for(let i=0;i<xs.length;i++){ const ph=(t/1.5+i*.37)%1, py=y0+(y1-y0)*ph, a=1-.45*ph;
+    out += `<line x1="${xs[i]}" y1="${py.toFixed(1)}" x2="${xs[i]-.8}" y2="${(py+4.6).toFixed(1)}" stroke="${C.rain}" stroke-width="1.8" stroke-linecap="round" stroke-opacity="${a.toFixed(2)}"/>`; }
+  return out; }
+function zzzFloat(x,y,color,t,period,gi){
+  const ox=[0,8,13], oy=[0,-9,-16], sz=[13,10,7.5], base=[1,.95,.72];
+  let out='';
+  for(let i=0;i<3;i++){ const ph=(t/period+i*.34)%1, a=base[i]*(1-ph*.8);
+    out += `<text x="${(x+ox[i]+ph*2.2).toFixed(1)}" y="${(y+oy[i]-ph*6).toFixed(1)}" font-size="${sz[i]}" font-weight="700" fill="${color}" fill-opacity="${Math.max(0,a).toFixed(2)}" font-family="ui-rounded,sans-serif">${i===0?'Z':'z'}</text>`; }
+  return out; }
+function confettiFall(t){
+  const xs=[24,76,34,66,50], rs=[2.6,2.6,2.2,2.2,2.0];
+  let out='';
+  for(let i=0;i<5;i++){ const ph=(t/2.8+i*.21)%1, px=xs[i]+Math.sin((t+i*1.3)*1.6)*2.2, py=3+ph*48, a=Math.max(0,1-ph*.75);
+    out += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${rs[i]}" fill="${C.conf[i]}" fill-opacity="${a.toFixed(2)}"/>`; }
+  return out; }
+function blink(t,off){ return ((t+off)%4.2)<0.13; }
+function svgWrap(gi,inner){
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+   <defs><linearGradient id="${gi}" x1="0" y1="0" x2="0" y2="1">
+   <stop offset="0" stop-color="${C.bodyTop}"/><stop offset="1" stop-color="${C.bodyBottom}"/></linearGradient></defs>${inner}</svg>`; }
+</script>
+<script>
+/* ═══════ 六个姿势（含动画，1:1 移植） ═══════ */
+function poseCommute(t,gi){ return svgWrap(gi,
+  shadow(91)+body(50,58,21,24,gi)+
+  `<path d="M31 56 Q24 60 22 66" stroke="${C.limb}" stroke-width="3" fill="none" stroke-linecap="round"/>
+   <path d="M69 56 Q75 60 76 65" stroke="${C.limb}" stroke-width="3" fill="none" stroke-linecap="round"/>`+
+  caseBag(70,66)+legsWalk(80,t)+
+  eyesN(50,54,6.5,blink(t,.7))+mouth(50,63,2)+
+  `<line x1="22" y1="44" x2="27" y2="46" stroke="${C.bgFaint}" stroke-width="2" stroke-linecap="round" stroke-opacity="${(0.55+0.216*Math.sin(t*5.2)).toFixed(2)}"/>
+   <line x1="20" y1="50" x2="26" y2="51.5" stroke="${C.bgFaint}" stroke-width="2" stroke-linecap="round" stroke-opacity="${(0.55+0.216*Math.sin(t*5.2)).toFixed(2)}"/>
+   <line x1="73" y1="36" x2="78" y2="38" stroke="${C.bgFaint}" stroke-width="2" stroke-linecap="round" stroke-opacity="${(0.55+0.216*Math.sin(t*5.2)).toFixed(2)}"/>
+   <line x1="75" y1="42" x2="81" y2="43.5" stroke="${C.bgFaint}" stroke-width="2" stroke-linecap="round" stroke-opacity="${(0.55+0.216*Math.sin(t*5.2)).toFixed(2)}"/>`
+); }
+function poseWorkAm(t,gi){ const tapL=Math.sin(t*8.4)*1.2, tapR=Math.sin(t*8.4+Math.PI)*1.2;
+  return svgWrap(gi,
+  shadow(91)+body(50,54,21,22,gi)+
+  `<path d="M33 60 Q40 68 45 ${(71+tapL).toFixed(1)}" stroke="${C.limb}" stroke-width="3" fill="none" stroke-linecap="round"/>
+   <path d="M67 60 Q60 68 55 ${(71+tapR).toFixed(1)}" stroke="${C.limb}" stroke-width="3" fill="none" stroke-linecap="round"/>`+
+  laptop(50,64)+legsWalk(76,t)+
+  eyesN(50,50,6.5,blink(t,1.4))+mouth(50,59,0)+
+  sparkle(74,30,5.4*(1+0.28*Math.sin(t*3.4)),C.moon)
+); }
+function poseWorkPm(t,gi){ return svgWrap(gi,
+  shadow(91)+body(50,58,21,22,gi)+
+  `<path d="M31 56 Q26 62 28 68" stroke="${C.limb}" stroke-width="3" fill="none" stroke-linecap="round"/>
+   <path d="M69 56 Q74 60 73 64" stroke="${C.limb}" stroke-width="3" fill="none" stroke-linecap="round"/>`+
+  `<rect x="70" y="62" width="10" height="10" rx="2" fill="${C.bowl}"/>
+   <path d="M80 64.5 Q83.6 64.5 83.6 67 Q83.6 69.5 80 69.5" stroke="#E4E9EC" stroke-width="1.4" fill="none"/>`+
+  steam(72,60,t)+sweat(28,40)+legsStand(80)+
+  `<path d="M43.5 55 Q46.5 58.6 49.5 55" stroke="${C.face}" stroke-width="2" fill="none" stroke-linecap="round"/>
+   <path d="M50.5 55 Q53.5 58.6 56.5 55" stroke="${C.face}" stroke-width="2" fill="none" stroke-linecap="round"/>`+
+  mouth(50,63,3)
+); }
+function poseWeekend(t,gi){ return svgWrap(gi,
+  `<ellipse cx="48" cy="82" rx="26" ry="4" fill="${C.shadow}"/>
+   <rect x="20" y="68" width="26" height="15" rx="7" fill="${C.pillow}"/>`+
+  `<ellipse cx="56" cy="64" rx="26" ry="16" fill="url(#${gi})"/>
+   <ellipse cx="47" cy="57" rx="9" ry="5" fill="rgba(255,255,255,.28)"/>`+
+  eyesHappy(60,60,5.6)+mouth(60,68,0)+
+  `<line x1="36" y1="78" x2="33" y2="84" stroke="${C.limb}" stroke-width="2.6" stroke-linecap="round"/>
+   <line x1="44" y1="80" x2="43" y2="86" stroke="${C.limb}" stroke-width="2.6" stroke-linecap="round"/>`+
+  zzzFloat(76,40,C.zzz,t,2.8,gi)
+); }
+function poseHolidayWork(t,gi){ return svgWrap(gi,
+  shadow(91)+body(50,60,21,24,gi)+
+  `<path d="M31 58 Q25 64 26 70" stroke="${C.limb}" stroke-width="3" fill="none" stroke-linecap="round"/>
+   <path d="M69 58 Q74 63 73 68" stroke="${C.limb}" stroke-width="3" fill="none" stroke-linecap="round"/>`+
+  caseBag(69,69)+legsStand(82)+
+  eyesSad(50,56,6.5,blink(t,3))+mouth(50,65,4)+
+  cloud(37,40,1)+rainLines(t,[36,41],52,59.5)+sweat(63,44)
+); }
+function poseOffWork(t,gi){ const jump=Math.sin((t%2.2)/2.2*Math.PI)*4;
+  return svgWrap(gi,
+  shadow(92,1-jump/14)+
+  `<g transform="translate(0 ${(-jump).toFixed(1)})">`+
+  body(50,52,21,23,gi)+
+  `<path d="M31 46 Q22 40 20 32" stroke="${C.limb}" stroke-width="3" fill="none" stroke-linecap="round"/>
+   <path d="M69 46 Q78 40 80 32" stroke="${C.limb}" stroke-width="3" fill="none" stroke-linecap="round"/>`+
+  legsStand(74)+eyesHappy(50,48,6.5)+mouth(50,58,1)+
+  sparkle(50,12,5*(1+0.3*Math.sin(t*4.4)),C.conf[1])+
+  `</g>`+
+  confettiFall(t)
+); }
+
+/* ═══════ 渲染循环 ═══════ */
+const DEMOS = [
+  { id:'d1', nm:'通勤赶路', wh:'工作日 08:00 前', cap:'走路摆腿 · 眨眼 · 速度线呼吸', fn:poseCommute },
+  { id:'d2', nm:'元气搬砖', wh:'上午', cap:'双手敲键盘 · 星星闪烁 · 眨眼', fn:poseWorkAm },
+  { id:'d3', nm:'硬撑时刻', wh:'下午', cap:'咖啡热气上升（循环）', fn:poseWorkPm },
+  { id:'d4', nm:'躺平快乐', wh:'休息日', cap:'Zzz 上飘渐隐（循环）', fn:poseWeekend },
+  { id:'d5', nm:'苦命出勤', wh:'休息日出勤', cap:'雨滴下落 · 眨眼 · 呼吸', fn:poseHolidayWork },
+  { id:'d6', nm:'下班快乐', wh:'下班瞬间', cap:'蹦跳 + 彩带飘落', fn:poseOffWork },
+];
+document.getElementById('grid').innerHTML = DEMOS.map((d,i) => `
+  <div class="cell">
+    <div class="nm">${d.nm}</div>
+    <div class="wh">${d.wh}</div>
+    <div class="svgbox" id="${d.id}"></div>
+    <div class="cap">${d.cap}</div>
+  </div>`).join('');
+
+const T0 = performance.now();
+DEMOS.forEach(function (d, i) { d.gi = 'pg' + i; });
+let lastRaf = 0;
+function render(t) {
+  for (const d of DEMOS) {
+    document.getElementById(d.id).innerHTML = d.fn(t, d.gi);
+  }
+}
+function loop(now) {
+  lastRaf = performance.now();
+  render((now - T0) / 1000);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+// 看门狗：标签页后台节流 RAF 时，用计时器兜底驱动（保证动画在任意环境都推进）
+setInterval(function () {
+  if (performance.now() - lastRaf > 800) {
+    render((performance.now() - T0) / 1000);
+  }
+}, 180);
+</script>
+</body></html>

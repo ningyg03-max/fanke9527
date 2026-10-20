@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eef1f4;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:14px;align-items:center}
+.wrap{width:390px}
+.card{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 2px 8px rgba(15,40,40,.08)}
+.t{font-size:13.5px;font-weight:700;color:#111827;margin-bottom:10px}
+.t span{font-size:11px;font-weight:400;color:#6b7280}
+/* 时间线 */
+.item{display:flex;gap:10px;padding:6px 0}
+.dot{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;
+     justify-content:center;font-size:10px;color:#fff;font-weight:700}
+.dot.g{background:#0E9C8C}.dot.r{background:#E11D48}.dot.a{background:#F59E0B}.dot.b{background:#3B82F6}
+.bd{flex:1}
+.b1{font-size:12.5px;font-weight:700;color:#16323B}
+.b2{font-size:11.5px;color:#61808C;line-height:1.5;margin-top:2px}
+code{font-family:"SF Mono",Menlo,monospace;font-size:11px;background:#F1F5F4;padding:1px 5px;border-radius:4px;color:#0F766E}
+/* 表格 */
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#F1F5F4;color:#46626B;font-weight:600;padding:7px 10px;text-align:left;font-size:11.5px}
+td{padding:7px 10px;border-top:1px solid #EEF3F2;color:#16323B}
+td.ok{color:#047857;font-weight:700}
+td.bad{color:#BE123C;font-weight:700}
+td.warn{color:#B45309;font-weight:700}
+/* 代码块 */
+.f{background:#0F2E2A;border-radius:10px;padding:11px 13px;font-size:11px;color:#8FE3CF;line-height:1.7;
+   font-family:"SF Mono",Menlo,monospace;overflow-x:auto}
+.f .c{color:#5E8B82}
+.f .bad{color:#FF8FA8}
+.f .good{color:#6EE7B7}
+.f .y{color:#FCD34D}
+/* 说明块 */
+.note{background:#ECFDF5;border-radius:10px;padding:9px 11px;font-size:11px;color:#047857;
+      line-height:1.55;margin-top:10px}
+.note b{color:#065F46}
+.note.warn{background:#FFF7EA;color:#92400E}
+.note.warn b{color:#78350F}
+.note.blue{background:#EFF6FF;color:#1D4ED8}
+.note.blue b{color:#1E40AF}
+.branch{display:flex;gap:8px;margin-top:8px}
+.br{flex:1;border-radius:10px;padding:10px;font-size:11px;line-height:1.55}
+.br.done{background:#ECFDF5;color:#047857;border:1px solid #CDEEE5}
+.br.todo{background:#FFF7EA;color:#92400E;border:1px solid #FDE4CE}
+.br b{display:block;font-size:12px;margin-bottom:4px}
+</style></head><body>
+
+<div class="wrap"><div class="card">
+<div class="t">① 问题复现 <span>· 你说的场景，100% 必现</span></div>
+<div class="item"><div class="dot g">1</div><div class="bd">
+  <div class="b1">加班「结束」</div>
+  <div class="b2"><code>archiveTodayOvertime()</code> 立即向工资日历写预写行：<br>日薪 + 加班费 → 日历/月报能看到的来源</div>
+</div></div>
+<div class="item"><div class="dot r">2</div><div class="bd">
+  <div class="b1">删除记录</div>
+  <div class="b2">回滚条件 <code>todayStamp ≤ cum_last_day</code> ——<br>
+  归档点最大只到「昨天」→ 今日永远不满足 → <b style="color:#BE123C">死代码，回滚永不执行</b></div>
+</div></div>
+<div class="item"><div class="dot a">3</div><div class="bd">
+  <div class="b1">结果</div>
+  <div class="b2">日历行与月报合计里，加班费原样残留</div>
+</div></div>
+<div style="height:8px"></div>
+<table>
+<tr><th>数据面</th><th>你看到的现象</th></tr>
+<tr><td>工资日历 10/10 行</td><td class="bad">✗ 残留 日薪+加班费</td></tr>
+<tr><td>月度战报 月合计/总收入</td><td class="bad">✗ 含残留加班费</td></tr>
+<tr><td>主卡「今日已赚」</td><td class="ok">✓ 正常（实时算，不受影响）</td></tr>
+<tr><td>累计总额</td><td class="ok">✓ 正常（今日本就不在其中）</td></tr>
+</table>
+</div></div>
+
+<div class="wrap"><div class="card">
+<div class="t">② 修复 <span>· 两条分支统一处理</span></div>
+<div class="branch">
+<div class="br done"><b>已归档日</b>从日历行与累计中<br>扣回加班费（adjust）</div>
+<div class="br todo"><b>未归档日（今天）</b>刷新预写行为
+「无加班费」口径<br>累计不动（归档时覆盖）</div>
+</div>
+<div class="note blue" style="margin-top:10px">
+🔧 两条入口（主卡长按/确认框 + 日历长按）已统一到
+<code>ArchiveSync.onOvertimeRemoved</code> —— 顺带修掉了日历入口
+「会错扣累计」的反向 bug。
+</div>
+<div class="note" style="margin-top:8px">
+✨ <b>打开即自愈</b>：App 启动时检查今日预写行，与当前口径不符就自动刷新
+—— 你设备上已经残留的 10/10 数据，装新版打开后会被直接清理。
+</div>
+<div class="note warn" style="margin-top:8px">
+📐 预写行口径同步统一为「日薪+加班费+外快」（此前漏算外快），
+与次日归档公式完全一致。
+</div>
+</div></div>
+
+<div class="wrap"><div class="card">
+<div class="t">③ 验证</div>
+<div class="f">
+<span class="c">① 结束加班</span>
+put(today, 日薪+<span class="y">加班费</span>+外快)
+
+<span class="c">② 删除记录 → 刷新预写行</span>
+put(today, 日薪+外快)   <span class="c">// 加班费清零</span>
+
+<span class="good">✓ 未归档：行刷新 / 累计不动</span>
+<span class="good">✓ 已归档：行与累计同时扣回</span>
+<span class="good">✓ 打开自愈：残留自动清理</span>
+</div>
+<div style="height:10px"></div>
+<table>
+<tr><th>检查项</th><th>结果</th></tr>
+<tr><td>编译</td><td class="ok">175 类 ✓</td></tr>
+<tr><td>回归测试（新增 Y+Z 组 19 项）</td><td class="ok">650 / 650 ✓</td></tr>
+<tr><td>签名 / 对齐</td><td class="ok">v2+v3 ✓ · 4-aligned ✓</td></tr>
+<tr><td>反编译核对（6 处）</td><td class="ok">全部命中 ✓</td></tr>
+</table>
+</div></div>
+
+</body></html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ padding:16px 12px 44px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:430px}
+h1{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12px;color:#475569;line-height:1.75;margin-top:7px}
+.sec{margin-top:24px}
+.hd{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.num{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+ font-weight:800;font-size:12.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+h2{font-size:15px;font-weight:800;color:#0F172A}
+.sub{font-size:11.5px;color:#64748B;margin:5px 0 12px;line-height:1.65}
+/* 对照两栏 */
+.two{display:flex;gap:12px}
+.col{flex:1;background:#fff;border-radius:14px;padding:13px 14px;border:1px solid #E2E8EC}
+.col.bad{border-color:#FECDD3}
+.col.good{border-color:#A7F3D0}
+.tag{font-size:10.5px;font-weight:750;padding:2.5px 9px;border-radius:9px;display:inline-block;margin-bottom:8px}
+.tag.bad{background:#FFE4E6;color:#BE123C}
+.tag.good{background:#D1FAE5;color:#047857}
+.line{font-size:11.5px;color:#475569;line-height:1.75}
+.line b{color:#16323B}
+.line code{background:#F1F5F4;border-radius:4px;padding:1px 4px;font-size:10.5px;color:#0F766E}
+.big{font-size:17px;font-weight:800;color:#0F766E;margin-top:6px}
+.big.bad{color:#BE123C}
+/* 公式 */
+.f{background:#0F2E2A;border-radius:10px;padding:11px 13px;font-size:11px;color:#8FE3CF;line-height:1.8;
+   font-family:"SF Mono",Menlo,monospace;margin-top:10px;overflow-x:auto}
+.f .c{color:#5E8B82}
+.f .y{color:#FCD34D}
+.note{background:#fff;border-radius:14px;padding:13px 15px;border:1px solid #E2E8EC;font-size:11.8px;color:#475569;line-height:1.75;margin-top:12px}
+.note b{color:#0B7A5C}
+.foot{background:#ECFDF5;border:1px solid #CDEEE5;border-radius:16px;padding:15px 17px;margin-top:24px;
+ font-size:12px;color:#065F46;line-height:1.85}
+.foot b{display:block;font-size:13px;margin-bottom:7px}
+</style></head><body>
+<div class="page">
+  <h1>两处口径修复 · 已实现</h1>
+  <p class="intro">📦 <b>SalaryJump-3.52-goalstart.apk</b> —— ① 存钱罐从「起算日」计算且补录不影响进度；
+  ② 补录月份按正常出勤天数算日均。</p>
+
+  <!-- ══ ① 存钱罐 ══ -->
+  <div class="sec">
+    <div class="hd"><span class="num">①</span><h2>存钱罐：起算日 + 排除补录</h2></div>
+    <div class="sub">问题：进度原本用「累计总额」—— 补录 2025-03 = ¥12,000 会让进度凭空 +12,000。</div>
+    <div class="two">
+      <div class="col bad">
+        <span class="tag bad">修复前</span>
+        <div class="line">进度 = <b>累计总额</b><br>（包含补录的历史月份）</div>
+        <div class="big bad">¥14,015.56</div>
+        <div class="line" style="margin-top:6px">补录 12000 直接虚增进度</div>
+      </div>
+      <div class="col good">
+        <span class="tag good">修复后</span>
+        <div class="line">进度 = <b>起算日之后</b>的正常收入<br>（逐行扣掉补录金额）</div>
+        <div class="big">¥2,015.56</div>
+        <div class="line" style="margin-top:6px">补录历史/当月均不计入 ✓</div>
+      </div>
+    </div>
+    <div class="f">
+<span class="c">// 目标设置弹窗新增</span>
+进度起算  [ 2026 年 10 月 6 日 ]  <span class="c">← 可点选（默认今天）</span>
+<span class="c">// 只统计该日期之后的收入；补录的历史月份不计入进度</span>
+    </div>
+  </div>
+
+  <!-- ══ ② 日均 ══ -->
+  <div class="sec">
+    <div class="hd"><span class="num">②</span><h2>补录月份的日均口径</h2></div>
+    <div class="sub">问题：日均分母是「有记录的行数」—— 补录月份只有 1 行（月末），日均算成 ¥12,000/天。</div>
+    <div class="two">
+      <div class="col bad">
+        <span class="tag bad">修复前</span>
+        <div class="line">2025 年 3 月：<br>补录 ¥12,000，<b>行数 1</b></div>
+        <div class="big bad">日均 ¥12,000</div>
+        <div class="line" style="margin-top:6px">天价 —— 显然不对</div>
+      </div>
+      <div class="col good">
+        <span class="tag good">修复后</span>
+        <div class="line">2025 年 3 月：<br>补录 ¥12,000，<b>出勤 21 天</b></div>
+        <div class="big">日均 ¥571.43</div>
+        <div class="line" style="margin-top:6px">按正常出勤天数 ✓</div>
+      </div>
+    </div>
+    <div class="f">
+<span class="c">// 统一口径（三处应用）</span>
+有补录的月份 → 该月<b>正常出勤天数</b>（WorkdayHelper.workdaysInMonth）
+其他月份     → 已记录天数（原样）
+
+<span class="y">工资日历</span> 「X 个工作日 · 日均 Y」
+<span class="y">月度战报</span> 「计薪天数」「日均」<span class="c">（标签由"有记录天数"改为"计薪天数"）</span>
+<span class="y">年度总览</span> 逐月累加后算全年日均
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>验证</b>
+    ✅ 编译 237 类 · 测试 908/908（新增 14 项）<br>
+    ✅ 端到端模拟：补录历史/当月 → 进度均不变；补录月日均 = 12000/21 = ¥571.43<br>
+    ✅ 反编译核对：goalProgress / statDays / 起算日选择器 / 三处应用<br><br>
+    💡 <b>旧目标的处理</b>：已设的目标此前没有「起算日」记录 → 装上后自动以<b>今天</b>为起点，
+    可在目标设置弹窗里改成你想要的日期（比如开始记账那天）。
+  </div>
+</div>
+</body></html>

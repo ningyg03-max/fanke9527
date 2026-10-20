@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ padding:16px 10px 40px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:740px}
+h1{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12px;color:#475569;line-height:1.75;margin-top:7px}
+.sec{margin-top:24px}
+h2{font-size:14.5px;font-weight:800;color:#0F172A;display:flex;align-items:center;gap:8px}
+.num{width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+ font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sub{font-size:11.5px;color:#64748B;margin:6px 0 12px;line-height:1.65}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.cell{width:150px;background:linear-gradient(168deg,#EAF7F2,#E8F1F7);border-radius:16px;padding:12px 10px;
+ border:1px solid rgba(255,255,255,.9);text-align:center}
+.cell .lbl{font-size:11px;font-weight:750;color:#0A3B31;margin-bottom:6px}
+.cell .box{width:130px;height:136px;margin:0 auto}
+.cell .dsc{font-size:10px;color:#7C939C;margin-top:5px;line-height:1.45}
+.badge{display:inline-block;font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:8px;margin-top:6px}
+.badge.l0{background:#D1FAE5;color:#047857}
+.badge.l1{background:#FEF3C7;color:#92400E}
+.badge.l2{background:#FED7AA;color:#9A3412}
+.badge.l3{background:#FECDD3;color:#9F1239}
+.quote{background:#fff;border-radius:12px;padding:10px 13px;border:1px solid #E2E8EC;font-size:12px;color:#16323B;
+ margin-top:10px;line-height:1.6}
+.quote .who{font-size:10px;color:#8AA6B0;display:block;margin-bottom:3px}
+.note{background:#fff;border-radius:14px;padding:13px 15px;border:1px solid #E2E8EC;font-size:11.8px;color:#475569;line-height:1.75;margin-top:16px}
+.note b{color:#0B7A5C}
+svg{display:block;width:100%;height:100%}
+</style></head><body>
+<div class="page">
+  <h1>小人 2.0 · 四项升级</h1>
+  <p class="intro">📦 <b>SalaryJump-3.56-pet2.apk</b> —— ①疲劳值 ②动态语录 ③发薪日倒数 ⑤工位场景，全部基于真实数据。</p>
+
+  <!-- ══ ① 疲劳值 ══ -->
+  <div class="sec">
+    <h2><span class="num">①</span>疲劳值（连续工作累积）</h2>
+    <div class="sub">连续工作天数越多，小人越蔫：汗滴 → 黑眼圈+翘发 → 冒烟。休息日会重置。</div>
+    <div class="row">
+      <div class="cell"><div class="lbl">连着 0-2 天</div><div class="box" id="f0"></div><span class="badge l0">精神小伙</span></div>
+      <div class="cell"><div class="lbl">连着 3-5 天</div><div class="box" id="f1"></div><span class="badge l1">一滴汗</span></div>
+      <div class="cell"><div class="lbl">连着 6-9 天</div><div class="box" id="f2"></div><span class="badge l2">黑眼圈+翘发</span></div>
+      <div class="cell"><div class="lbl">连着 10+ 天</div><div class="box" id="f3"></div><span class="badge l3">魂快散了</span></div>
+    </div>
+    <div class="note">计分：工作日 +1（当天加班再 +1）｜休息日 −2（下限 0）｜回溯最多 60 天。国庆这类长假会自动把疲劳清零。</div>
+  </div>
+
+  <!-- ══ ② 动态语录 ══ -->
+  <div class="sec">
+    <h2><span class="num">②</span>动态语录（按真实数据生成）</h2>
+    <div class="sub">点击小人时说一句 —— 内容取决于你当前的实际状态，不是通用文案。</div>
+    <div class="row" style="justify-content:flex-start">
+      <div class="cell" style="width:230px;text-align:left">
+        <div class="quote"><span class="who">连着 10 天工作时</span>「连着上了 10 天，魂快散了…」</div>
+        <div class="quote"><span class="who">发薪日前一天</span>「明天就发工资了，今晚睡得着」</div>
+        <div class="quote"><span class="who">今天请了假</span>「今天不上班，嘿嘿」</div>
+        <div class="quote"><span class="who">存钱罐过半</span>「存钱罐过半了，有点小骄傲」</div>
+        <div class="quote"><span class="who">周日晚</span>「想到明天要上班…」</div>
+      </div>
+      <div class="cell" style="width:230px;text-align:left">
+        <div class="quote"><span class="who">日常打卡状态（标签位）</span>别人放假我搬砖</div>
+        <div class="quote"><span class="who">距发薪 ≤7 天时（标签自动追加）</span>键盘敲起来 · 距发薪 3 天</div>
+        <div class="quote"><span class="who">发薪日当天</span>今天发薪 💰</div>
+        <div class="quote"><span class="who">点击时的活泼反应</span>「戳我干嘛，快去赚钱」</div>
+        <div class="quote" style="color:#8AA6B0">语录池按条件命中后随机选，且避免连续重复</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ③ 发薪日倒数 ══ -->
+  <div class="sec">
+    <h2><span class="num">③</span>发薪日倒数</h2>
+    <div class="sub">心情标签自动追加「距发薪 X 天」（7 天内才显示，避免平时太吵）。</div>
+    <div class="note">发薪日前 7 天起：<code>工作状态 · 距发薪 N 天</code>｜当天：<code>今天发薪 💰</code>（还触发庆祝动画）</div>
+  </div>
+
+  <!-- ══ ⑤ 工位场景 ══ -->
+  <div class="sec">
+    <h2><span class="num">⑤</span>工位场景</h2>
+    <div class="sub">小人背后有了工位：桌子 + 显示器 + 咖啡杯 + 台灯，光照随状态变化。</div>
+    <div class="row">
+      <div class="cell"><div class="lbl">工作中</div><div class="box" id="s1"></div><div class="dsc">屏幕亮 + 台灯亮（暖光晕）</div></div>
+      <div class="cell"><div class="lbl">下班后</div><div class="box" id="s2"></div><div class="dsc">屏幕暗 + 灯灭</div></div>
+      <div class="cell"><div class="lbl">周末</div><div class="box" id="s3"></div><div class="dsc">桌上落灰（点点）</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══ 场景 + 小人（与 App 同源的简化复刻） ═══ */
+function scene(working, weekend) {
+  const screenCol = working ? '#8ED9C4' : '#C6D3D0';
+  const glow = working ? `<ellipse cx="85" cy="68" rx="15" ry="10" fill="rgba(252,211,77,.18)"/>` : '';
+  const dust = weekend ? `<circle cx="52" cy="90" r="0.8" fill="rgba(0,0,0,.13)"/><circle cx="60" cy="91.5" r="0.6" fill="rgba(0,0,0,.13)"/><circle cx="68" cy="89.5" r="0.7" fill="rgba(0,0,0,.13)"/>` : '';
+  return `
+  <rect x="8" y="88" width="84" height="8" rx="2.5" fill="#D8E4E0"/>
+  <rect x="12" y="52" width="28" height="24" rx="2" fill="#B9C9C5"/>
+  <rect x="14.5" y="54.5" width="23" height="18.5" rx="1.2" fill="${screenCol}"/>
+  <rect x="24" y="76" width="4" height="5" fill="#A9BBB7"/>
+  <rect x="19" y="80.5" width="14" height="2.5" rx="1.2" fill="#A9BBB7"/>
+  <rect x="74" y="80" width="10" height="8" rx="2" fill="#F2F7F6"/>
+  <rect x="75.5" y="81.5" width="7" height="3" rx="1.4" fill="#6B4F3A"/>
+  <rect x="86" y="60" width="2" height="28" fill="#B9C9C5"/>
+  <rect x="78" y="56" width="12" height="5" rx="2" fill="#C9D7D3"/>
+  ${glow}${dust}`;
+}
+function pet(fatigue, offwork) {
+  const arms = offwork
+    ? `<path d="M31 46 Q22 40 20 32" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+       <path d="M69 46 Q78 40 80 32" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+       <path d="M43 74 L38 80" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+       <path d="M57 74 L62 80" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>`
+    : `<path d="M31 58 Q25 64 26 70" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+       <path d="M69 58 Q74 63 73 68" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+       <path d="M43 82 L40 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+       <path d="M57 82 L61 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>`;
+  const eyes = offwork
+    ? `<path d="M40 44 Q43.5 40 47 44" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>
+       <path d="M53 44 Q56.5 40 60 44" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>`
+    : `<circle cx="43.5" cy="54" r="2.7" fill="#063A2F"/><circle cx="56.5" cy="54" r="2.7" fill="#063A2F"/>`;
+  const mouth2 = offwork
+    ? `<path d="M44 56 Q50 63 56 56" stroke="#063A2F" stroke-width="2.2" fill="none" stroke-linecap="round"/>`
+    : `<path d="M45 65 Q47.5 62 50 65 Q52.5 68 55 65" stroke="#063A2F" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+  const darkEyes = fatigue >= 2
+    ? `<ellipse cx="44" cy="58" rx="3" ry="3" fill="none" stroke="rgba(6,58,47,.30)" stroke-width="1.6"/>
+       <ellipse cx="56" cy="58" rx="3" ry="3" fill="none" stroke="rgba(6,58,47,.30)" stroke-width="1.6"/>` : '';
+  const sweat = fatigue >= 1
+    ? `<path d="M72 40 Q74.4 43 72 44.8 Q69.6 43 72 40 Z" fill="#7CC6F2"/>` +
+      (fatigue >= 2 ? `<path d="M26 44 Q28.4 47 26 48.8 Q23.6 47 26 44 Z" fill="#7CC6F2"/>` : '') : '';
+  const hair = fatigue >= 2
+    ? `<line x1="44" y1="34" x2="42" y2="29" stroke="#063A2F" stroke-width="1.8" stroke-linecap="round"/>
+       <line x1="50" y1="33" x2="50" y2="27.5" stroke="#063A2F" stroke-width="1.8" stroke-linecap="round"/>
+       <line x1="56" y1="34" x2="58" y2="29" stroke="#063A2F" stroke-width="1.8" stroke-linecap="round"/>` : '';
+  const smoke = fatigue >= 3
+    ? `<path d="M45 26 Q43 20 45 14" stroke="rgba(107,124,122,.45)" stroke-width="2" fill="none" stroke-linecap="round"/>
+       <path d="M55 25 Q57 19 55 13" stroke="rgba(107,124,122,.45)" stroke-width="2" fill="none" stroke-linecap="round"/>` : '';
+  const cy = offwork ? 52 : 58, ry = offwork ? 23 : 24;
+  return `
+  <defs><linearGradient id="pg${fatigue}${offwork?1:0}" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>
+  <ellipse cx="50" cy="90" rx="16" ry="3.4" fill="rgba(10,30,25,.10)"/>
+  <ellipse cx="50" cy="${cy}" rx="21" ry="${ry}" fill="url(#pg${fatigue}${offwork?1:0})"/>
+  <ellipse cx="44" cy="${cy-8}" rx="8" ry="5.6" fill="rgba(255,255,255,.30)"/>
+  ${arms}${eyes}${darkEyes}${mouth2}${sweat}${hair}${smoke}`;
+}
+function svg(inner) { return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`; }
+
+document.getElementById('f0').innerHTML = svg(scene(true,false) + pet(0,false));
+document.getElementById('f1').innerHTML = svg(scene(true,false) + pet(1,false));
+document.getElementById('f2').innerHTML = svg(scene(true,false) + pet(2,false));
+document.getElementById('f3').innerHTML = svg(scene(true,false) + pet(3,false));
+document.getElementById('s1').innerHTML = svg(scene(true,false) + pet(0,false));
+document.getElementById('s2').innerHTML = svg(scene(false,false) + pet(0,true));
+document.getElementById('s3').innerHTML = svg(scene(false,true) + pet(0,false));
+</script>
+</body></html>

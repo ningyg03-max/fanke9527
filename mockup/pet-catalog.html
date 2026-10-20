@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ padding:16px 10px 40px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:760px}
+h1{font-size:20px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12px;color:#475569;line-height:1.7;margin-top:7px}
+.sec{margin-top:26px}
+h2{font-size:15px;font-weight:800;color:#0F172A;display:flex;align-items:center;gap:8px}
+.num{width:26px;height:26px;border-radius:9px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+ font-weight:800;font-size:12.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sub{font-size:11.5px;color:#64748B;margin:6px 0 13px;line-height:1.65}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px}
+.cell{background:linear-gradient(168deg,#EAF7F2,#E8F1F7);border-radius:16px;padding:12px 10px;text-align:center;
+ border:1px solid rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center}
+.cell .nm{font-size:12.5px;font-weight:800;color:#0A3B31}
+.cell .box{width:118px;height:124px;margin:4px auto}
+.cell .cond{font-size:10px;color:#0B7A5C;background:rgba(11,158,125,.10);border-radius:9px;padding:3px 8px;margin-top:5px;line-height:1.45}
+.cell .mood{font-size:10px;color:#7C939C;margin-top:4px;font-style:italic}
+table{width:100%;border-collapse:collapse;font-size:11.5px;background:#fff;border-radius:14px;overflow:hidden;margin-top:6px}
+th{background:#F1F5F4;color:#46626B;font-weight:650;padding:9px 11px;text-align:left;font-size:11px}
+td{padding:9px 11px;border-top:1px solid #EEF3F2;color:#16323B;line-height:1.5}
+td b{color:#0B7A5C}
+.pri{background:#FFFBEB}
+.note{background:#fff;border-radius:14px;padding:13px 15px;border:1px solid #E2E8EC;font-size:11.8px;color:#475569;line-height:1.75;margin-top:12px}
+.note b{color:#0B7A5C}
+.note code{background:#F1F5F4;border-radius:4px;padding:1px 4px;font-size:10.5px;color:#0F766E}
+svg{display:block;width:100%;height:100%}
+</style></head><body>
+<div class="page">
+  <h1>打工小人 · 全部外观与触发条件</h1>
+  <p class="intro">基于 <b>SalaryJump-3.57</b> 实际代码核对。共 <b>12 种常规姿势 + 4 种临时反应 + 4 级疲劳叠加 + 发薪日标签</b>。</p>
+
+  <!-- ═══ 常规姿势 ═══ -->
+  <div class="sec">
+    <h2><span class="num">1</span>常规姿势（按状态自动切换，12 种）</h2>
+    <div class="sub">判定优先级：请假 → 休息日出勤 → 加班 → 休息日 → 周一/周五氛围 → 时段。同一天内随时间和状态变化。</div>
+    <div class="grid" id="g1"></div>
+  </div>
+
+  <!-- ═══ 疲劳 ═══ -->
+  <div class="sec">
+    <h2><span class="num">2</span>疲劳叠加（4 级，覆盖在常规姿势上）</h2>
+    <div class="sub">连续工作累积：工作日 +1（加班再 +1）｜休息日/请假 −2（下限 0）｜锚点 = 开始用 App 那天。</div>
+    <div class="grid" id="g2"></div>
+  </div>
+
+  <!-- ═══ 临时反应 ═══ -->
+  <div class="sec">
+    <h2><span class="num">3</span>临时反应（4 种，2-3 秒后自动恢复）</h2>
+    <div class="sub">触发时覆盖当前姿势，计时结束后回到常规姿势。</div>
+    <div class="grid" id="g3"></div>
+  </div>
+
+  <!-- ═══ 优先级表 ═══ -->
+  <div class="sec">
+    <h2><span class="num">4</span>判定优先级（重要：谁会覆盖谁）</h2>
+    <table>
+      <tr><th style="width:26%">优先级</th><th>条件</th><th>结果</th></tr>
+      <tr><td>1（最高）</td><td>请假（当天有请假记录）</td><td><b>家里躺</b>（全天）</td></tr>
+      <tr><td>2</td><td>休息日出勤（标记了出勤）</td><td>下班前 <b>苦命出勤</b> / 下班后 <b>下班快乐</b></td></tr>
+      <tr class="pri"><td>3</td><td><b>加班中</b>（打了卡未结束）</td><td><b>黑眼圈搬砖</b>（优先于周一/周五氛围）</td></tr>
+      <tr><td>4</td><td>休息日（未出勤）</td><td>周日晚 <b>焦虑</b> / 其余 <b>躺平</b></td></tr>
+      <tr><td>5</td><td>周一（工作日）</td><td><b>生无可恋周一</b>（全天）</td></tr>
+      <tr><td>6</td><td>周五下午起（≥13:00）</td><td><b>欢呼 + 彩带</b></td></tr>
+      <tr><td>7（最低）</td><td>普通工作日各时段</td><td>通勤 / 搬砖 / 干饭 / 硬撑 / 下班</td></tr>
+      <tr class="pri"><td>叠加层</td><td>疲劳等级 1-3（与上述叠加）</td><td>汗滴 / 黑眼圈 / 冒烟</td></tr>
+    </table>
+  </div>
+
+  <!-- ═══ 文案 ═══ -->
+  <div class="sec">
+    <h2><span class="num">5</span>心情标签（小人下方的文字）</h2>
+    <table>
+      <tr><th style="width:30%">姿势</th><th>默认标签</th><th>追加规则</th></tr>
+      <tr><td>通勤赶路</td><td>拖着步子出门</td><td rowspan="12" style="vertical-align:middle">
+        <b>发薪日（优先）</b><br>
+        · 当天 → <b>「今天发薪 💰」</b>（整句替换）<br>
+        · 7 天内 → 追加 <b>「· 距发薪 X 天」</b><br>
+        · 其余 → 不追加
+      </td></tr>
+      <tr><td>元气搬砖</td><td>键盘敲起来</td></tr>
+      <tr><td>硬撑时刻</td><td>咖啡续命中</td></tr>
+      <tr><td>爆肝加班</td><td>加班的第 N 小时</td></tr>
+      <tr><td>下班快乐</td><td>下班快乐！</td></tr>
+      <tr><td>干饭时间</td><td>干饭不积极…</td></tr>
+      <tr><td>躺平快乐</td><td>谁也别叫我</td></tr>
+      <tr><td>苦命出勤</td><td>别人放假我搬砖</td></tr>
+      <tr><td>今日休假</td><td>今日休假</td></tr>
+      <tr><td>生无可恋周一</td><td>生无可恋周一</td></tr>
+      <tr><td>马上就要周末</td><td>马上就要周末！</td></tr>
+      <tr><td>周日晚焦虑</td><td>想到明天就…</td></tr>
+    </table>
+    <div class="note">
+      <b>点击小人</b> → 临时说一句动态语录（基于真实数据），说完恢复默认标签：<br>
+      连着 6+ 天 → 「别戳…让我躺一会」｜发薪日 → 「别戳了，我在数钱」｜平时 → 「戳我干嘛，快去赚钱」等 6 条随机
+    </div>
+  </div>
+
+  <!-- ═══ 场景 ═══ -->
+  <div class="sec">
+    <h2><span class="num">6</span>工位场景（背景层）</h2>
+    <table>
+      <tr><th style="width:30%">状态</th><th>场景表现</th></tr>
+      <tr><td>工作中（搬砖/加班/出勤/通勤）</td><td>显示器<b>亮屏</b> + 台灯<b>暖光晕</b> + 咖啡<b>冒热气</b></td></tr>
+      <tr><td>下班后 / 周五欢呼</td><td>显示器<b>熄屏</b> + 台灯灭</td></tr>
+      <tr><td>周末 / 请假</td><td>屏幕暗 + 桌上<b>落灰</b>（灰点）</td></tr>
+    </table>
+  </div>
+</div>
+
+<script>
+/* ═══ 与 App 同源的精简小人绘制 ═══ */
+function scene(on, dust){
+  return `<rect x="2" y="86" width="96" height="7" rx="2.5" fill="#D8E4E0"/>
+  <rect x="2" y="50" width="20" height="24" rx="2" fill="#B9C9C5"/>
+  <rect x="4" y="52" width="16" height="19.5" rx="1.2" fill="${on?'#8ED9C4':'#C6D3D0'}"/>
+  <rect x="10.5" y="74" width="3" height="6" fill="#A9BBB7"/>
+  <rect x="6" y="79.5" width="12" height="2.5" rx="1.2" fill="#A9BBB7"/>
+  <rect x="94" y="56" width="2" height="30" fill="#B9C9C5"/>
+  <rect x="86" y="52" width="12" height="5" rx="2" fill="#C9D7D3"/>
+  <rect x="78" y="76" width="11" height="10" rx="2.2" fill="#F2F7F6"/>
+  <rect x="79.5" y="77.5" width="8" height="3.5" rx="1.4" fill="#6B4F3A"/>
+  <rect x="24" y="78" width="14" height="8" rx="1.5" fill="#FDF6E3"/>
+  ${on?`<ellipse cx="88" cy="66" rx="12" ry="10" fill="rgba(252,211,77,.14)"/>
+        <path d="M82 74 Q83.5 70 82 66" stroke="rgba(185,198,206,.4)" stroke-width="1.6" fill="none" stroke-linecap="round"/>`:''}
+  ${dust?`<circle cx="48" cy="88.5" r=".9" fill="rgba(0,0,0,.13)"/><circle cx="56" cy="89.5" r=".7" fill="rgba(0,0,0,.13)"/><circle cx="64" cy="88" r=".8" fill="rgba(0,0,0,.13)"/>`:''}`;
+}
+function arms(o){
+  if(o==='down') return `<path d="M31 58 Q25 64 26 70" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M69 58 Q74 63 73 68" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M43 82 L40 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/><path d="M57 82 L61 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>`;
+  if(o==='up') return `<path d="M31 46 Q22 40 20 32" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M69 46 Q78 40 80 32" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M43 74 L38 80" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/><path d="M57 74 L62 80" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>`;
+  if(o==='work') return `<path d="M31 54 Q24 49 22 43" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M69 54 Q76 49 78 43" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M43 79 L40 86" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/><path d="M57 79 L60 86" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>`;
+  if(o==='laptop') return `<path d="M33 62 Q40 69 45 72" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M67 62 Q60 69 55 72" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="34" y="74" width="32" height="4" rx="2" fill="#2E4046"/><rect x="38" y="65" width="24" height="9" rx="1.6" fill="#48626A"/>`;
+  if(o==='fist') return `<path d="M31 56 Q24 50 22 38" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M69 56 Q76 60 77 66" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="22" cy="36" r="4.2" fill="#2ECFA0"/><line x1="43" y1="82" x2="41" y2="89" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/><line x1="57" y1="82" x2="59" y2="89" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>`;
+  if(o==='hang') return `<path d="M31 58 Q25 64 26 70" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M69 58 Q74 63 73 68" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="69" y="69" width="15" height="12" rx="2.5" fill="#B08968"/><rect x="69" y="69" width="15" height="4.5" rx="2.2" fill="#8F6B4A"/><path d="M43 82 L40 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/><path d="M57 82 L61 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>`;
+  if(o==='walk') return `<path d="M31 56 Q24 60 22 66" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M69 56 Q75 60 76 65" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="70" y="66" width="15" height="12" rx="2.5" fill="#B08968"/><rect x="70" y="66" width="15" height="4.5" rx="2.2" fill="#8F6B4A"/><path d="M43 80 L37 86" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/><path d="M57 80 L63 83" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>`;
+  if(o==='chop') return `<path d="M31 58 Q26 63 28 68" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M69 58 Q74 63 72 68" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/><line x1="43" y1="78" x2="41" y2="85" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/><line x1="57" y1="78" x2="59" y2="85" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/><ellipse cx="50" cy="76" rx="14" ry="5.4" fill="#fff" stroke="#E4E9EC"/><ellipse cx="50" cy="74.4" rx="10.6" ry="4" fill="#F7F3E8"/><line x1="60" y1="62" x2="70" y2="58" stroke="#C79A5B" stroke-width="2" stroke-linecap="round"/><line x1="61.6" y1="64.4" x2="71.6" y2="60.4" stroke="#C79A5B" stroke-width="2" stroke-linecap="round"/>`;
+  return '';
+}
+function eyes(k){
+  if(k==='happy') return `<path d="M40 44 Q43.5 40 47 44" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M53 44 Q56.5 40 60 44" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+  if(k==='half') return `<path d="M40 55 Q43.5 58.6 47 55" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M53 55 Q56.5 58.6 60 55" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+  if(k==='sad') return `<circle cx="43.5" cy="55" r="2.6" fill="#063A2F"/><circle cx="56.5" cy="55" r="2.6" fill="#063A2F"/><path d="M40.1 50.6 L45.5 52.4" stroke="#063A2F" stroke-width="1.6" stroke-linecap="round"/><path d="M59.9 50.6 L54.5 52.4" stroke="#063A2F" stroke-width="1.6" stroke-linecap="round"/>`;
+  if(k==='dead') return `<line x1="40" y1="54" x2="46" y2="54" stroke="#063A2F" stroke-width="2.2" stroke-linecap="round"/><line x1="54" y1="54" x2="60" y2="54" stroke="#063A2F" stroke-width="2.2" stroke-linecap="round"/>`;
+  if(k==='wide') return `<circle cx="43.5" cy="53" r="4.2" fill="#fff"/><circle cx="43.5" cy="53" r="2.1" fill="#063A2F"/><circle cx="56.5" cy="53" r="4.2" fill="#fff"/><circle cx="56.5" cy="53" r="2.1" fill="#063A2F"/>`;
+  return `<circle cx="43.5" cy="54" r="2.7" fill="#063A2F"/><circle cx="56.5" cy="54" r="2.7" fill="#063A2F"/>`;
+}
+function mouth(k){
+  if(k==='smile') return `<path d="M44 56 Q50 63 56 56" stroke="#063A2F" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+  if(k==='big') return `<path d="M44 54 Q50 61 56 54" stroke="#063A2F" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+  if(k==='flat') return `<line x1="45.5" y1="58" x2="54.5" y2="58" stroke="#063A2F" stroke-width="2" stroke-linecap="round"/>`;
+  if(k==='wave') return `<path d="M45 62 Q47.5 59 50 62 Q52.5 65 55 62" stroke="#063A2F" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+  if(k==='open') return `<path d="M45.5 55 Q50 61.5 54.5 55 Z" fill="#063A2F"/>`;
+  if(k==='o') return `<circle cx="50" cy="57" r="2.6" fill="#063A2F"/>`;
+  return `<path d="M46 58 Q50 62 54 58" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+}
+function extras(k){
+  if(k==='cloud') return `<path d="M30 42 A9 9 0 0 1 44 38 A7 7 0 0 1 46 51 L31 51 A6.4 6.4 0 0 1 30 42 Z" fill="#93A7B4"/><path d="M36 53 L35 58" stroke="#6FB3E0" stroke-width="1.8" stroke-linecap="round"/><path d="M41 53 L40 57.6" stroke="#6FB3E0" stroke-width="1.8" stroke-linecap="round"/>`;
+  if(k==='moon') return `<path d="M16 28 A10 10 0 0 1 31 24 A8 8 0 0 1 33 38 L17 38 A7 7 0 0 1 16 28 Z" fill="#FCD34D"/><circle cx="80" cy="30" r="2" fill="rgba(6,58,47,.5)"/><circle cx="85" cy="27" r="1.5" fill="rgba(6,58,47,.36)"/>`;
+  if(k==='conf') return `<circle cx="24" cy="20" r="2.6" fill="#F472B6"/><circle cx="76" cy="22" r="2.6" fill="#FCD34D"/><circle cx="34" cy="12" r="2.2" fill="#60A5FA"/><circle cx="66" cy="10" r="2.2" fill="#34D399"/><path d="M50 6 L51.4 10.6 L56 12 L51.4 13.4 L50 18 L48.6 13.4 L44 12 L48.6 10.6 Z" fill="#FCD34D"/>`;
+  if(k==='zzz') return `<text x="76" y="40" font-size="13" font-weight="700" fill="rgba(11,158,125,.55)">Z</text><text x="84" y="31" font-size="10" font-weight="700" fill="rgba(11,158,125,.40)">z</text><text x="89" y="24" font-size="7.5" font-weight="700" fill="rgba(11,158,125,.28)">z</text>`;
+  if(k==='hour') return `<path d="M76 30 L86 30 L80.6 37 L86 44 L76 44 L81.4 37 Z" fill="rgba(244,199,107,.35)" stroke="#E0A93F" stroke-width="1.4" stroke-linejoin="round"/>`;
+  if(k==='sweat') return `<path d="M73 38 Q76.4 42.2 73 44.6 Q69.6 42.2 73 38 Z" fill="#7CC6F2"/>`;
+  if(k==='steam') return `<path d="M44 22 Q41 15 44 8" stroke="rgba(107,124,122,.35)" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M56 21 Q59 14 56 7" stroke="rgba(107,124,122,.35)" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+  return '';
+}
+function pet(o){
+  // o: {cy, ry, arms, eyes, mouth, extras, blush, hair}
+  const gid = 'pg' + Math.random().toString(36).slice(2,7);
+  let inner = `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>`;
+  inner += `<ellipse cx="50" cy="90" rx="16" ry="3.4" fill="rgba(10,30,25,.10)"/>`;
+  inner += `<ellipse cx="50" cy="${o.cy||58}" rx="21" ry="${o.ry||24}" fill="url(#${gid})"/>`;
+  inner += `<ellipse cx="44" cy="${(o.cy||58)-8}" rx="8" ry="5.6" fill="rgba(255,255,255,.30)"/>`;
+  inner += arms(o.arms||'down');
+  inner += eyes(o.eyes||'n') + mouth(o.mouth||'small');
+  if(o.blush) inner += `<ellipse cx="37" cy="59" rx="4.6" ry="3" fill="rgba(244,114,182,.45)"/><ellipse cx="63" cy="59" rx="4.6" ry="3" fill="rgba(244,114,182,.45)"/>`;
+  (o.extraList||[]).forEach(function(k){ inner += extras(k); });
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+}
+
+const POSES = [
+  { nm:'通勤赶路', o:{cy:58, ry:24, arms:'walk', eyes:'n', mouth:'o', extraList:[]}, cond:'工作日 08:00 前', mood:'拖着步子出门' },
+  { nm:'元气搬砖', o:{cy:54, ry:22, arms:'laptop', eyes:'n', mouth:'small', extraList:[]}, cond:'工作日 上午', mood:'键盘敲起来' },
+  { nm:'干饭时间', o:{cy:54, ry:22, arms:'chop', eyes:'happy', mouth:'open', extraList:[]}, cond:'工作日 午休', mood:'干饭不积极…' },
+  { nm:'硬撑时刻', o:{cy:58, ry:22, arms:'down', eyes:'half', mouth:'flat', extraList:[]}, cond:'工作日 下午', mood:'咖啡续命中' },
+  { nm:'爆肝加班', o:{cy:56, ry:22, arms:'laptop', eyes:'n', mouth:'wave', extraList:['moon']}, cond:'工作日 下班后 + 已打卡', mood:'加班的第 N 小时' },
+  { nm:'下班快乐', o:{cy:52, ry:23, arms:'up', eyes:'happy', mouth:'big', extraList:['conf']}, cond:'工作结束瞬间 / 休息日出勤下班后', mood:'下班快乐！' },
+  { nm:'躺平快乐', o:{cy:64, ry:16, arms:'', eyes:'happy', mouth:'small', extraList:['zzz']}, cond:'休息日（未出勤）白天', mood:'谁也别叫我' },
+  { nm:'苦命出勤', o:{cy:60, ry:24, arms:'hang', eyes:'sad', mouth:'wave', extraList:['cloud']}, cond:'休息日已出勤 + 下班前', mood:'别人放假我搬砖' },
+  { nm:'今日休假', o:{cy:64, ry:16, arms:'', eyes:'happy', mouth:'small', extraList:['zzz']}, cond:'请假（全天）', mood:'今日休假' },
+  { nm:'生无可恋周一', o:{cy:60, ry:23, arms:'down', eyes:'dead', mouth:'flat', extraList:['cloud']}, cond:'周一（工作日，全天）', mood:'生无可恋周一' },
+  { nm:'马上就要周末', o:{cy:56, ry:24, arms:'work', eyes:'happy', mouth:'big', extraList:['conf']}, cond:'周五 ≥13:00（含下班后）', mood:'马上就要周末！' },
+  { nm:'周日晚焦虑', o:{cy:58, ry:24, arms:'down', eyes:'n', mouth:'wave', extraList:['hour']}, cond:'周日 ≥ 下班时间（未出勤）', mood:'想到明天就…' },
+];
+const FATIGUE = [
+  { nm:'等级 0 · 精神', o:{cy:58, ry:24, arms:'down', eyes:'n', mouth:'small', extraList:[]}, cond:'疲劳分 0-2', mood:'无叠加' },
+  { nm:'等级 1 · 一滴汗', o:{cy:58, ry:24, arms:'down', eyes:'n', mouth:'small', extraList:['sweat']}, cond:'疲劳分 3-5', mood:'+汗滴' },
+  { nm:'等级 2 · 明显疲惫', o:{cy:58, ry:24, arms:'down', eyes:'n', mouth:'small', extraList:['sweat']}, cond:'疲劳分 6-9', mood:'+黑眼圈 +翘发 +两滴汗' },
+  { nm:'等级 3 · 垮掉', o:{cy:58, ry:24, arms:'down', eyes:'n', mouth:'small', extraList:['sweat','steam']}, cond:'疲劳分 10+', mood:'+冒烟 +脸颊凹陷' },
+];
+const REACT = [
+  { nm:'摸鱼被抓', o:{cy:58, ry:24, arms:'down', eyes:'wide', mouth:'o', extraList:[]}, cond:'点击小人（1/3 概率）', mood:'摸鱼被抓！' },
+  { nm:'加油！', o:{cy:58, ry:24, arms:'fist', eyes:'happy', mouth:'open', extraList:[]}, cond:'点击小人（1/3 概率）', mood:'加油！' },
+  { nm:'嘿嘿', o:{cy:58, ry:24, arms:'down', eyes:'happy', mouth:'small', extraList:[], blush:true}, cond:'点击小人（1/3 概率）', mood:'嘿嘿' },
+  { nm:'庆祝', o:{cy:54, ry:23, arms:'up', eyes:'happy', mouth:'big', extraList:['conf']}, cond:'存钱罐达 25/50/75/100% 或 发薪日', mood:'🎉 达成！' },
+];
+
+function fill(id, list){
+  document.getElementById(id).innerHTML = list.map(function(d){
+    return `<div class="cell"><div class="nm">${d.nm}</div><div class="box">${pet(d.o)}</div><div class="cond">${d.cond}</div><div class="mood">${d.mood}</div></div>`;
+  }).join('');
+}
+fill('g1', POSES);
+fill('g2', FATIGUE);
+fill('g3', REACT);
+</script>
+</body></html>

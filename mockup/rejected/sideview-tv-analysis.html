@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>侧视 + 电视 + 马里奥 · 可行性</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#E9F1EF}
+body{font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ width:384px;margin:0 auto;padding:16px 20px 32px;color:#16323B;font-size:13px}
+h1{font-size:17px;font-weight:800;margin-bottom:4px}
+.lead{font-size:11.5px;color:#5A7680;line-height:1.7;margin-bottom:14px}
+.sec{margin-top:22px}
+h2{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.num{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+ font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.num.warn{background:linear-gradient(135deg,#B45309,#F59E0B)}
+.card{background:#fff;border-radius:16px;padding:15px 17px;margin-bottom:10px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+p{font-size:11.5px;color:#475569;line-height:1.8}
+p b{color:#16323B}
+code{background:#F1F5F4;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#0F766E;font-family:ui-monospace,monospace}
+
+/* 真实尺寸展示 */
+.stagewrap{display:flex;gap:14px;justify-content:center;align-items:flex-end;flex-wrap:wrap;margin-top:8px}
+.stage{text-align:center}
+.stage .cap{font-size:9.5px;color:#5A7680;margin-top:6px;line-height:1.4}
+.stage .cap b{color:#16323B}
+
+table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+th{text-align:left;color:#64748B;font-weight:600;padding:5px 6px;font-size:10px;background:#F8FBFA}
+td{padding:6px;border-top:1px solid #EEF3F2;color:#475569;vertical-align:top}
+td b{color:#16323B}
+.mono{font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+.bad{color:#B91C1C;font-weight:700}
+.good{color:#047857;font-weight:700}
+
+.opt{background:#12241F;border-radius:16px;padding:13px;margin-bottom:10px;color:#E8F4F2}
+.opt h3{font-size:12.5px;font-weight:800;margin-bottom:6px;display:flex;gap:7px;align-items:center}
+.tag{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:6px}
+.t-rec{background:#0B7A5C;color:#fff}.t-ok{background:#2A4A42;color:#9FC4BA}.t-bad{background:#4A2020;color:#FFAAAA}
+.opt p{font-size:11px;color:#9FB8BE;line-height:1.75}
+.opt p b{color:#E8F4F2}
+.opt .cost{font-size:10px;color:#7E9AA3;margin-top:6px;font-family:ui-monospace,monospace}
+
+.note{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;
+ font-size:11.5px;color:#78350F;line-height:1.8;margin-top:10px}
+.note b{color:#92400E}
+.danger{background:#FEF2F2;border:1px solid #FECACA;color:#7F1D1D}
+.ask{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:13px 15px;margin-top:14px}
+.ask h3{font-size:12.5px;color:#1E3A8A;margin-bottom:8px}
+.ask li{font-size:11.5px;color:#334155;line-height:1.9;margin-left:16px}
+.ask li b{color:#1E3A8A}
+</style></head><body>
+
+<h1>侧视 + 电视 + 马里奥：可行吗</h1>
+<p class="lead">下面三张图是<b>真实像素尺寸</b>（不做任何放大），你看到的就是手机上看到的。</p>
+
+<!-- ══ 硬数字 ══ -->
+<div class="sec">
+  <h2><span class="num">1</span>先看硬数字</h2>
+  <div class="card">
+    <table>
+      <tr><th style="width:56px">档位</th><th>画布总像素</th><th>1 单位 =</th></tr>
+      <tr><td>小 88dp</td><td class="mono">248 × 248 px</td><td class="mono">2.48 px</td></tr>
+      <tr><td><b>中 104dp</b></td><td class="mono"><b>292 × 292 px</b></td><td class="mono">2.93 px</td></tr>
+      <tr><td>大 120dp</td><td class="mono">338 × 338 px</td><td class="mono">3.38 px</td></tr>
+    </table>
+    <p style="margin-top:10px">
+      要塞进去的东西：<b>电视 42×24 单位</b> → 屏幕 36×18 → <b>马里奥 8×10 单位</b><br>
+      换算成像素（中档）：电视 <b>123×70px</b>，屏幕 <b>105×53px</b>，
+      <b>马里奥 23×29px</b> —— 8×10 的像素格，每格约 <b>2.9px</b>。
+    </p>
+    <div class="note danger" style="margin-top:10px">
+      <b>小档（88dp）</b>：马里奥只有 <b>20×25px</b>，每格 2.5px —— <b>基本糊成色块</b>。
+      如果你平时用「小」档，这个细节看不见。
+    </div>
+  </div>
+</div>
+
+<!-- ══ 真尺寸预览 ══ -->
+<div class="sec">
+  <h2><span class="num">2</span>真实尺寸预览</h2>
+  <div class="stagewrap" id="stages"></div>
+  <p style="font-size:10.5px;color:#8AA6B0;margin-top:8px;text-align:center">
+    ↑ 这三张都是 1:1 像素，没有放大。手机上就是这么大。
+  </p>
+</div>
+
+<!-- ══ 三个硬问题 ══ -->
+<div class="sec">
+  <h2><span class="num warn">!</span>三个绕不开的问题</h2>
+
+  <div class="card">
+    <p><b>① 「侧过来」= 换一套骨架，不是改一个姿势</b></p>
+    <p style="margin-top:6px">
+      现在 <b>16 个姿势全是正脸</b>：两只眼、左右对称的手臂。
+      侧视要重画：<b>一只眼、侧面脸、单臂朝前</b> —— 等于画一个新角色。
+    </p>
+    <p style="margin-top:6px">
+      更麻烦的是：<b>切换时会「跳」</b>。正脸 → 侧脸，用户会觉得「这是谁？」。
+      除非整个小人系统都改成侧视（那就是彻底重画），否则这个不一致一直在。
+    </p>
+  </div>
+
+  <div class="card">
+    <p><b>② 「墙上电视」意味着要画一面墙</b></p>
+    <p style="margin-top:6px">
+      现在小人是<b>透明背景</b>画在主卡渐变上的，唯一的「场景」是工位（书架/台灯/桌面线条，
+      而且只在上班时画）。
+    </p>
+    <p style="margin-top:6px">
+      墙上电视只有两种画法：
+      <br>· <b>画墙</b> → 整个 100×100 铺一层墙色，<b>主卡渐变会被挡掉一块</b>
+      <br>· <b>不画墙</b> → 电视浮在空中，像现在的工位一样「漂浮道具」
+    </p>
+  </div>
+
+  <div class="card">
+    <p><b>③ 视觉竞争：小人本来是配角</b></p>
+    <p style="margin-top:6px">
+      小人旁边就是<b>今日已赚的大数字</b>。加上电视 + 马里奥之后，
+      右上角会变成一整块<b>会动的高饱和色区域</b>（马里奥红蓝），
+      <b>抢走金额的注意力</b>。
+    </p>
+  </div>
+</div>
+
+<!-- ══ 三个替代方案 ══ -->
+<div class="sec">
+  <h2><span class="num">3</span>如果一定要做，怎么做</h2>
+
+  <div class="opt">
+    <h3><span class="tag t-rec">推荐</span>方案甲 · 只做「横握手柄」，不做侧视/电视</h3>
+    <p>正脸小人，双手在身前横握一个手柄（就是上一轮分析的方案）。
+    <b>不改视角、不画墙、不加电视</b> —— 视觉上干净，改动最小。</p>
+    <div class="cost">改动：2 个绘制方法 · 小 · 无一致性风险</div>
+  </div>
+
+  <div class="opt">
+    <h3><span class="tag t-ok">折中</span>方案乙 · 正脸 + 小电视（不做侧视）</h3>
+    <p>小人还是正脸，但<b>旁边浮着一个小电视</b>（右上角，约 30×18 单位），屏幕上有个小小的马里奥。
+    不画墙（电视漂浮，像工位道具那样）。</p>
+    <p style="margin-top:6px">视角一致，但<b>马里奥只有约 16×20px</b>（中档），更糊。</p>
+    <div class="cost">改动：电视 + 马里奥 + 小人为「看电视」的姿势 · 中</div>
+  </div>
+
+  <div class="opt">
+    <h3><span class="tag t-bad">原案</span>方案丙 · 侧视 + 墙上电视 + 马里奥</h3>
+    <p>你最初的想法。技术上<b>能做</b>，但要接受三点：侧视小人只在这个场景出现（和其它姿势不一致）、
+    要有墙或电视漂浮、马里奥只有 23×29px。</p>
+    <div class="cost">改动：新骨架 + 场景 + 像素画 · 大（约等于重画一个角色）</div>
+  </div>
+</div>
+
+<!-- ══ 我的判断 ══ -->
+<div class="note">
+  <b>我的判断：技术上可行，但我不建议做成「侧视 + 墙上电视」。</b><br><br>
+  三个理由：<br>
+  ① <b>侧视会破坏一致性</b> —— 16 个姿势都是正脸，突然一个侧脸，像换了个角色<br>
+  ② <b>马里奥太小</b> —— 23×29px，小档只有 20×25px，只能看出「红蓝一块」<br>
+  ③ <b>抢主卡注意力</b> —— 大数字旁边放一块高饱和会动的区域，主次颠倒<br><br>
+  如果就是想要「打游戏」这个感觉，<b>方案甲（正脸横握手柄）</b>能拿到 80% 的效果，
+  但只花 20% 的成本，而且没有任何一致性风险。
+</div>
+
+<div class="ask">
+  <h3>想听你的意思</h3>
+  <ul>
+    <li>你能接受<b>侧视只在这个场景出现</b>（和其它姿势不一致）吗？</li>
+    <li>马里奥那个尺寸（23×29px，小档 20×25px）看到实物图后，<b>还能接受吗</b>？</li>
+    <li>还是说，其实你想要的是「<b>打游戏的那股劲儿</b>」，具体是侧视还是正脸不重要？</li>
+  </ul>
+</div>
+
+<script>
+/* ── 马里奥 8×10 像素画 ── */
+const MARIO = [
+  '..RRRR..',
+  '.RRRRRR.',
+  '.SSSSSS.',
+  '.SDSDSD.',
+  '.DDDDDD.',
+  '..SSSS..',
+  '.BBBBBB.',
+  'BYBBBBYB',
+  '.BBBBBB.',
+  '.DD..DD.',
+];
+const MC = {R:'#E52521', S:'#FFC9A0', D:'#3B2412', B:'#2B5FD9', Y:'#FFD700'};
+
+function marioRects(x0, y0, cell) {
+  let out = '';
+  for (let r = 0; r < MARIO.length; r++) {
+    for (let c = 0; c < MARIO[r].length; c++) {
+      const ch = MARIO[r][c];
+      if (ch === '.') continue;
+      out += `<rect x="${(x0 + c*cell).toFixed(2)}" y="${(y0 + r*cell).toFixed(2)}" `
+           + `width="${cell.toFixed(2)}" height="${cell.toFixed(2)}" fill="${MC[ch]}"/>`;
+    }
+  }
+  return out;
+}
+
+/* ── 场景：电视 + 小人（viewBox 0-100）── */
+
+// 电视几何：外框 50-96 x 4-32，屏幕 53-93 x 7-29（宽 40 高 22 单位）
+const TV = {x0: 50, y0: 4, x1: 96, y1: 32, sx0: 53, sy0: 7, sx1: 93, sy1: 29};
+
+/** 马里奥：8x10 格，自适应铺满屏幕（留 1 单位边） */
+function marioInScreen() {
+  const w = (TV.sx1 - TV.sx0) - 2;      // 38
+  const h = (TV.sy1 - TV.sy0) - 2;      // 20
+  const cell = Math.min(w / 8, h / 10); // 2.0
+  const gw = cell * 8, gh = cell * 10;
+  const x0 = TV.sx0 + (w - gw) / 2 + 1;
+  const y0 = TV.sy0 + (h - gh) / 2 + 1;
+  return marioRects(x0, y0, cell);
+}
+
+function sceneSvg(mode) {
+  // mode: 'side' | 'threequarter' | 'nocurtain'
+  const wall = `<rect x="0" y="0" width="100" height="100" fill="#E3EFEB"/>
+    <rect x="0" y="0" width="100" height="52" fill="#DCEAE6"/>`;
+  const tv = `
+    <rect x="${TV.x0}" y="${TV.y0}" width="${TV.x1-TV.x0}" height="${TV.y1-TV.y0}" rx="2.6" fill="#1B2A33"/>
+    <rect x="${TV.sx0}" y="${TV.sy0}" width="${TV.sx1-TV.sx0}" height="${TV.sy1-TV.sy0}" rx="1.2" fill="#0A1620"/>
+    ${marioInScreen()}
+    <rect x="${TV.x0+2}" y="${TV.y1}" width="${TV.x1-TV.x0-4}" height="2" rx="1" fill="#2C3E4A"/>
+    <rect x="${TV.x0+8}" y="${TV.y1+2}" width="3.5" height="2.6" fill="#1B2A33"/>
+    <rect x="${TV.x1-11.5}" y="${TV.y1+2}" width="3.5" height="2.6" fill="#1B2A33"/>`;
+  // 地面
+  const floor = `<ellipse cx="34" cy="91" rx="30" ry="3.2" fill="rgba(10,30,25,.10)"/>
+    <rect x="0" y="90" width="100" height="10" fill="#CFE0DA"/>`;
+
+  let pet = '';
+  if (mode === 'side') {
+    // 纯侧视：单眼在轮廓边缘、单臂前伸
+    pet = `
+    <defs><linearGradient id="pb1" x1="0.1" y1="0" x2="0.55" y2="1">
+      <stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>
+    <ellipse cx="30" cy="68" rx="15.5" ry="20" fill="url(#pb1)"/>
+    <ellipse cx="26" cy="60" rx="6" ry="4.2" fill="rgba(255,255,255,.28)"/>
+    <!-- 侧脸：眼在右边缘，嘴朝右 -->
+    <ellipse cx="41.5" cy="62" rx="1.9" ry="2.6" fill="#063A2F"/>
+    <path d="M40 70 Q43.5 71.5 45 69" stroke="#063A2F" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+    <!-- 前臂伸向手柄 -->
+    <path d="M41 72 Q47 74 49 77" stroke="#063A2F" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <!-- 手柄 -->
+    <rect x="48" y="75" width="13" height="6.6" rx="2.2" fill="#243B36" stroke="#0F766E" stroke-width="0.9"/>
+    <rect x="50" y="76.7" width="5" height="3.4" rx="0.7" fill="#5EEAD4" opacity=".85"/>
+    <circle cx="57.5" cy="77.2" r="0.95" fill="#FCD34D"/>
+    <circle cx="58.8" cy="79.6" r="0.95" fill="#FCD34D"/>
+    <!-- 盘腿坐 -->
+    <path d="M22 84 Q28 90 36 88" stroke="#063A2F" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <path d="M30 86 Q37 91 44 88" stroke="#063A2F" stroke-width="2.8" fill="none" stroke-linecap="round"/>`;
+  } else {
+    // 3/4 侧视：脸还看得见（两只眼但一大一小），身体略转
+    pet = `
+    <defs><linearGradient id="pb2" x1="0.1" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>
+    <ellipse cx="34" cy="66" rx="17.5" ry="21" fill="url(#pb2)"/>
+    <ellipse cx="29" cy="58" rx="7" ry="4.8" fill="rgba(255,255,255,.28)"/>
+    <!-- 3/4 脸：右眼大（近）、左眼小（远） -->
+    <ellipse cx="41" cy="60" rx="2.6" ry="3.1" fill="#063A2F"/>
+    <ellipse cx="33.5" cy="60" rx="1.9" ry="2.6" fill="#063A2F" opacity=".78"/>
+    <path d="M37 69 Q42 71.5 46 69" stroke="#063A2F" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <!-- 前臂伸向手柄 -->
+    <path d="M48 70 Q53 73 54 76" stroke="#063A2F" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <!-- 手柄 -->
+    <rect x="53" y="74" width="14" height="7" rx="2.3" fill="#243B36" stroke="#0F766E" stroke-width="0.9"/>
+    <rect x="55.2" y="75.8" width="5.4" height="3.6" rx="0.7" fill="#5EEAD4" opacity=".85"/>
+    <circle cx="63" cy="76.4" r="1" fill="#FCD34D"/>
+    <circle cx="64.4" cy="79" r="1" fill="#FCD34D"/>
+    <!-- 盘腿坐 -->
+    <path d="M24 84 Q31 90 39 88" stroke="#063A2F" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <path d="M33 86 Q40 91 47 88" stroke="#063A2F" stroke-width="2.8" fill="none" stroke-linecap="round"/>`;
+  }
+
+  const wallPart = (mode === 'nocurtain') ? floor : wall + floor;
+  return wallPart + tv + pet;
+}
+
+/* ── 正面对照（现有姿势，简化的 OFF_WORK）── */
+function sceneCurrent() {
+  return `
+    <ellipse cx="50" cy="90" rx="16" ry="3.4" fill="rgba(10,30,25,.10)"/>
+    <defs><linearGradient id="cur" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>
+    <ellipse cx="50" cy="56" rx="21" ry="23" fill="url(#cur)"/>
+    <ellipse cx="44" cy="48" rx="8" ry="5.6" fill="rgba(255,255,255,.30)"/>
+    <path d="M31 50 Q22 44 20 36" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M69 50 Q78 44 80 36" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <line x1="43" y1="79" x2="41.5" y2="86" stroke="#063A2F" stroke-width="3"/>
+    <line x1="57" y1="79" x2="58.5" y2="86" stroke="#063A2F" stroke-width="3"/>
+    <path d="M40 46 Q43.5 42 47 46" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M53 46 Q56.5 42 60 46" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M45 56 Q50 63 55 56" stroke="#063A2F" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  `;
+}
+
+const STAGES = [
+  {px: 292, label: 'A · 3/4 侧视', sub: '（脸还看得见）', svg: sceneSvg('threequarter')},
+  {px: 292, label: 'B · 纯侧视', sub: '（只有一只眼）', svg: sceneSvg('side')},
+  {px: 248, label: '小档 88dp', sub: '（3/4 侧视）', svg: sceneSvg('threequarter')},
+  {px: 292, label: '不画墙', sub: '（电视+小人漂浮）', svg: sceneSvg('nocurtain')},
+];
+
+const host = document.getElementById('stages');
+STAGES.forEach(s => {
+  const d = document.createElement('div');
+  d.className = 'stage';
+  d.innerHTML = `<svg width="${s.px}" height="${s.px}" viewBox="0 0 100 100"
+     style="border-radius:16px;background:linear-gradient(168deg,#EAF7F2,#E8F1F7);display:block;
+            box-shadow:0 2px 10px rgba(15,23,42,.08)">${s.svg}</svg>
+     <div class="cap"><b>${s.label}</b><br>${s.sub}</div>`;
+  host.appendChild(d);
+});
+</script>
+</body></html>

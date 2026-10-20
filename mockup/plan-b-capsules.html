@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eef1f4;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:18px;align-items:center}
+.wrap{width:384px}
+.cap{font-size:13.5px;font-weight:700;color:#111827;margin-bottom:2px;display:flex;align-items:center;gap:8px}
+.bdg{font-size:10px;padding:2px 8px;border-radius:7px;font-weight:600}
+.b-now{background:#fee2e2;color:#b91c1c}
+.b-new{background:#d1fae5;color:#047857}
+.sub{font-size:11.5px;color:#6b7280;line-height:1.5;margin-bottom:10px}
+/* 页面背景 */
+.ph{border-radius:18px;padding:14px 20px 24px}
+.ph.dark{background:linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26)}
+.ph.light{background:linear-gradient(180deg,#ECFBF4,#EEF6FE 55%,#F1F6FF)}
+/* 主卡 */
+.hero{border-radius:24px;padding:20px;position:relative;overflow:hidden}
+.hero.dark{background:linear-gradient(135deg,#065F46,#0B8A6A 33%,#0E9C8C 66%,#14B8A6);
+  box-shadow:0 5px 14px rgba(0,0,0,.5)}
+.hero.light{background:linear-gradient(135deg,#0EA47A,#10B981 33%,#22C6B4 66%,#2DD4BF);
+  box-shadow:0 5px 14px rgba(16,185,129,.28)}
+.hero:before{content:"";position:absolute;width:150px;height:150px;border-radius:50%;
+  background:rgba(255,255,255,.12);top:-48px;right:-38px}
+.hero>*{position:relative;z-index:2}
+/* ══ 旧版三行（对比用） ══ */
+.oldrow{display:flex;align-items:center;background:rgba(255,255,255,.20);border-radius:20px;
+       padding:9px 6px 9px 14px;margin-bottom:10px}
+.oldrow .st{flex:1;font-size:13px;color:#fff}
+.oldrow .ac{font-size:13px;font-weight:700;color:#fff;background:rgba(255,255,255,.24);
+           padding:5px 12px;border-radius:14px}
+/* ══ 新版胶囊行 ══ */
+.caps{display:flex;gap:7px;margin-bottom:14px}
+.cap1{flex:1;height:40px;border-radius:20px;display:flex;align-items:center;justify-content:center;
+      font-size:12.5px;overflow:hidden;white-space:nowrap;padding:0 8px}
+.cap1.idle{background:rgba(255,255,255,.19);color:rgba(255,255,255,.90);font-weight:500}
+.cap1.rec{background:rgba(255,255,255,.36);color:#FFFFFF;font-weight:700}
+.cap1.run{background:#FFFFFF;color:#0A5C48;font-weight:800;font-size:12.5px}
+/* 卡片其他元素 */
+.hrow{display:flex;align-items:center;height:24px;margin-bottom:14px}
+.dotw{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.65);margin-right:7px}
+.hlab{font-size:11.5px;color:rgba(255,255,255,.78);letter-spacing:.12em;font-weight:600;flex:1}
+.clock{font-size:12px;color:rgba(255,255,255,.72)}
+.amt{font-size:46px;font-weight:700;color:#fff;letter-spacing:-1.5px;line-height:1;
+  display:flex;align-items:baseline;gap:2px}
+.amt .c{font-size:24px;font-weight:600}
+.chip{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:12px;
+      padding:6px 11px;border-radius:20px;margin-top:12px}
+.pb{height:6px;border-radius:4px;background:rgba(255,255,255,.26);margin-top:16px;overflow:hidden}
+.pb>i{display:block;height:100%;background:#fff;border-radius:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:14px}
+.stats .v{font-size:13px;font-weight:600;color:#fff;text-align:center}
+.stats .k{font-size:10.5px;color:rgba(255,255,255,.72);text-align:center;margin-top:3px}
+.dv{height:1px;background:rgba(255,255,255,.22);margin:13px 0 9px}
+.sch{font-size:11.5px;color:rgba(255,255,255,.78)}
+/* 自适应小场景 */
+.scene{background:#fff;border-radius:14px;padding:12px;margin-top:10px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.scene .t{font-size:11.5px;font-weight:700;color:#374151;margin-bottom:8px}
+.mini{background:linear-gradient(135deg,#065F46,#0B8A6A 40%,#0E9C8C 70%,#14B8A6);
+      border-radius:14px;padding:10px 12px}
+.mini .caps{margin-bottom:0}
+.mini .cap1{height:36px;font-size:12px;border-radius:18px}
+</style></head><body>
+
+<!-- ══════ ① 现状 ══════ -->
+<div class="wrap"><div class="cap">① 现状 <span class="bdg b-now">三行占位</span></div>
+<div class="sub">三行各自独占一行，高度合计约 <b>150dp</b>。其中两行在多数时段只有一个小按钮。</div>
+<div class="ph dark"><div class="hero dark">
+  <div class="oldrow"><span class="st">今天加班了？</span><span class="ac">开始</span></div>
+  <div class="oldrow"><span class="st">今天请假了吗？</span><span class="ac">补记</span></div>
+  <div class="oldrow"><span class="st">💰 今天赚外快了？</span><span class="ac">记一笔</span></div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:16:07</span></div>
+  <div class="amt"><span class="c">¥</span>777.78</div>
+  <div class="chip">● 今日下班 · 工资已满额</div>
+  <div class="pb"><i style="width:100%"></i></div>
+  <div class="stats">
+    <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+    <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+  </div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- ══════ ② 方案 B · 常态 ══════ -->
+<div class="wrap"><div class="cap">② 方案 B · 常态 <span class="bdg b-new">节省 ~110dp</span></div>
+<div class="sub">三胶囊并排一行，高 40dp。<b>每个仍是 1 tap 直达</b>，操作路径不变。</div>
+<div class="ph dark"><div class="hero dark">
+  <div class="caps">
+    <div class="cap1 idle">⏱ 加班</div>
+    <div class="cap1 idle">🏖 请假</div>
+    <div class="cap1 idle">💰 外快</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:16:07</span></div>
+  <div class="amt"><span class="c">¥</span>777.78</div>
+  <div class="chip">● 今日下班 · 工资已满额</div>
+  <div class="pb"><i style="width:100%"></i></div>
+  <div class="stats">
+    <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+    <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+  </div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- ══════ ③ 方案 B · 状态变化 ══════ -->
+<div class="wrap"><div class="cap">③ 方案 B · 状态变化 <span class="bdg b-new">状态一眼可辨</span></div>
+<div class="sub">三种视觉状态：<b>待操作</b>（淡底）· <b>已记录</b>（亮底加粗）· <b>进行中</b>（白底反色，最醒目）</div>
+<div class="ph dark"><div class="hero dark">
+  <div class="caps">
+    <div class="cap1 run">⏱ 加班中</div>
+    <div class="cap1 rec">🏖 病假</div>
+    <div class="cap1 rec">💰 ¥200.00</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:16:07</span></div>
+  <div class="amt"><span class="c">¥</span>977.78</div>
+  <div class="chip">● 加班费 ¥7.50 · 1.5 倍结算</div>
+  <div class="pb"><i style="width:100%"></i></div>
+  <div class="stats">
+    <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+    <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+  </div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- ══════ ④ 自适应 ══════ -->
+<div class="wrap"><div class="cap">④ 自适应显示 <span class="bdg b-new">按可用性增减胶囊</span></div>
+<div class="sub">保持现有语义：加班只在工作日下班后出现；请假只在工作日；外快全时段。胶囊会自适应并排。</div>
+<div class="ph dark">
+  <div class="scene">
+    <div class="t">工作日 上午（加班未到点）→ 2 颗</div>
+    <div class="mini"><div class="caps">
+      <div class="cap1 idle">🏖 请假</div>
+      <div class="cap1 idle">💰 外快</div>
+    </div></div>
+  </div>
+  <div class="scene">
+    <div class="t">工作日 下班后（三颗齐全）→ 3 颗</div>
+    <div class="mini"><div class="caps">
+      <div class="cap1 idle">⏱ 加班</div>
+      <div class="cap1 idle">🏖 请假</div>
+      <div class="cap1 idle">💰 外快</div>
+    </div></div>
+  </div>
+  <div class="scene">
+    <div class="t">周末（只留外快）→ 1 颗铺满</div>
+    <div class="mini"><div class="caps">
+      <div class="cap1 idle">💰 今天赚外快了？</div>
+    </div></div>
+  </div>
+</div></div>
+
+<!-- ══════ ⑤ 浅色主题 ══════ -->
+<div class="wrap"><div class="cap">⑤ 浅色主题对照</div>
+<div class="sub">同一套设计，白底反色胶囊在浅色主题下同样醒目。</div>
+<div class="ph light"><div class="hero light">
+  <div class="caps">
+    <div class="cap1 run">⏱ 加班中</div>
+    <div class="cap1 rec">🏖 病假</div>
+    <div class="cap1 rec">💰 ¥200.00</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:16:07</span></div>
+  <div class="amt"><span class="c">¥</span>977.78</div>
+  <div class="chip">● 加班费 ¥7.50 · 1.5 倍结算</div>
+  <div class="pb"><i style="width:100%"></i></div>
+  <div class="stats">
+    <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+    <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+  </div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+</body></html>

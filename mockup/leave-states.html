@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b0d11;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:18px;
+     display:flex;gap:16px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:7px}
+.cap{font-size:12px;color:#7d8794;text-align:center}
+.cap b{display:block;font-size:13px;color:#eef2f7;font-weight:700;margin-bottom:2px}
+.phone{width:384px;border-radius:24px;overflow:hidden;flex-shrink:0;box-shadow:0 10px 40px rgba(0,0,0,.6);
+       background:linear-gradient(180deg,#ecfbf4,#eef6fe 55%,#f1f6ff);padding:0 16px 18px}
+.sbar{height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 4px;font-size:11px;color:#7a99a3}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:5px 2px 11px}
+.ttl{font-size:19px;font-weight:700;color:#16323b}
+.gear{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);color:#61808c;
+      display:flex;align-items:center;justify-content:center;font-size:13px}
+.hero{border-radius:24px;padding:18px;overflow:hidden;position:relative;
+  background:linear-gradient(135deg,#0ea47a,#10b981 42%,#22c6b4 74%,#38bdf8 130%);
+  box-shadow:0 12px 28px rgba(16,185,129,.3)}
+.hero:before{content:"";position:absolute;width:170px;height:170px;border-radius:50%;background:rgba(255,255,255,.12);top:-66px;right:-48px}
+.hero>*{position:relative}
+.otrow{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.20);border-radius:20px;
+       padding:8px 6px 8px 13px;margin-bottom:13px}
+.otrow .st{flex:1;font-size:12.5px;color:#fff}
+.otrow .ac{font-size:12.5px;font-weight:700;color:#fff;background:rgba(255,255,255,.24);
+           padding:5px 11px;border-radius:14px}
+.hl{font-size:11px;color:rgba(255,255,255,.78);letter-spacing:1.2px;font-weight:600}
+.hc{font-size:11.5px;color:rgba(255,255,255,.72)}
+.ha{font-size:42px;font-weight:700;color:#fff;margin-top:8px;letter-spacing:-1px;line-height:1.05}
+.ha .c{font-size:22px;font-weight:600}
+.hst{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:11.5px;
+      padding:6px 11px;border-radius:20px;margin-top:10px}
+.hb{height:7px;border-radius:5px;background:rgba(255,255,255,.26);margin-top:14px;overflow:hidden}
+.hb>i{display:block;height:100%;background:#fff;border-radius:5px}
+.hs{display:grid;grid-template-columns:repeat(4,1fr);margin-top:14px}
+.hs .v{font-size:12.5px;font-weight:600;color:#fff;text-align:center}
+.hs .k{font-size:10px;color:rgba(255,255,255,.72);text-align:center;margin-top:3px}
+.hd{height:1px;background:rgba(255,255,255,.22);margin:13px 0 9px}
+.hsch{font-size:11px;color:rgba(255,255,255,.78)}
+/* 日历 */
+.cal{background:#fff;border-radius:16px;padding:12px 14px;margin-top:10px}
+.calrow{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid #eef4f2}
+.calrow:last-child{border-bottom:none}
+.cday{width:38px;font-size:16px;font-weight:700;color:#16323b}
+.cwk{width:34px;font-size:10px;color:#8aa6b0}
+.cname{flex:1;font-size:12.5px;color:#16323b}
+.cname.hw{color:#b45309;font-weight:600}
+.cname.lv{color:#7C6BD6;font-weight:600}
+.camt{font-size:14px;font-weight:700;color:#047857}
+.camt.zero{color:#8aa6b0}
+</style></head><body>
+
+<!-- ① 未标记 -->
+<div class="col"><div class="cap"><b>① 工作日 · 未请假</b>「标记」入口</div>
+<div class="phone"><div class="sbar"><span>14:20</span><span>5G ▮▮▮</span></div>
+<div class="nav"><span class="ttl">SalaryJump</span><span class="gear">⚙</span></div>
+<div class="hero">
+  <div class="otrow"><span class="st">今天请假了？</span><span class="ac">标记</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span class="hl">今日已赚</span><span class="hc">14:20:05</span></div>
+  <div class="ha"><span class="c">¥</span>175.00</div>
+  <div class="hst">● 工作中 · 距下班 2:40</div>
+  <div class="hb"><i style="width:58%"></i></div>
+  <div class="hs">
+    <div><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥37.50</div><div class="k">每小时</div></div>
+    <div><div class="v">¥0.63</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.01</div><div class="k">每秒</div></div></div>
+  <div class="hd"></div>
+  <div class="hsch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- ② 年假全薪 -->
+<div class="col"><div class="cap"><b>② 年假 · 全薪</b>半天也不影响（示例整天）</div>
+<div class="phone"><div class="sbar"><span>10:05</span><span>5G ▮▮▮</span></div>
+<div class="nav"><span class="ttl">SalaryJump</span><span class="gear">⚙</span></div>
+<div class="hero">
+  <div class="otrow"><span class="st">🏖 年假 · 全薪 · 300.00 元</span><span class="ac">取消</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span class="hl">今日已赚</span><span class="hc">10:05:33</span></div>
+  <div class="ha"><span class="c">¥</span>300.00</div>
+  <div class="hst">● 年假 · 全薪 · 今日 300.00 元</div>
+  <div class="hb"><i style="width:100%"></i></div>
+  <div class="hs">
+    <div><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥37.50</div><div class="k">每小时</div></div>
+    <div><div class="v">¥0.63</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.01</div><div class="k">每秒</div></div></div>
+  <div class="hd"></div>
+  <div class="hsch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- ③ 病假半天 + 日历 -->
+<div class="col"><div class="cap"><b>③ 病假半天 + 工资日历</b>¥90 + 事假 ¥0</div>
+<div class="phone"><div class="sbar"><span>09:30</span><span>5G ▮▮▮</span></div>
+<div class="nav"><span class="ttl">SalaryJump</span><span class="gear">⚙</span></div>
+<div class="hero">
+  <div class="otrow"><span class="st">🏖 病假 · 60% · 半天 · 90.00 元</span><span class="ac">取消</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span class="hl">今日已赚</span><span class="hc">09:30:12</span></div>
+  <div class="ha"><span class="c">¥</span>90.00</div>
+  <div class="hst">● 病假 · 60% · 半天 · 今日 90.00 元</div>
+  <div class="hb"><i style="width:30%"></i></div>
+  <div class="hs">
+    <div><div class="v">¥90.00</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥11.25</div><div class="k">每小时</div></div>
+    <div><div class="v">¥0.19</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.00</div><div class="k">每秒</div></div></div>
+  <div class="hd"></div>
+  <div class="hsch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>
+<div class="cal">
+  <div class="calrow"><span class="cday">16</span><span class="cwk">周五</span><span class="cname lv">病假 · 60%</span><span class="camt">¥ 180.00</span></div>
+  <div class="calrow"><span class="cday">15</span><span class="cwk">周四</span><span class="cname lv">事假 · 无薪</span><span class="camt zero">¥ 0.00</span></div>
+  <div class="calrow"><span class="cday">14</span><span class="cwk">周三</span><span class="cname lv">年假 · 全薪 · 半天</span><span class="camt">¥ 150.00</span></div>
+  <div class="calrow"><span class="cday">13</span><span class="cwk">周二</span><span class="cname">工作日</span><span class="camt">¥ 300.00</span></div>
+</div>
+</div></div>
+
+</body></html>

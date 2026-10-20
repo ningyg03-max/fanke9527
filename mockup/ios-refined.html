@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><title>SalaryJump · iOS 精致感方案对比</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b0d11;font-family:"PingFang SC","Noto Sans CJK SC","Source Han Sans SC",system-ui,sans-serif;
+     padding:18px;display:flex;gap:15px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:7px}
+.cap{font-size:12px;color:#7d8794;text-align:center;line-height:1.45}
+.cap b{display:block;font-size:13px;color:#eef2f7;font-weight:700;margin-bottom:1px}
+.phone{width:384px;height:832px;border-radius:28px;overflow:hidden;position:relative;flex-shrink:0;
+       box-shadow:0 12px 44px rgba(0,0,0,.7)}
+.sbar{height:30px;display:flex;align-items:center;justify-content:space-between;
+      padding:0 16px;font-size:11px;font-weight:600;letter-spacing:.2px}
+.sbar .r{display:flex;gap:5px;align-items:center}
+.tnum{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+/* ══════════ ① 现状 2.8 ══════════ */
+.cur{background:linear-gradient(180deg,#ecfbf4,#eef6fe 55%,#f1f6ff)}
+.cur .sbar{color:#7a99a3}
+.cur .pad{padding:2px 16px 0}
+.cur .nav{display:flex;align-items:center;gap:10px;padding:5px 2px 3px}
+.cur .logo{width:30px;height:30px;border-radius:10px;background:linear-gradient(135deg,#10b981,#06b6d4);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
+.cur .ttl{font-size:19px;font-weight:700;color:#16323b;flex:1}
+.cur .gear{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.9);color:#61808c;
+  display:flex;align-items:center;justify-content:center;font-size:15px}
+.cur .hero{border-radius:24px;padding:20px;margin-top:14px;overflow:hidden;position:relative;
+  background:linear-gradient(135deg,#0ea47a,#10b981 42%,#22c6b4 74%,#38bdf8 130%);
+  box-shadow:0 12px 28px rgba(16,185,129,.3)}
+.cur .hero:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.12);top:-70px;right:-50px}
+.cur .hero:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08);bottom:-60px;left:-30px}
+.cur .hero>*{position:relative}
+.cur .hl{font-size:11.5px;color:rgba(255,255,255,.78);letter-spacing:1.3px;font-weight:600}
+.cur .hc{font-size:12px;color:rgba(255,255,255,.72)}
+.cur .ha{font-size:46px;font-weight:700;color:#fff;margin-top:10px;letter-spacing:-1px;line-height:1.05}
+.cur .ha .c{font-size:24px;font-weight:600}
+.cur .hst{display:inline-block;background:rgba(255,255,255,.2);color:#fff;font-size:12px;
+  padding:6px 12px;border-radius:20px;margin-top:11px}
+.cur .hb{height:8px;border-radius:5px;background:rgba(255,255,255,.26);margin-top:15px;overflow:hidden}
+.cur .hb>i{display:block;height:100%;background:#fff;border-radius:5px}
+.cur .hs{display:grid;grid-template-columns:repeat(4,1fr);margin-top:16px}
+.cur .hs .v{font-size:13.5px;font-weight:600;color:#fff;text-align:center}
+.cur .hs .k{font-size:10.5px;color:rgba(255,255,255,.72);text-align:center;margin-top:4px}
+.cur .hd{height:1px;background:rgba(255,255,255,.22);margin:14px 0 10px}
+.cur .hsch{font-size:11.5px;color:rgba(255,255,255,.78)}
+.cur .card{background:#fff;border-radius:22px;padding:19px 20px;margin-top:13px;
+  box-shadow:0 4px 18px rgba(22,50,59,.06)}
+.cur .ct{display:flex;align-items:center;gap:7px}
+.cur .dot{width:7px;height:7px;border-radius:4px}
+.cur .lbl{font-size:11.5px;color:#8aa6b0;letter-spacing:1.2px;font-weight:600}
+.cur .lk{font-size:12.5px;color:#0369a1}
+.cur .wa{font-size:32px;font-weight:700;color:#0369a1;margin-top:12px;letter-spacing:-.5px}
+.cur .wa .t{font-size:15px;color:#61808c;font-weight:500}
+.cur .pb{height:8px;border-radius:5px;background:#e6f2ee;margin-top:13px;overflow:hidden}
+.cur .pb>i{display:block;height:100%;background:#0ea5e9;border-radius:5px}
+.cur .brow{display:flex;gap:9px;margin-top:15px}
+.cur .bm{flex:1;height:48px;border-radius:24px;background:linear-gradient(135deg,#0ea47a,#10b981 60%,#22c6b4);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:700}
+.cur .bo{width:92px;height:48px;border-radius:24px;border:1.5px solid #d3e9e3;background:#f7fcfa;color:#2e5a55;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.cur .nx{font-size:12px;color:#61808c;margin-top:12px}
+.cur .ca{font-size:30px;font-weight:700;color:#b45309;margin-top:10px;letter-spacing:-.5px}
+.cur .cs{font-size:12.5px;color:#61808c;margin-top:7px}
+.cur .ch{display:inline-block;background:#fff7ea;color:#b45309;font-size:11.5px;padding:4px 10px;border-radius:12px;margin-left:8px;font-weight:600}
+
+/* ══════════ ② 方案 A · iOS 原生 ══════════ */
+.iosA{background:#f2f2f7}
+.iosA .sbar{color:#1c1c1e}
+.iosA .pad{padding:0 16px}
+.iosA .nav{padding:6px 2px 10px}
+.iosA .nt{font-size:30px;font-weight:700;color:#1c1c1e;letter-spacing:-.8px;line-height:1.15}
+.iosA .ns{font-size:13px;color:#8e8e93;margin-top:2px}
+.iosA .gear{position:absolute;right:16px;top:36px;width:32px;height:32px;border-radius:50%;
+  background:#e4e4e9;color:#636366;display:flex;align-items:center;justify-content:center;font-size:14px}
+.iosA .card{background:#fff;border-radius:12px;padding:16px;margin-bottom:14px}
+.iosA .row1{display:flex;justify-content:space-between;align-items:baseline}
+.iosA .lbl{font-size:13px;font-weight:600;color:#1c1c1e}
+.iosA .lk{font-size:15px;color:#007aff;display:flex;align-items:center;gap:2px}
+.iosA .clk{font-size:13px;color:#8e8e93}
+.iosA .amt{font-size:34px;font-weight:700;color:#1c1c1e;letter-spacing:-1.2px;margin-top:6px;line-height:1.1}
+.iosA .amt .c{font-size:22px;font-weight:600;color:#8e8e93;margin-right:1px}
+.iosA .st{font-size:15px;color:#34c759;margin-top:6px;font-weight:500}
+.iosA .pb{height:4px;border-radius:2px;background:#e5e5ea;margin-top:14px;overflow:hidden}
+.iosA .pb>i{display:block;height:100%;background:#34c759;border-radius:2px}
+.iosA .hr{height:.5px;background:#e5e5ea;margin:15px 0 13px}
+.iosA .g4{display:grid;grid-template-columns:repeat(4,1fr)}
+.iosA .g4 .v{font-size:15px;font-weight:600;color:#1c1c1e;text-align:center}
+.iosA .g4 .k{font-size:11px;color:#8e8e93;text-align:center;margin-top:3px}
+.iosA .sched{font-size:12px;color:#8e8e93;margin-top:12px;padding-top:11px;border-top:.5px solid #e5e5ea}
+.iosA .wnum{font-size:30px;font-weight:700;color:#1c1c1e;letter-spacing:-1px;margin-top:10px}
+.iosA .wnum .t{font-size:17px;font-weight:500;color:#8e8e93}
+.iosA .pb2{height:4px;border-radius:2px;background:#e5e5ea;margin-top:12px;overflow:hidden}
+.iosA .pb2>i{display:block;height:100%;background:#007aff;border-radius:2px}
+.iosA .brow{display:flex;gap:9px;margin-top:15px}
+.iosA .bm{flex:1;height:46px;border-radius:12px;background:#34c759;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600}
+.iosA .bo{width:88px;height:46px;border-radius:12px;background:#f2f2f7;color:#007aff;
+  display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500}
+.iosA .nx{font-size:12px;color:#8e8e93;margin-top:10px}
+.iosA .camt{font-size:28px;font-weight:700;color:#1c1c1e;letter-spacing:-1px;margin-top:8px}
+.iosA .chip{display:inline-block;background:#f2f2f7;color:#636366;font-size:12px;font-weight:600;
+  padding:3px 9px;border-radius:8px;margin-left:8px;vertical-align:middle}
+.iosA .sub{font-size:12px;color:#8e8e93;margin-top:5px}
+
+/* ══════════ ③ 方案 B · iOS 深色数据 ══════════ */
+.iosB{background:#f2f2f7}
+.iosB .sbar{color:#1c1c1e}
+.iosB .pad{padding:0 16px}
+.iosB .nav{display:flex;align-items:center;justify-content:space-between;padding:4px 2px 12px}
+.iosB .nt{font-size:22px;font-weight:700;color:#1c1c1e;letter-spacing:-.4px}
+.iosB .ns{font-size:12px;color:#8e8e93;margin-top:1px}
+.iosB .gear{width:32px;height:32px;border-radius:50%;background:#e4e4e9;color:#636366;
+  display:flex;align-items:center;justify-content:center;font-size:14px}
+.iosB .dark{background:#1c1c1e;border-radius:20px;padding:20px;margin-bottom:14px;color:#fff}
+.iosB .dl{font-size:12px;color:rgba(255,255,255,.55);font-weight:600;letter-spacing:.3px}
+.iosB .top{display:flex;align-items:center;gap:16px;margin-top:12px}
+.iosB .ring{width:96px;height:96px;border-radius:50%;flex-shrink:0;position:relative;
+  background:conic-gradient(from -90deg,#30d158 0 104.4deg,rgba(255,255,255,.13) 104.4deg 360deg);
+  display:flex;align-items:center;justify-content:center}
+.iosB .ring:before{content:"";position:absolute;width:76px;height:76px;border-radius:50%;background:#1c1c1e}
+.iosB .ring span{position:relative;font-size:15px;font-weight:600;color:#30d158;letter-spacing:-.3px}
+.iosB .amt{font-size:38px;font-weight:700;color:#fff;letter-spacing:-1.3px;line-height:1.08}
+.iosB .amt .c{font-size:22px;font-weight:600;color:rgba(255,255,255,.6)}
+.iosB .st{font-size:13px;color:#30d158;margin-top:7px}
+.iosB .dg4{display:grid;grid-template-columns:repeat(4,1fr);margin-top:18px;
+  border-top:.5px solid rgba(255,255,255,.13);padding-top:14px}
+.iosB .dg4 .v{font-size:14px;font-weight:600;color:#fff;text-align:center}
+.iosB .dg4 .k{font-size:10.5px;color:rgba(255,255,255,.5);text-align:center;margin-top:3px}
+.iosB .card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px}
+.iosB .h{display:flex;justify-content:space-between;align-items:baseline}
+.iosB .t{font-size:16px;font-weight:700;color:#1c1c1e;letter-spacing:-.3px}
+.iosB .lk{font-size:14px;color:#007aff}
+.iosB .wnum{font-size:34px;font-weight:700;color:#1c1c1e;letter-spacing:-1.2px;margin-top:12px}
+.iosB .wnum .t2{font-size:16px;font-weight:500;color:#8e8e93}
+.iosB .pb{height:5px;border-radius:3px;background:#e5e5ea;margin-top:12px;overflow:hidden}
+.iosB .pb>i{display:block;height:100%;background:#007aff;border-radius:3px}
+.iosB .brow{display:flex;gap:9px;margin-top:16px}
+.iosB .bm{flex:1;height:46px;border-radius:14px;background:#007aff;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:600}
+.iosB .bo{width:86px;height:46px;border-radius:14px;background:#f2f2f7;color:#007aff;
+  display:flex;align-items:center;justify-content:center;font-size:15px}
+.iosB .nx{font-size:12px;color:#8e8e93;margin-top:11px}
+.iosB .camt{font-size:30px;font-weight:700;color:#1c1c1e;letter-spacing:-1.1px;margin-top:10px}
+.iosB .chip{display:inline-block;background:#f2f2f7;color:#636366;font-size:12px;font-weight:600;
+  padding:3px 9px;border-radius:8px;margin-left:8px;vertical-align:middle}
+.iosB .sub{font-size:12px;color:#8e8e93;margin-top:5px}
+
+/* ══════════ ④ 方案 C · 毛玻璃 ══════════ */
+.iosC{background:#eef1f6}
+.iosC .blob{position:absolute;border-radius:50%;filter:blur(46px)}
+.iosC .b1{width:280px;height:280px;background:rgba(120,220,190,.55);top:-70px;left:-70px}
+.iosC .b2{width:250px;height:250px;background:rgba(130,180,255,.45);top:190px;right:-90px}
+.iosC .b3{width:230px;height:230px;background:rgba(190,170,255,.35);bottom:-60px;left:-40px}
+.iosC .sbar{position:relative;color:#3a4a52}
+.iosC .pad{position:relative;padding:0 16px}
+.iosC .nav{display:flex;align-items:center;justify-content:space-between;padding:6px 2px 12px}
+.iosC .nt{font-size:20px;font-weight:700;color:#1f3238;letter-spacing:-.3px}
+.iosC .ns{font-size:12px;color:rgba(70,95,105,.75);margin-top:1px}
+.iosC .gear{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.65);
+  border:.5px solid rgba(255,255,255,.9);color:#4a6470;display:flex;align-items:center;
+  justify-content:center;font-size:14px;backdrop-filter:blur(14px)}
+.iosC .card{background:rgba(255,255,255,.62);border:.5px solid rgba(255,255,255,.85);border-radius:20px;
+  padding:18px;margin-bottom:13px;backdrop-filter:blur(20px);box-shadow:0 6px 22px rgba(60,90,100,.07)}
+.iosC .lbl{font-size:12px;font-weight:600;color:rgba(70,95,105,.8);letter-spacing:.6px}
+.iosC .lk{font-size:13.5px;color:#0a84ff;font-weight:500}
+.iosC .clk{font-size:12px;color:rgba(70,95,105,.7)}
+.iosC .amt{font-size:40px;font-weight:700;color:#10333a;letter-spacing:-1.4px;margin-top:8px;line-height:1.08}
+.iosC .amt .c{font-size:23px;font-weight:600;color:rgba(70,95,105,.65)}
+.iosC .st{font-size:13.5px;color:#0f9d6b;margin-top:7px;font-weight:500}
+.iosC .pb{height:6px;border-radius:4px;background:rgba(120,150,160,.18);margin-top:14px;overflow:hidden}
+.iosC .pb>i{display:block;height:100%;background:linear-gradient(90deg,#34d399,#10b981);border-radius:4px}
+.iosC .hr{height:.5px;background:rgba(120,150,160,.22);margin:15px 0 12px}
+.iosC .g4{display:grid;grid-template-columns:repeat(4,1fr)}
+.iosC .g4 .v{font-size:14px;font-weight:600;color:#1f3238;text-align:center}
+.iosC .g4 .k{font-size:10.5px;color:rgba(70,95,105,.72);text-align:center;margin-top:3px}
+.iosC .sched{font-size:11.5px;color:rgba(70,95,105,.72);margin-top:11px;padding-top:10px;
+  border-top:.5px solid rgba(120,150,160,.22)}
+.iosC .wnum{font-size:32px;font-weight:700;color:#10333a;letter-spacing:-1px;margin-top:10px}
+.iosC .wnum .t{font-size:16px;font-weight:500;color:rgba(70,95,105,.7)}
+.iosC .pb2{height:6px;border-radius:4px;background:rgba(120,150,160,.18);margin-top:12px;overflow:hidden}
+.iosC .pb2>i{display:block;height:100%;background:linear-gradient(90deg,#38bdf8,#0ea5e9);border-radius:4px}
+.iosC .brow{display:flex;gap:9px;margin-top:15px}
+.iosC .bm{flex:1;height:46px;border-radius:16px;background:linear-gradient(135deg,#0ea47a,#10b981 60%,#22c6b4);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;
+  box-shadow:0 5px 16px rgba(16,185,129,.28)}
+.iosC .bo{width:88px;height:46px;border-radius:16px;background:rgba(255,255,255,.7);
+  border:.5px solid rgba(255,255,255,.95);color:#2e5a55;display:flex;align-items:center;
+  justify-content:center;font-size:14.5px;font-weight:500;backdrop-filter:blur(14px)}
+.iosC .nx{font-size:11.5px;color:rgba(70,95,105,.75);margin-top:11px}
+.iosC .camt{font-size:30px;font-weight:700;color:#10333a;letter-spacing:-1.1px;margin-top:9px}
+.iosC .chip{display:inline-block;background:rgba(255,255,255,.75);border:.5px solid rgba(255,255,255,.95);
+  color:#4a6470;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:9px;margin-left:8px;vertical-align:middle}
+.iosC .sub{font-size:11.5px;color:rgba(70,95,105,.72);margin-top:5px}
+</style></head><body>
+
+<!-- ═══ ① 现状 ═══ -->
+<div class="col"><div class="cap"><b>① 现状 · 2.8</b>渐变主卡 + 大圆角</div>
+<div class="phone cur"><div class="sbar tnum"><span>16:17</span><span class="r">5G ▮▮▮</span></div>
+<div class="pad">
+  <div class="nav"><div class="logo">¥</div><span class="ttl">SalaryJump</span><div class="gear">⚙</div></div>
+  <div class="hero">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="hl">今日已赚</span><span class="hc tnum">08:29:31</span></div>
+    <div class="ha tnum"><span class="c">¥</span>86.42</div>
+    <div class="hst">● 工作中 · 距午休 3:01</div>
+    <div class="hb"><i style="width:29%"></i></div>
+    <div class="hs">
+      <div><div class="v tnum">¥300.00</div><div class="k">今日目标</div></div>
+      <div><div class="v tnum">¥37.50</div><div class="k">每小时</div></div>
+      <div><div class="v tnum">¥0.63</div><div class="k">每分钟</div></div>
+      <div><div class="v tnum">¥0.01</div><div class="k">每秒</div></div></div>
+    <div class="hd"></div>
+    <div class="hsch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="ct"><span class="dot" style="background:#0ea5e9"></span><span class="lbl">今日喝水</span></div>
+      <div style="display:flex;gap:14px"><span class="lk">记录</span><span class="lk">统计</span></div></div>
+    <div class="wa tnum">1250<span class="t"> / 2000 ml</span></div>
+    <div class="pb"><i style="width:62%"></i></div>
+    <div class="brow"><div class="bm">喝水 +250 ml</div><div class="bo">选饮品</div></div>
+    <div class="nx">下次提醒 09:30 · 约 284 kcal · 含糖 2 杯</div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="dot" style="background:#f59e0b"></span><span class="lbl">累计收入</span></div>
+    <div class="ca tnum">¥ 5,678.90<span class="ch">19 天</span></div>
+    <div class="cs">按工作日累计 · 今天入账中</div>
+  </div>
+</div></div></div>
+
+<!-- ═══ ② 方案 A · iOS 原生 ═══ -->
+<div class="col"><div class="cap"><b>② 方案 A · iOS 原生</b>大标题 + 分组卡 + 纯中性色</div>
+<div class="phone iosA"><div class="sbar tnum"><span>16:17</span><span class="r">5G ▮▮▮</span></div>
+<div class="pad">
+  <div class="nav"><div class="nt">薪资</div><div class="ns tnum">10月9日 周五</div></div>
+  <div class="gear">⚙</div>
+  <div class="card">
+    <div class="row1"><span class="lbl2" style="font-size:13px;color:#8e8e93">今日已赚</span><span class="clk tnum">08:29:31</span></div>
+    <div class="amt tnum"><span class="c">¥</span>86.42</div>
+    <div class="st">工作中 · 距午休 3:01</div>
+    <div class="pb"><i style="width:29%"></i></div>
+    <div class="hr"></div>
+    <div class="g4">
+      <div><div class="v tnum">300.00</div><div class="k">今日目标</div></div>
+      <div><div class="v tnum">37.50</div><div class="k">每小时</div></div>
+      <div><div class="v tnum">0.63</div><div class="k">每分钟</div></div>
+      <div><div class="v tnum">0.01</div><div class="k">每秒</div></div></div>
+    <div class="sched">智能工作日 · 08:00–17:00 · 午休 11:30–12:30</div>
+  </div>
+  <div class="card">
+    <div class="row1"><span class="lbl">今日喝水</span>
+      <span style="display:flex;gap:16px"><span class="lk">记录 ›</span><span class="lk">统计 ›</span></span></div>
+    <div class="wnum tnum">1250<span class="t"> / 2000 ml</span></div>
+    <div class="pb2"><i style="width:62%"></i></div>
+    <div class="brow"><div class="bm">喝水 +250 ml</div><div class="bo">选饮品</div></div>
+    <div class="nx">下次提醒 09:30 · 约 284 kcal · 含糖 2 杯</div>
+  </div>
+  <div class="card">
+    <div class="row1"><span class="lbl">累计收入</span><span class="chip">19 天</span></div>
+    <div class="camt tnum">¥ 5,678.90</div>
+    <div class="sub">按工作日累计 · 今天入账中</div>
+  </div>
+</div></div></div>
+
+<!-- ═══ ③ 方案 B · iOS 深色数据 ═══ -->
+<div class="col"><div class="cap"><b>③ 方案 B · iOS 深色数据</b>Fitness 风 · 深色数据卡 + 环形进度</div>
+<div class="phone iosB"><div class="sbar tnum"><span>16:17</span><span class="r">5G ▮▮▮</span></div>
+<div class="pad">
+  <div class="nav">
+    <div><div class="nt">薪资</div><div class="ns tnum">10月9日 周五</div></div>
+    <div class="gear">⚙</div>
+  </div>
+  <div class="dark">
+    <div class="dl">今日已赚</div>
+    <div class="top">
+      <div class="ring"><span class="tnum">29%</span></div>
+      <div style="flex:1">
+        <div class="amt tnum"><span class="c">¥</span>86.42</div>
+        <div class="st">工作中 · 距午休 3:01</div>
+      </div>
+    </div>
+    <div class="dg4">
+      <div><div class="v tnum">300.00</div><div class="k">今日目标</div></div>
+      <div><div class="v tnum">37.50</div><div class="k">每小时</div></div>
+      <div><div class="v tnum">0.63</div><div class="k">每分钟</div></div>
+      <div><div class="v tnum">0.01</div><div class="k">每秒</div></div></div>
+  </div>
+  <div class="card">
+    <div class="h"><span class="t">今日喝水</span>
+      <span style="display:flex;gap:14px"><span class="lk">记录</span><span class="lk">统计</span></span></div>
+    <div class="wnum tnum">1250<span class="t2"> / 2000 ml</span></div>
+    <div class="pb"><i style="width:62%"></i></div>
+    <div class="brow"><div class="bm">喝水 +250 ml</div><div class="bo">选饮品</div></div>
+    <div class="nx">下次提醒 09:30 · 约 284 kcal · 含糖 2 杯</div>
+  </div>
+  <div class="card">
+    <div class="h"><span class="t">累计收入</span><span class="chip">19 天</span></div>
+    <div class="camt tnum">¥ 5,678.90</div>
+    <div class="sub">按工作日累计 · 今天入账中</div>
+  </div>
+</div></div></div>
+
+<!-- ═══ ④ 方案 C · 毛玻璃 ═══ -->
+<div class="col"><div class="cap"><b>④ 方案 C · 毛玻璃通透</b>半透明材质 + 柔和光斑</div>
+<div class="phone iosC">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="sbar tnum"><span>16:17</span><span class="r">5G ▮▮▮</span></div>
+<div class="pad">
+  <div class="nav">
+    <div><div class="nt">薪资</div><div class="ns tnum">10月9日 周五</div></div>
+    <div class="gear">⚙</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="lbl">今日已赚</span><span class="clk tnum">08:29:31</span></div>
+    <div class="amt tnum"><span class="c">¥</span>86.42</div>
+    <div class="st">工作中 · 距午休 3:01</div>
+    <div class="pb"><i style="width:29%"></i></div>
+    <div class="hr"></div>
+    <div class="g4">
+      <div><div class="v tnum">300.00</div><div class="k">今日目标</div></div>
+      <div><div class="v tnum">37.50</div><div class="k">每小时</div></div>
+      <div><div class="v tnum">0.63</div><div class="k">每分钟</div></div>
+      <div><div class="v tnum">0.01</div><div class="k">每秒</div></div></div>
+    <div class="sched">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="lbl">今日喝水</span>
+      <span style="display:flex;gap:14px"><span class="lk">记录</span><span class="lk">统计</span></span></div>
+    <div class="wnum tnum">1250<span class="t"> / 2000 ml</span></div>
+    <div class="pb2"><i style="width:62%"></i></div>
+    <div class="brow"><div class="bm">喝水 +250 ml</div><div class="bo">选饮品</div></div>
+    <div class="nx">下次提醒 09:30 · 约 284 kcal · 含糖 2 杯</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="lbl">累计收入</span><span class="chip">19 天</span></div>
+    <div class="camt tnum">¥ 5,678.90</div>
+    <div class="sub">按工作日累计 · 今天入账中</div>
+  </div>
+</div></div></div>
+
+</body></html>

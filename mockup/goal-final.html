@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f2f4f7;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:20px;align-items:center}
+.wrap{width:384px}
+.cap{font-size:13.5px;font-weight:700;color:#111827;margin-bottom:2px}
+.cap span{font-size:11px;font-weight:400;color:#6b7280}
+.ph{border-radius:20px;padding:12px 20px 20px;background:linear-gradient(180deg,#ECFBF4,#EEF6FE 55%,#F1F6FF)}
+.card{border-radius:24px;padding:20px;
+      background:radial-gradient(circle at 90% 4%, rgba(16,185,129,.11), transparent 52%),linear-gradient(135deg,#FFFFFF 44%,#E7F8F0);
+      box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.chead{display:flex;align-items:center;height:24px}
+.cdot{width:7px;height:7px;border-radius:50%;background:#10B981;margin-right:7px}
+.clab{font-size:11.5px;color:#8AA6B0;letter-spacing:.12em;font-weight:600;flex:1}
+.lk{font-size:12.5px;color:#047857;font-weight:600}
+.nb{font-size:32px;font-weight:700;color:#047857;letter-spacing:-1px;margin-top:9px;line-height:1;
+    display:flex;align-items:baseline;gap:3px}
+.nb .un{font-size:15px;color:#61808C;font-weight:400}
+.chip{font-size:11.5px;padding:5px 10px;border-radius:12px;margin-left:9px;background:#ECFDF5;color:#047857}
+.dv{height:1px;background:#E3EFEC;margin:15px 0 13px}
+.subT{font-size:12px;color:#61808C;margin-top:8px}
+/* 存钱罐区 */
+.gh{display:flex;align-items:center;height:28px}
+.gname{font-size:13.5px;font-weight:700;color:#16323B;flex:1}
+.gpct{font-size:21px;font-weight:800;color:#047857;letter-spacing:-.5px}
+.gset{font-size:12.5px;color:#047857;font-weight:600;margin-left:10px}
+/* 里程碑 SVG */
+.msvg{display:block;margin-top:8px}
+/* 里程碑胶囊 */
+.tag{display:inline-block;font-size:11.5px;font-weight:600;padding:6px 11px;border-radius:10px;margin-top:8px}
+.tag.amber{background:#FFF7EA;color:#B45309}
+.tag.green{background:#ECFDF5;color:#047857}
+/* 三栏 */
+.cols{display:flex;margin-top:12px}
+.cols>div{flex:1}
+.cols>div:last-child{text-align:right}
+.cols>div:nth-child(2){text-align:center}
+.k{font-size:10.5px;color:#8AA6B0}
+.v{font-size:14px;font-weight:700;color:#16323B;margin-top:4px}
+.v.g{color:#047857}
+.v.m{color:#61808C;font-weight:600}
+.v.d{color:#16323B;font-weight:700}
+</style></head><body>
+
+<!-- ═══ 主场景（6.1%） ═══ -->
+<div class="wrap"><div class="cap">主界面 · 存钱罐（6.1%）<span> 目标 ¥23,560</span></div>
+<div class="ph"><div class="card">
+  <div class="chead"><span class="cdot"></span><span class="clab">累计收入</span><span class="lk">明细 ›</span></div>
+  <div class="nb" style="color:#047857">¥ 1,427.78<span class="chip">1 天</span></div>
+  <div class="subT">按工作日累计</div>
+  <div class="dv"></div>
+
+  <div class="gh">
+    <span class="gname">🎯 MacBook Pro</span>
+    <span class="gpct">6%</span>
+    <span class="gset">设置</span>
+  </div>
+
+  <svg class="msvg" width="344" height="40" viewBox="0 0 344 40">
+    <rect x="16" y="11.5" width="312" height="3" rx="1.5" fill="#E6F2EE"/>
+    <rect x="16" y="11.5" width="19" height="3" rx="1.5" fill="#10B981"/>
+    <circle cx="16" cy="13" r="6" fill="#10B981"/>
+    <circle cx="94" cy="13" r="5" fill="#FFFFFF" stroke="#B45309" stroke-width="2.5"/>
+    <circle cx="172" cy="13" r="6" fill="#FFFFFF" stroke="#E3EFEC" stroke-width="2"/>
+    <circle cx="250" cy="13" r="6" fill="#FFFFFF" stroke="#E3EFEC" stroke-width="2"/>
+    <circle cx="328" cy="13" r="6" fill="#FFFFFF" stroke="#E3EFEC" stroke-width="2"/>
+    <text x="16" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle" font-family="sans-serif">0%</text>
+    <text x="94" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle" font-family="sans-serif">25%</text>
+    <text x="172" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle" font-family="sans-serif">50%</text>
+    <text x="250" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle" font-family="sans-serif">75%</text>
+    <text x="328" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle" font-family="sans-serif">100%</text>
+  </svg>
+
+  <div><span class="tag amber">下个里程碑 25%（¥5,890.00） · 还需 6 个工作日</span></div>
+
+  <div class="cols">
+    <div><div class="k">已攒</div><div class="v g">¥1,427.78</div></div>
+    <div><div class="k">还差</div><div class="v m">¥22,132.22</div></div>
+    <div><div class="k">预计完成</div><div class="v d">11月24日</div></div>
+  </div>
+</div></div></div>
+
+<!-- ═══ 三种进度状态 ═══ -->
+<div class="wrap"><div class="cap">里程碑条 · 三种状态<span> 达成节奏感</span></div>
+<div class="ph">
+  <div class="card" style="margin-bottom:14px">
+    <div class="gh"><span class="gname">🎯 已攒到 30%（过 25%）</span><span class="gpct">30%</span></div>
+    <svg class="msvg" width="344" height="40" viewBox="0 0 344 40">
+      <rect x="16" y="11.5" width="312" height="3" rx="1.5" fill="#E6F2EE"/>
+      <rect x="16" y="11.5" width="94" height="3" rx="1.5" fill="#10B981"/>
+      <circle cx="16" cy="13" r="6" fill="#10B981"/>
+      <circle cx="94" cy="13" r="6" fill="#10B981"/>
+      <circle cx="172" cy="13" r="5" fill="#FFFFFF" stroke="#B45309" stroke-width="2.5"/>
+      <circle cx="250" cy="13" r="6" fill="#FFFFFF" stroke="#E3EFEC" stroke-width="2"/>
+      <circle cx="328" cy="13" r="6" fill="#FFFFFF" stroke="#E3EFEC" stroke-width="2"/>
+      <text x="16" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle">0%</text>
+      <text x="94" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle">25%</text>
+      <text x="172" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle">50%</text>
+      <text x="250" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle">75%</text>
+      <text x="328" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle">100%</text>
+    </svg>
+    <div><span class="tag amber">下个里程碑 50%（¥11,780.00） · 还需 14 个工作日</span></div>
+    <div class="cols">
+      <div><div class="k">已攒</div><div class="v g">¥7,068.00</div></div>
+      <div><div class="k">还差</div><div class="v m">¥16,492.00</div></div>
+      <div><div class="k">预计完成</div><div class="v d">11月21日</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="gh"><span class="gname">🎯 已达成</span><span class="gpct">100%</span></div>
+    <svg class="msvg" width="344" height="40" viewBox="0 0 344 40">
+      <rect x="16" y="11.5" width="312" height="3" rx="1.5" fill="#10B981"/>
+      <circle cx="16" cy="13" r="6" fill="#10B981"/>
+      <circle cx="94" cy="13" r="6" fill="#10B981"/>
+      <circle cx="172" cy="13" r="6" fill="#10B981"/>
+      <circle cx="250" cy="13" r="6" fill="#10B981"/>
+      <circle cx="328" cy="13" r="6" fill="#10B981"/>
+      <text x="16" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle">0%</text>
+      <text x="94" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle">25%</text>
+      <text x="172" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle">50%</text>
+      <text x="250" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle">75%</text>
+      <text x="328" y="34" font-size="9.5" fill="#8AA6B0" text-anchor="middle">100%</text>
+    </svg>
+    <div><span class="tag green">🎉 已达成！累计 ¥23,560.00 元</span></div>
+    <div class="cols">
+      <div><div class="k">已攒</div><div class="v g">¥23,560.00</div></div>
+      <div><div class="k">还差</div><div class="v m">¥0.00</div></div>
+      <div><div class="k">预计完成</div><div class="v d">已完成</div></div>
+    </div>
+  </div>
+</div></div>
+
+</body></html>

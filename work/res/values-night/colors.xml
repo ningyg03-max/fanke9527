@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="app_background">#ff0c1e1b</color>
+    <color name="widget_accent">#ff34d399</color>
+    <color name="widget_background_color">#9912262a</color>
+    <color name="widget_border_color">#1f34d399</color>
+    <color name="widget_button_background">#2634d399</color>
+    <color name="widget_progress_track">#2effffff</color>
+    <color name="widget_text_primary">#ffe8f4f2</color>
+    <color name="widget_text_secondary">#ff9fb8be</color>
+</resources>

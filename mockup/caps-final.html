@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eef1f4;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:16px;align-items:center}
+.wrap{width:384px}
+.cap{font-size:13px;font-weight:700;color:#111827;margin-bottom:8px}
+.cap span{font-size:11px;font-weight:400;color:#6b7280}
+.ph{border-radius:16px;padding:12px 16px 16px;background:linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26)}
+.hero{border-radius:20px;padding:16px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#065F46,#0B8A6A 33%,#0E9C8C 66%,#14B8A6);
+  box-shadow:0 5px 14px rgba(0,0,0,.5)}
+.hero:before{content:"";position:absolute;width:130px;height:130px;border-radius:50%;
+  background:rgba(255,255,255,.12);top:-42px;right:-34px}
+.hero>*{position:relative;z-index:2}
+/* 胶囊 */
+.caps{display:flex;gap:7px;margin-bottom:12px}
+.cap1{flex:1;height:40px;border-radius:20px;display:flex;align-items:center;justify-content:center;
+      font-size:12.5px;overflow:hidden;white-space:nowrap;padding:0 8px;letter-spacing:-.2px}
+.cap1.idle{background:rgba(255,255,255,.19);color:rgba(255,255,255,.90);font-weight:500}
+.cap1.rec{background:rgba(255,255,255,.36);color:#FFFFFF;font-weight:700}
+.cap1.run{background:#FFFFFF;color:#0A5C48;font-weight:800}
+/* 卡片 */
+.hrow{display:flex;align-items:center;height:22px;margin-bottom:12px}
+.dotw{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.65);margin-right:7px}
+.hlab{font-size:11px;color:rgba(255,255,255,.78);letter-spacing:.12em;font-weight:600;flex:1}
+.clock{font-size:11.5px;color:rgba(255,255,255,.72)}
+.amt{font-size:40px;font-weight:700;color:#fff;letter-spacing:-1.4px;line-height:1;
+  display:flex;align-items:baseline;gap:2px}
+.amt .c{font-size:21px;font-weight:600}
+.chip{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:11.5px;
+      padding:5px 10px;border-radius:18px;margin-top:10px}
+.dv{height:1px;background:rgba(255,255,255,.22);margin:11px 0 8px}
+.sch{font-size:11px;color:rgba(255,255,255,.78)}
+/* 说明 */
+.note{background:#fff;border-radius:10px;padding:9px 11px;font-size:11px;color:#4b5563;
+      line-height:1.55;margin-top:8px}
+.note b{color:#047857}
+.note .w{color:#b45309}
+.grid{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+</style></head><body>
+
+<div class="grid">
+<div class="wrap"><div class="cap">① 工作日 · 全天 <span>(2 颗 → 3 颗)</span></div>
+<div class="ph"><div class="hero">
+  <div class="caps">
+    <div class="cap1 idle">🏖 请假</div>
+    <div class="cap1 idle">💰 外快</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:34:07</span></div>
+  <div class="amt"><span class="c">¥</span>560.00</div>
+  <div class="chip">● 工作中 · 距下班 1:26</div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>
+<div class="note">上午/下午：<b>2 颗</b>（加班未到点）<br>下班后：自动变 <b>3 颗</b>（加班出现）</div>
+</div></div>
+
+<div class="wrap"><div class="cap">② 加班进行中 <span>(白底反色)</span></div>
+<div class="ph"><div class="hero">
+  <div class="caps">
+    <div class="cap1 run">⏱ 加班中</div>
+    <div class="cap1 idle">🏖 请假</div>
+    <div class="cap1 idle">💰 外快</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:34:07</span></div>
+  <div class="amt"><span class="c">¥</span>785.28</div>
+  <div class="chip">● 加班费 ¥7.50 · 1.5 倍结算</div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>
+<div class="note">加班中胶囊<b>白底反色</b>，最醒目<br>秒数在下方状态行里滚动显示</div>
+</div></div>
+
+<div class="wrap"><div class="cap">③ 周末 · 未出勤 <span>(2 颗)</span></div>
+<div class="ph"><div class="hero">
+  <div class="caps">
+    <div class="cap1 idle">🏢 出勤</div>
+    <div class="cap1 idle">💰 外快</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:34:07</span></div>
+  <div class="amt"><span class="c">¥</span>0.00</div>
+  <div class="chip">● 周六 · 今天不累计</div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>
+<div class="note"><span class="w">加班、请假胶囊自动隐藏</span>（周末不适用）</div>
+</div></div>
+
+<div class="wrap"><div class="cap">④ 周末 · 已出勤（调休）<span>+1 天</span></div>
+<div class="ph"><div class="hero">
+  <div class="caps">
+    <div class="cap1 rec">✅ 调休+1</div>
+    <div class="cap1 idle">💰 外快</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:34:07</span></div>
+  <div class="amt"><span class="c">¥</span>0.00</div>
+  <div class="chip">● 周六 · 出勤 调休</div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>
+<div class="note">调休模式<b>不发钱</b>，大数字 ¥0.00<br>调休余额在「加班与出勤规则」页查看</div>
+</div></div>
+
+<div class="wrap"><div class="cap">⑤ 法定节假日 · 已出勤 <span>3 倍</span></div>
+<div class="ph"><div class="hero">
+  <div class="caps">
+    <div class="cap1 rec">✅ 出勤 3倍</div>
+    <div class="cap1 rec">💰 ¥200.00</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:34:07</span></div>
+  <div class="amt"><span class="c">¥</span>2,533.34</div>
+  <div class="chip">● 法定节假日 · 出勤 3 倍结算</div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>
+<div class="note">¥2,333.34（3倍）+ ¥200（外快）= <b>¥2,533.34</b></div>
+</div></div>
+
+<div class="wrap"><div class="cap">⑥ 工作日 · 请假+外快 <span>已记录态</span></div>
+<div class="ph"><div class="hero">
+  <div class="caps">
+    <div class="cap1 rec">🏖 病假</div>
+    <div class="cap1 rec">💰 ¥200.00</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:34:07</span></div>
+  <div class="amt"><span class="c">¥</span>666.67</div>
+  <div class="chip">● 病假 · 60% · 今日 466.67 元</div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>
+<div class="note">¥466.67（病假60%）+ ¥200（外快）= <b>¥666.67</b></div>
+</div></div>
+</div>
+
+</body></html>

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>打工小人 · 优化建议</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#E9F1EF}
+body{font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ width:384px;margin:0 auto;padding:16px 20px 30px;color:#16323B;font-size:13px}
+h1{font-size:17px;font-weight:800;margin-bottom:4px}
+.lead{font-size:11.5px;color:#5A7680;line-height:1.7;margin-bottom:8px}
+.stat{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:#5A7680;margin-bottom:16px}
+.stat b{color:#0B7A5C;font-size:13px}
+.sec{margin-top:22px}
+h2{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.num{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+ font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.num.g{background:#D1D9DC;color:#475569}
+.card{background:#fff;border-radius:18px;padding:15px 17px;margin-bottom:10px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+p{font-size:11.5px;color:#475569;line-height:1.8}
+p b{color:#16323B}
+code{background:#F1F5F4;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#0F766E;
+ font-family:ui-monospace,Menlo,monospace}
+.pri{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:7px;margin-right:6px}
+.p0{background:#FECDD3;color:#9F1239}.p1{background:#FEF3C7;color:#92400E}.p2{background:#E2E8F0;color:#475569}
+.row{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #F1F5F4;font-size:11.5px;color:#475569}
+.row:last-child{border-bottom:none}
+.row .t{flex:1;line-height:1.7}
+.row .t b{color:#16323B}
+.cost{font-size:10px;color:#8AA6B0;white-space:nowrap;padding-top:2px}
+table{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px}
+th{text-align:left;color:#64748B;font-weight:600;padding:5px 6px;font-size:10px;background:#F8FBFA}
+td{padding:6px;border-top:1px solid #EEF3F2;color:#475569;vertical-align:top}
+td b{color:#16323B}
+
+/* 小人演示 */
+.demo{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+.dc{width:88px;text-align:center}
+.dc .box{height:92px;background:linear-gradient(168deg,#EAF7F2,#E8F1F7);border-radius:14px;
+ display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.9)}
+.dc .l{font-size:9.5px;color:#5A7680;margin-top:5px;line-height:1.35}
+.note{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;
+ font-size:11.5px;color:#78350F;line-height:1.8;margin-top:10px}
+.note b{color:#92400E}
+.ask{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:13px 15px;margin-top:14px}
+.ask h3{font-size:12.5px;color:#1E3A8A;margin-bottom:8px}
+.ask li{font-size:11.5px;color:#334155;line-height:1.9;margin-left:16px}
+</style></head><body>
+
+<h1>打工小人 · 还能优化什么</h1>
+<p class="lead">现状盘点 → 我按「真实收益」排的建议。带 P0 的是我认为最值得做的。</p>
+<div class="stat">
+  <span><b>1175</b> 行绘制</span><span><b>16</b> 种姿势</span><span><b>20</b> 个绘制方法</span>
+  <span><b>15</b> 条语录</span><span><b>4</b> 级疲劳</span><span><b>7</b> 种动效</span>
+</div>
+
+<!-- ══ 先看有什么 ══ -->
+<div class="sec">
+  <h2><span class="num g">i</span>现在已经有的</h2>
+  <div class="card">
+    <table>
+      <tr><th style="width:88px">维度</th><th>内容</th></tr>
+      <tr><td>姿势</td><td>通勤 / 上午 / 午休 / 下午 / 下班 / 加班 / 休息日 / 出勤 / 请假 / 周一 / 周五 / 周日晚 + 3 反应 + 撒花 + 捂耳朵</td></tr>
+      <tr><td>动效</td><td>呼吸、眨眼、汗滴、冒烟、热气、星光、云、雨、彩带、ZZZ</td></tr>
+      <tr><td>状态感知</td><td>加班打卡 / 请假 / 出勤 / 发薪日 / 存钱罐 / 日历历史（6 个数据源）</td></tr>
+      <tr><td>交互</td><td>点击反应（跟状态走）· 连戳彩蛋 · 触觉反馈</td></tr>
+      <tr><td>设置</td><td>显示开关 · 三档尺寸 · 工位场景</td></tr>
+    </table>
+    <p style="margin-top:10px">
+      <b>底子很扎实了。</b>所以下面的建议都是「锦上添花」或「补体验缺口」，没有「缺胳膊少腿」的。
+    </p>
+  </div>
+</div>
+
+<!-- ══ P0 ══ -->
+<div class="sec">
+  <h2><span class="num">1</span>P0 · 最值得做</h2>
+
+  <div class="card">
+    <p><span class="pri p0">P0</span><b>现在的时刻，值多少钱</b></p>
+    <p style="margin-top:6px">
+      小人已经是「状态指示器」，但没体现 App 的**核心价值**。加一行实时读数：
+    </p>
+    <div style="background:#0C1F1C;border-radius:10px;padding:11px 13px;margin-top:8px;
+      font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#5EEAD4;line-height:1.9">
+      💼 工作中 · 这一小时 ¥35.20 · 今天已赚 ¥287.50
+    </div>
+    <p style="margin-top:8px">
+      小人自己就是「计时器」的人格化 —— 但**它现在不报数**。这一行把它和 App 的核心连起来。
+      <b>数据全都有</b>（`SalaryCalculator` 的费率），只差显示。
+    </p>
+  </div>
+
+  <div class="card">
+    <p><span class="pri p0">P0</span><b>小人随状态「换表情」不够细 —— 加微表情</b></p>
+    <p style="margin-top:6px">
+      现在表情是姿势自带的（工作=普通眼、加班=黑眼圈、请假=闭眼）。
+      但<b>同一种姿势下，心情也可能不同</b> —— 比如同样是「工作中」：
+      今天是发薪日 vs 今天连着上了 12 天。
+    </p>
+    <p style="margin-top:6px">
+      建议加一层**独立于姿势的表情**：发薪日 = 嘴角上扬 · 疲劳 3 级 = 眼袋加深 ·
+      周五下午 = 眼睛发光。这样「16 姿势 × 4 心情」= 64 种组合，
+      但只加一层绘制，不用画 64 个姿势。
+    </p>
+  </div>
+</div>
+
+<!-- ══ P1 ══ -->
+<div class="sec">
+  <h2><span class="num">2</span>P1 · 体验缺口</h2>
+
+  <div class="card">
+    <p><span class="pri p1">P1</span><b>姿势切换太「跳」</b></p>
+    <p style="margin-top:6px">
+      现在 `setPose()` 是**瞬间替换**：到 12:00 那一刻，小人从「上午」直接变成「午休」，
+      没有任何过渡。一天切 5–8 次，每次都硬切。
+    </p>
+    <p style="margin-top:6px">
+      建议加 **150–200ms 的交叉淡入**（画两层，透明度过渡）。成本很小，
+      但「换姿势」这件事会从「闪一下」变成「看得出它动了」。
+    </p>
+  </div>
+
+  <div class="card">
+    <p><span class="pri p1">P1</span><b>语录会重复</b></p>
+    <p style="margin-top:6px">
+      <code>quote()</code> 是纯随机（15 条池子）。连着点 3 次可能出同一条 ——
+      这会让「有性格」变成「复读机」。
+    </p>
+    <p style="margin-top:6px">
+      建议<b>记住上一条，避免连续重复</b>（几条内不重）。`PetState` 里有个 `KEY_LAST_QUOTE`
+      但看起来没实际用于去重。改动大概 10 行。
+    </p>
+  </div>
+
+  <div class="card">
+    <p><span class="pri p1">P1</span><b>语录池偏小，而且有些状态没话说</b></p>
+    <p style="margin-top:6px">
+      15 条要覆盖「发薪日 / 请假 / 疲劳 / 存钱罐 / 周一 / 周五 / 午休 / 下班…」这么多状态，
+      平均每状态不到 2 条。点几次就见完了。
+    </p>
+    <p style="margin-top:6px">
+      建议**每个状态补到 3–5 条**（总量到 ~35 条）。这是纯文案工作，零风险。
+      另外可加「外快到账」「目标达成」「今天没记录」这些**现在没覆盖**的状态。
+    </p>
+  </div>
+</div>
+
+<!-- ══ P2 ══ -->
+<div class="sec">
+  <h2><span class="num">3</span>P2 · 想做再加</h2>
+
+  <div class="card">
+    <p><span class="pri p2">P2</span><b>更多彩蛋</b></p>
+    <div class="row"><span class="t">连戳 15 次 → 小人<b>转身走了</b>（消失 2 秒再回来）</span><span class="cost">中</span></div>
+    <div class="row"><span class="t">发薪日戳他 → <b>撒钱特效</b>（复用现有 confetti）</span><span class="cost">小</span></div>
+    <div class="row"><span class="t">凌晨还在用 App → 小人<b>躺着</b>说「你还不睡？」</span><span class="cost">小</span></div>
+  </div>
+
+  <div class="card">
+    <p><span class="pri p2">P2</span><b>小人能「记」事情</b></p>
+    <p style="margin-top:6px">
+      比如你今天请了假，明天点他，他会说「昨天休息够了吧？」。
+      技术上就是比对昨天/今天的记录 —— 但这是**记忆系统**，复杂度上一个台阶。
+    </p>
+  </div>
+
+  <div class="card">
+    <p><span class="pri p2">P2</span><b>尺寸档位加「跟随金额字号」</b></p>
+    <p style="margin-top:6px">
+      现在尺寸是用户手选的。可以做成<b>自适应</b>：金额位数多的时候自动缩小人，
+      少的时候放大 —— 但用户已经能手动选，这个收益不大。
+    </p>
+  </div>
+</div>
+
+<!-- ══ 不建议 ══ -->
+<div class="sec">
+  <h2><span class="num g">✕</span>我建议别做的</h2>
+  <div class="card">
+    <table>
+      <tr><th style="width:128px">想法</th><th>为什么不建议</th></tr>
+      <tr><td><b>继续加姿势</b></td><td>16 种已经覆盖了所有状态。再加就是「为画而画」，而且每个姿势要维护</td></tr>
+      <tr><td><b>小人升级 / 养成</b></td><td>喂食、成长、换装 —— 会把「打工小人」变成另一个游戏，偏离 App 主题</td></tr>
+      <tr><td><b>小人换肤 / 皮肤商店</b></td><td>同上，而且本工程没有资源系统（全代码绘制），换肤代价大</td></tr>
+      <tr><td><b>更多连戳彩蛋</b></td><td>彩蛋的价值在于「偶尔发现」。堆多了就不惊喜了</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="note">
+  <b>我的排序</b>：<br>
+  ① <b>实时读数</b>（把人和 App 的核心连起来）<br>
+  ② <b>微表情层</b>（16 姿势 × 4 心情，成本低收益高）<br>
+  ③ <b>语录去重 + 扩池</b>（成本最低，最容易感知）<br>
+  ④ 姿势切换过渡<br>
+  ⑤ 彩蛋（挑 1 个）<br><br>
+  如果只做一件事，我做 ③ —— <b>低成本、立刻能感觉到</b>。
+  但要说「最有用」，是 ①。
+</div>
+
+<div class="ask">
+  <h3>需要你定</h3>
+  <ul>
+    <li>做哪几项？（可以只挑 1–2 个）</li>
+    <li>① 的「实时读数」显示在哪里？<b>小人下方</b>（现在被心情文案占着）还是<b>替换心情文案</b>？</li>
+    <li>② 微表情的「心情」取哪几个维度？我建议：<b>发薪日 / 疲劳 / 周五 / 目标达成</b></li>
+  </ul>
+</div>
+
+</body></html>

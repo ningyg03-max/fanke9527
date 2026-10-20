@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ padding:16px 12px 44px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:420px}
+h1{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12px;color:#475569;line-height:1.75;margin-top:7px}
+.sec{margin-top:22px}
+.lbl{font-size:11.5px;font-weight:750;padding:3px 11px;border-radius:999px;display:inline-block;margin-bottom:9px}
+.lbl.bad{background:#FFE4E6;color:#BE123C}
+.lbl.good{background:#D1FAE5;color:#047857}
+.dlg{background:#fff;border-radius:18px;box-shadow:0 10px 30px -12px rgba(15,40,40,.3);overflow:hidden}
+.dt{font-size:16px;font-weight:750;color:#16323B;padding:17px 22px 10px}
+.dbody{padding:0 20px}
+/* 修复前：9 个挤一行 */
+.rowbad{display:flex;gap:4px;margin-bottom:6px}
+.cellbad{flex:1;height:44px;border-radius:10px;background:#F2F7F5;border:1px solid #E3EFEC;
+ display:flex;align-items:center;justify-content:center;font-size:8.5px;color:#7C939C;overflow:hidden;white-space:nowrap}
+.cellbad.add{border-color:#8CC8B8;border-style:dashed;color:#0B7A5C}
+/* 修复后：2 列 */
+.rowgood{display:flex;gap:7px;margin-bottom:7px}
+.cellgood{flex:1;height:50px;border-radius:12px;background:#F2F7F5;border:1px solid #E3EFEC;
+ display:flex;flex-direction:column;justify-content:center;padding:0 10px;gap:2px;overflow:hidden}
+.cellgood.fav{background:linear-gradient(135deg,#E7F8F1,#E6F5F5);border-color:#A7E3D2}
+.cellgood .n{font-size:12px;font-weight:700;color:#0A3B31;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cellgood .m{font-size:9.5px;color:#7C939C}
+.cellgood.add{background:rgba(255,255,255,.5);border-style:dashed;border-color:#8CC8B8;align-items:center}
+.cellgood.add .n{color:#0B7A5C}
+.spacer{flex:1}
+.sectl{font-size:10px;font-weight:700;color:#8AA6B0;margin:2px 0 6px}
+.foot{display:flex;justify-content:flex-end;padding:10px 14px 14px}
+.fbtn{font-size:13px;font-weight:650;color:#0FA98A;padding:8px 13px}
+.note{background:#fff;border-radius:14px;padding:13px 15px;border:1px solid #E2E8EC;font-size:11.8px;color:#475569;line-height:1.7;margin-top:14px}
+.note b{color:#0B7A5C}
+.note code{background:#F1F5F4;border-radius:4px;padding:1px 4px;font-size:10.5px;color:#0F766E}
+/* 时间按钮对照 */
+.setbox{background:#fff;border-radius:18px;padding:14px 16px;box-shadow:0 10px 30px -12px rgba(15,40,40,.25)}
+.trow{display:flex;gap:10px;margin-bottom:10px}
+.tbtn{border-radius:9px;border:1px solid #E3EFEC;background:#F7FBFA;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.tbtn .a{font-size:13px;color:#16323B}
+.tbtn .b{font-size:13px;font-weight:700;color:#16323B}
+.tbtn.bad{height:46px;overflow:hidden}
+.tbtn.good{height:60px}
+.swrow{display:flex;align-items:center;font-size:13px;color:#16323B;padding:6px 0}
+.sw{margin-left:auto;width:38px;height:22px;border-radius:11px;background:#0FA98A;position:relative}
+.sw i{position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;right:2px}
+.sw.off{background:#CBD5D0}.sw.off i{right:auto;left:2px}
+</style></head><body>
+<div class="page">
+  <h1>两处布局修复</h1>
+  <p class="intro">bug ①：饮品网格的 9 个格子挤在<b>一行</b>里（水平容器不会自动换行）→ 每个仅 ~24dp 宽，文字全截断。<br>
+  bug ②：喝水时段按钮高 46dp，装不下两行文字 → 「08:00」被裁切。</p>
+
+  <!-- ① 饮品网格 -->
+  <div class="sec">
+    <span class="lbl bad">修复前 · 全部挤在一行（你的截图）</span>
+    <div class="dlg">
+      <div class="dt">选择饮品</div>
+      <div class="dbody">
+        <div class="rowbad">
+          <div class="cellbad">5</div><div class="cellbad">5</div><div class="cellbad">5</div><div class="cellbad">5</div>
+          <div class="cellbad">5</div><div class="cellbad">5</div><div class="cellbad">38</div><div class="cellbad">5</div>
+          <div class="cellbad add">＋添</div>
+        </div>
+      </div>
+      <div class="foot"><span class="fbtn">取消</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <span class="lbl good">修复后 · 每 2 个一行（自动换行）</span>
+    <div class="dlg">
+      <div class="dt">选择饮品</div>
+      <div class="dbody">
+        <div class="sectl">★ 常喝</div>
+        <div class="rowgood">
+          <div class="cellgood fav"><span class="n">白开水</span><span class="m">500 杯</span></div>
+          <div class="cellgood fav"><span class="n">咖啡</span><span class="m">500 杯</span></div>
+        </div>
+        <div class="sectl" style="margin-top:12px">全部饮品</div>
+        <div class="rowgood">
+          <div class="cellgood"><span class="n">东方树叶</span><span class="m">500 杯</span></div>
+          <div class="cellgood"><span class="n">精酿啤酒</span><span class="m">500 杯</span></div>
+        </div>
+        <div class="rowgood">
+          <div class="cellgood"><span class="n">运动饮料</span><span class="m">550 罐</span></div>
+          <div class="cellgood"><span class="n">维C泡腾片</span><span class="m">500 杯</span></div>
+        </div>
+        <div class="rowgood">
+          <div class="cellgood"><span class="n">小瓶矿泉水</span><span class="m">380 杯</span></div>
+          <div class="cellgood add"><span class="n">＋ 添加</span><span class="m">新饮品</span></div>
+        </div>
+      </div>
+      <div class="foot"><span class="fbtn">取消</span></div>
+    </div>
+    <div class="note">
+      <b>修复方式</b>：新增 <code>GridCursor</code> 游标 + <code>addGridCell()</code> —— 每加入 2 个单元自动开新行（<code>index % 2 == 0</code> 时创建新行容器）。
+      最后一行只有一个时补占位保持半宽对齐。<br>
+      每格宽 ≈ <code>(内容宽 − 7) ÷ 2 ≈ 136dp</code> —— 足够显示「东方树叶 + 500 杯」。
+    </div>
+  </div>
+
+  <!-- ② 时段按钮 -->
+  <div class="sec">
+    <span class="lbl bad">修复前 · 按钮高 46dp（文字被裁）</span>
+    <div class="setbox">
+      <div class="trow">
+        <div class="tbtn bad" style="flex:1"><span class="a">开始</span><span class="b">08:00</span></div>
+        <div class="tbtn bad" style="flex:1"><span class="a">结束</span><span class="b">17:00</span></div>
+      </div>
+      <div class="swrow">午休期间不提醒<div class="sw"><i></i></div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <span class="lbl good">修复后 · 按钮高 60dp（与现有时间按钮一致）</span>
+    <div class="setbox">
+      <div class="trow">
+        <div class="tbtn good" style="flex:1"><span class="a">开始</span><span class="b">08:00</span></div>
+        <div class="tbtn good" style="flex:1"><span class="a">结束</span><span class="b">17:00</span></div>
+      </div>
+      <div class="swrow">午休期间不提醒<div class="sw"><i></i></div></div>
+      <div class="swrow">周末也提醒<div class="sw off"><i></i></div></div>
+    </div>
+    <div class="note">
+      <b>修复方式</b>：按钮高度 <code>46dp → 60dp</code> —— 与薪跳设置里现有的「上班/下班」时间按钮完全一致（那两个一直显示正常）。
+    </div>
+  </div>
+</div>
+</body></html>

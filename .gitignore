@@ -1,0 +1,33 @@
+# ── 构建产物 ──
+*.apk
+*.idsig
+*.dex
+*.class
+
+# apktool 反编译出来的 smali（3.2MB，构建时生成，不入库）
+work/smali/
+work/build/
+work/original/
+
+# 测试编译产物
+tests/out/
+tests/fresh/
+
+# ── 敏感文件（重要）──
+# keystore/README.txt 含明文签名口令，绝不入库
+keystore/README.txt
+*.keystore
+*.jks
+
+# ── 系统 / 编辑器垃圾 ──
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# ── 临时文件 ──
+*.bak
+*.bak.*
+*.log

@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>存钱罐升级 · 多目标 + 完成确认</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#E9F1EF}
+body{font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ width:384px;margin:0 auto;padding:16px 20px 30px;color:#16323B;font-size:13px}
+h1{font-size:17px;font-weight:800;margin-bottom:5px}
+.lead{font-size:11.5px;color:#5A7680;line-height:1.75;margin-bottom:16px}
+.sec{margin-top:22px}
+h2{font-size:13.5px;font-weight:700;color:#16323B;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.num{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+ font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.num.warn{background:linear-gradient(135deg,#9F1239,#E11D48)}
+.sub{font-size:11.5px;color:#64748B;line-height:1.7;margin-bottom:10px}
+.card{background:#fff;border-radius:18px;padding:16px 18px;margin-bottom:10px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+p{font-size:11.5px;color:#475569;line-height:1.8}
+p b{color:#16323B}
+code{background:#F1F5F4;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#0F766E;
+ font-family:ui-monospace,Menlo,monospace}
+table{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px}
+th{text-align:left;color:#64748B;font-weight:600;padding:5px 6px;font-size:10px;background:#F8FBFA}
+td{padding:6px;border-top:1px solid #EEF3F2;color:#475569;vertical-align:top}
+td b{color:#16323B}
+.mono{font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+
+/* ── 主卡存钱罐 ── */
+.goalcard{background:#fff;border-radius:18px;padding:16px 18px;margin-bottom:12px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.gh{display:flex;align-items:center;gap:6px}
+.gh .ic{font-size:14px}
+.gh .nm{font-size:13.5px;font-weight:700;color:#16323B;flex:1}
+.gh .act{font-size:12.5px;color:#0B9E7D}
+.gsub{font-size:10.5px;color:#8AA6B0;margin-top:4px}
+.gpct{font-size:21px;font-weight:800;color:#0B9E7D;margin-top:10px}
+.bar{height:8px;border-radius:4px;background:#E6F2EE;margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#10B981,#34D399)}
+.gcols{display:flex;margin-top:12px}
+.gcol{flex:1;text-align:center}
+.gcol .v{font-size:13px;font-weight:700;color:#16323B}
+.gcol .l{font-size:10px;color:#8AA6B0;margin-top:2px}
+.tag{display:inline-block;border-radius:8px;padding:3px 9px;font-size:11px;font-weight:700;margin-top:10px}
+.tag.amber{background:#FEF3C7;color:#92400E}
+.tag.green{background:#D1FAE5;color:#047857}
+.tag.blue{background:#DBEAFE;color:#1D4ED8}
+.btn{display:block;width:100%;margin-top:12px;padding:11px;border-radius:12px;border:none;
+ background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;font-size:13.5px;font-weight:700;
+ text-align:center;font-family:inherit}
+.btn.ghost{background:#F1F5F4;color:#0F766E}
+.st{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px}
+.st.on{background:#D1FAE5;color:#047857}
+.st.done{background:#E2E8F0;color:#475569}
+
+/* ── 流转图 ── */
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px}
+.fbox{flex:1;min-width:76px;background:#F4F8F9;border-radius:10px;padding:8px 6px;text-align:center;
+ font-size:10px;line-height:1.4;color:#475569}
+.fbox b{display:block;color:#16323B;font-size:11px;margin-bottom:3px}
+.arrow{color:#94A3B8;font-size:13px}
+
+.note{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;
+ font-size:11.5px;color:#78350F;line-height:1.8;margin-top:10px}
+.note b{color:#92400E}
+.ask{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:13px 15px;margin-top:14px}
+.ask h3{font-size:12.5px;color:#1E3A8A;margin-bottom:8px}
+.ask li{font-size:11.5px;color:#334155;line-height:1.9;margin-left:16px}
+.ask li b{color:#1E3A8A}
+</style></head><body>
+
+<h1>存钱罐升级：多目标 + 完成确认</h1>
+<p class="lead">你提的三件事：① 所有页面显示开始日期 ② 完成后人工确认按钮 + 显示完成日期 ③ 完成后能加第二个目标</p>
+
+<!-- ══ 现状 ══ -->
+<div class="sec">
+  <h2><span class="num">1</span>现状盘点</h2>
+  <div class="card">
+    <table>
+      <tr><th style="width:110px">落点</th><th>现在显示什么</th><th style="width:64px">有开始日期？</th></tr>
+      <tr><td><b>主界面主卡</b></td><td>名称 · 百分比 · 里程碑条 · 已攒/还差/预计完成</td><td style="color:#DC2626">无</td></tr>
+      <tr><td><b>月度战报</b></td><td>名称 · 进度条 · 累计已攒/还差</td><td style="color:#DC2626">无</td></tr>
+      <tr><td><b>设置对话框</b></td><td>名称 · 金额 · <b>进度起算</b>日期选择器</td><td style="color:#047857">有</td></tr>
+      <tr><td><b>小人语录</b></td><td>「存钱罐过半了，有点小骄傲」</td><td>不需要</td></tr>
+    </table>
+    <p style="margin-top:10px">
+      <b>关键发现</b>：<code>goal_start_stamp</code>（起算日）<b>已经存在</b>，只是只在设置对话框里露过面。
+      所以「显示开始日期」是<b>纯展示改动</b>，风险很低。
+    </p>
+  </div>
+</div>
+
+<!-- ══ 难点 ══ -->
+<div class="sec">
+  <h2><span class="num warn">!</span>三个必须解决的难点</h2>
+
+  <div class="card">
+    <p><b>难点 ①：存储只能装一个目标</b></p>
+    <p style="margin-top:6px">
+      现在是 4 个扁平 key：<code>goal_name</code> / <code>goal_amount_bits</code> /
+      <code>goal_start_stamp</code> / <code>goal_celebrated</code>。
+      <b>新目标会直接覆盖旧目标，历史全丢。</b>
+      要做多目标，必须换成列表 + <b>写迁移</b>（把你现在这个目标转成列表第一条）。
+    </p>
+  </div>
+
+  <div class="card">
+    <p><b>难点 ②：两个目标的进度会重叠（真问题）</b></p>
+    <p style="margin-top:6px">
+      进度算法是「累加 <code>stamp ≥ 起算日</code> 的所有收入」。如果目标 1 起算 9/1、
+      目标 2 起算 10/15，那么 <b>10/15 当天的收入会被两个目标各算一遍</b>。
+    </p>
+    <p style="margin-top:6px">
+      <b>解法</b>：目标 2 的起算日自动设为「目标 1 完成日的<b>次日</b>」，
+      并且已完成的目标把金额<b>冻结</b>（存下来，不再重算）—— 历史不会因为以后补录而变。
+    </p>
+  </div>
+
+  <div class="card">
+    <p><b>难点 ③：「完成」有两种时间，含义不同</b></p>
+    <table style="margin-top:8px">
+      <tr><th style="width:90px">时间</th><th>含义</th><th style="width:60px">谁记的</th></tr>
+      <tr><td><b>达标日</b></td><td>进度第一次 ≥100% 那天</td><td>程序自动</td></tr>
+      <tr><td><b>确认日</b></td><td>你点「确认完成」那天</td><td>你手动</td></tr>
+    </table>
+    <p style="margin-top:8px">
+      两者可能差几天（攒够了但还没下单/还没到手）。
+      <b>建议都记</b>：卡片显示「达标日」，确认后显示「完成（确认）日」。
+    </p>
+  </div>
+</div>
+
+<!-- ══ 状态流转 ══ -->
+<div class="sec">
+  <h2><span class="num">2</span>状态怎么流转</h2>
+  <div class="card">
+    <div class="flow">
+      <div class="fbox"><b>进行中</b>进度 &lt; 100%</div>
+      <div class="arrow">→</div>
+      <div class="fbox"><b>已达成</b>≥100%，等确认</div>
+      <div class="arrow">→</div>
+      <div class="fbox"><b>已完成</b>有确认日</div>
+      <div class="arrow">→</div>
+      <div class="fbox"><b>新目标</b>起算日自动接上</div>
+    </div>
+    <p style="margin-top:12px">
+      <b>必须确认才能开下一个</b> —— 否则两个目标会同时在攒，钱算不清。
+      这也符合直觉：一个目标没结清，不该开新账。
+    </p>
+  </div>
+</div>
+
+<!-- ══ 四种状态的卡片 ══ -->
+<div class="sec">
+  <h2><span class="num">3</span>四种状态长什么样</h2>
+
+  <!-- ①  进行中 -->
+  <div class="goalcard">
+    <div class="gh"><span class="ic">🎯</span><span class="nm">MacBook Pro</span><span class="act">设置</span></div>
+    <div class="gsub">开始日期 2026 年 9 月 1 日　<span class="st on">进行中</span></div>
+    <div class="gpct">68%</div>
+    <div class="bar"><i style="width:68%"></i></div>
+    <div class="tag amber">下个里程碑 75%（¥17,670）· 还需 12 个工作日</div>
+    <div class="gcols">
+      <div class="gcol"><div class="v">¥16,020</div><div class="l">已攒</div></div>
+      <div class="gcol"><div class="v">¥7,540</div><div class="l">还差</div></div>
+      <div class="gcol"><div class="v">11 月 8 日</div><div class="l">预计完成</div></div>
+    </div>
+  </div>
+
+  <!-- ② 已达成 -->
+  <div class="goalcard" style="box-shadow:0 0 0 2px #10B981,0 2px 10px rgba(15,23,42,.05)">
+    <div class="gh"><span class="ic">🎯</span><span class="nm">MacBook Pro</span><span class="act">设置</span></div>
+    <div class="gsub">开始日期 2026 年 9 月 1 日　<span class="st on">已达成</span></div>
+    <div class="gpct">100%</div>
+    <div class="bar"><i style="width:100%"></i></div>
+    <div class="tag green">🎉 10 月 14 日已攒够（¥23,900）</div>
+    <div class="gcols">
+      <div class="gcol"><div class="v">¥23,900</div><div class="l">已攒</div></div>
+      <div class="gcol"><div class="v">¥0</div><div class="l">还差</div></div>
+      <div class="gcol"><div class="v">64 天</div><div class="l">用时</div></div>
+    </div>
+    <button class="btn">✅ 已买到，确认完成</button>
+  </div>
+
+  <!-- ③ 已完成 -->
+  <div class="goalcard" style="background:#F8FBFA">
+    <div class="gh"><span class="ic">🏆</span><span class="nm">MacBook Pro</span><span class="st done">已完成</span></div>
+    <div class="gsub">
+      2026 年 9 月 1 日 → <b>2026 年 10 月 15 日</b>　用时 45 天
+    </div>
+    <div class="gcols" style="margin-top:10px">
+      <div class="gcol"><div class="v">¥23,560</div><div class="l">目标</div></div>
+      <div class="gcol"><div class="v">¥23,900</div><div class="l">实际攒到</div></div>
+      <div class="gcol"><div class="v">+¥340</div><div class="l">超出</div></div>
+    </div>
+  </div>
+
+  <!-- ④ 新目标 -->
+  <div class="goalcard" style="border:1.5px dashed #A7E8CE;background:#FBFFFE">
+    <div class="gh"><span class="ic">➕</span><span class="nm">设下一个目标</span></div>
+    <div class="gsub">起算日自动从 <b>2026 年 10 月 16 日</b> 开始（不重复计上一段的钱）</div>
+    <button class="btn" style="margin-top:14px">设置新目标</button>
+  </div>
+</div>
+
+<!-- ══ 存储设计 ══ -->
+<div class="sec">
+  <h2><span class="num">4</span>存储怎么改（附迁移）</h2>
+  <div class="card">
+    <p><b>新格式</b>（沿用工程惯例的分隔符字符串，和 <code>salary_history</code> 一致）：</p>
+    <div style="background:#0C1F1C;border-radius:10px;padding:11px 12px;margin-top:8px;
+      font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:#5EEAD4;line-height:1.9;overflow-x:auto">
+      goal_list = 名称|目标分|开始日|达标日|确认日|完成金额分<br>
+      <span style="color:#94A3B8">　　</span>↓ 多条用 ; 分隔<br>
+      MacBook Pro|2356000|20260901|20261014|20261015|2390000</div>
+    <p style="margin-top:10px">
+      · <b>确认日 = 0</b> → 这条是当前目标；非 0 → 已完成（进历史）<br>
+      · 名称要清洗掉 <code>|</code> 和 <code>;</code>（项目里已有同类做法）
+    </p>
+    <p style="margin-top:10px"><b>一次性迁移</b>（启动时检测，只跑一次）：</p>
+    <div style="background:#0C1F1C;border-radius:10px;padding:11px 12px;margin-top:8px;
+      font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:#5EEAD4;line-height:1.9">
+      若 goal_list 不存在 且 goal_name 存在：<br>
+      　goal_list = goal_name|goal_amount_bits|goal_start_stamp|0|0|0<br>
+      　（旧的 4 个 key 保留不删，作为回退保险）
+    </div>
+  </div>
+</div>
+
+<!-- ══ 工作量 ══ -->
+<div class="sec">
+  <h2><span class="num">5</span>工作量</h2>
+  <div class="card">
+    <table>
+      <tr><th>项</th><th style="width:52px">量</th><th>说明</th></tr>
+      <tr><td><b>GoalStore 新类</b></td><td>中</td><td>列表读写 + 迁移 + 名称清洗 + 冻结金额</td></tr>
+      <tr><td><b>主卡改造</b></td><td>中</td><td>开始日期行 · 确认按钮 · 已完成态 · 用时</td></tr>
+      <tr><td><b>战报改造</b></td><td>小</td><td>加开始日期 + 已完成目标列表</td></tr>
+      <tr><td><b>设置对话框</b></td><td>小</td><td>支持「完成当前 → 设新目标」</td></tr>
+      <tr><td><b>确认弹窗</b></td><td>小</td><td>让用户确认完成日期（默认今天）</td></tr>
+      <tr><td><b>小人语录适配</b></td><td>小</td><td>多目标后语录要读「当前目标」</td></tr>
+      <tr><td><b>回归测试</b></td><td>中</td><td>迁移 · 多目标 · 冻结 · 不重叠 · 边界</td></tr>
+    </table>
+    <p style="margin-top:10px">
+      对比参考：日历改造（v3.68）是中大型；读取缓存（v3.70）是中型。
+      <b>这次介于两者之间</b>——多目标要动存储和迁移，但 UI 只是加行。
+    </p>
+  </div>
+</div>
+
+<div class="note">
+  <b>⚠️ 迁移是这次唯一有风险的地方。</b>
+  你现在这个目标（MacBook Pro 23,560）已经在用了，转换必须无损。
+  我会：① 迁移只跑一次、幂等 ② 保留旧 key 不删 ③ 专门写迁移的回归测试（含「旧数据 → 新格式 → 数字完全一致」）。
+</div>
+
+<div class="ask">
+  <h3>需要你拍板 4 件事</h3>
+  <ul>
+    <li><b>完成日期显示哪个？</b>达标日（攒够那天）/ 确认日（你点确认那天）/ 两个都显示</li>
+    <li><b>完成的目标在哪看？</b>主卡堆叠显示 / 战报页加一块「已完成」 / 设置里</li>
+    <li><b>确认时能改日期吗？</b>默认今天，还是弹个日期选择器让你选（比如「昨天下的单」）</li>
+    <li><b>开始日期能改吗？</b>现在设置里有选择器；多目标后建议<b>只在新建时可选</b>，进行中不让改（避免进度跳变）</li>
+  </ul>
+</div>
+
+</body></html>

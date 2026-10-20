@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f2f4f7;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:20px;align-items:center}
+.lbl{width:380px;font-size:13px;font-weight:700;color:#374151}
+.lbl span{font-weight:400;color:#6b7280;font-size:11.5px}
+.ph{width:380px;border-radius:22px;padding:0;overflow:hidden;
+    background:linear-gradient(180deg,#ECFBF4,#EEF6FE 55%,#F1F6FF);
+    box-shadow:0 8px 30px rgba(0,0,0,.12)}
+.inner{padding:16px 20px 24px}
+/* 顶栏 */
+.hd{display:flex;align-items:center;height:42px;margin-bottom:8px}
+.bk{height:42px;padding:0 16px;border-radius:21px;background:#F7FCFA;border:1.5px solid #D3E9E3;
+    display:flex;align-items:center;font-size:13px;color:#16323B;font-weight:500}
+.tt{flex:1;text-align:center;font-size:20px;font-weight:700;color:#16323B}
+.pad{width:58px}
+.intro{font-size:12px;color:#61808C;line-height:1.5;margin:8px 0 2px}
+/* 分类卡片 */
+.card{border-radius:22px;padding:16px 18px;margin-top:12px;display:flex;align-items:center;
+      background:radial-gradient(circle at 90% 4%, rgba(16,185,129,.11), transparent 52%),linear-gradient(135deg,#FFFFFF 44%,#E7F8F0);
+      box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.card .em{font-size:24px;margin-right:14px}
+.card .tx{flex:1}
+.card .t{font-size:16px;font-weight:700;color:#16323B}
+.card .s{font-size:11.5px;color:#61808C;margin-top:4px}
+.card .ar{font-size:22px;color:#8AA6B0;font-weight:300}
+.footer{font-size:11.5px;color:#8AA6B0;line-height:1.5;margin-top:20px}
+/* 子页（全屏分区）样式 */
+.page{position:relative}
+.banner{border-radius:16px;padding:13px 16px;margin-top:14px;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,#0EA47A,#10B981 33%,#22C6B4 66%,#2DD4BF);
+    box-shadow:0 4px 10px rgba(16,185,129,.28)}
+.banner:before{content:"";position:absolute;width:110px;height:110px;border-radius:50%;
+           background:rgba(255,255,255,.13);top:-34px;right:-24px}
+.banner>*{position:relative}
+.banner .t{font-size:15.5px;font-weight:700;color:#fff}
+.banner .s{font-size:11px;color:rgba(255,255,255,.78);margin-top:4px}
+.lb{font-size:13px;color:#61808C;margin-top:18px}
+.in{margin-top:8px;height:44px;border-radius:9px;background:#FFFFFF;border:1px solid #E3EFEC;
+    display:flex;align-items:center;padding:0 14px;font-size:18px;color:#16323B;font-weight:600}
+.trow{display:flex;gap:9px;margin-top:8px}
+.tb{flex:1;height:42px;border-radius:21px;background:#F7FCFA;border:1.5px solid #D3E9E3;
+    display:flex;align-items:center;justify-content:center;font-size:12.5px;color:#16323B}
+.btnrow{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.btn{height:42px;padding:0 22px;border-radius:9px;display:flex;align-items:center;font-size:14px;
+     background:#F7FCFA;border:1px solid #D3E9E3;color:#16323B}
+.btn.pri{background:#047857;border-color:#047857;color:#fff;font-weight:600}
+</style></head><body>
+
+<!-- ═══ 总入口 ═══ -->
+<div class="lbl">① 设置总入口（新增 SettingsActivity）<span> · 分类卡片，点进各分区</span></div>
+<div class="ph"><div class="inner">
+  <div class="hd"><span class="bk">返回</span><span class="tt">设置</span><span class="pad"></span></div>
+  <div class="intro">设置按功能分为三组，点进去修改后「保存」即生效。</div>
+
+  <div class="card">
+    <span class="em">💼</span>
+    <div class="tx"><div class="t">薪跳设置</div><div class="s">工资 · 月薪 · 时间 · 加班 · 发薪日</div></div>
+    <span class="ar">›</span>
+  </div>
+  <div class="card">
+    <span class="em">💧</span>
+    <div class="tx"><div class="t">喝水设置</div><div class="s">提醒开关 · 间隔 · 饮品 · 热量 · 参考表</div></div>
+    <span class="ar">›</span>
+  </div>
+  <div class="card">
+    <span class="em">🔧</span>
+    <div class="tx"><div class="t">工具与安全</div><div class="s">节假日 · 备份 · 诊断 · 隐私锁 · 战报 · 说明</div></div>
+    <span class="ar">›</span>
+  </div>
+  <div class="footer">SalaryJump 3.23<br>修改规则只影响之后的记录，历史记录保留当时的计算方式。</div>
+</div></div>
+
+<!-- ═══ 子页：薪跳 ═══ -->
+<div class="lbl">② 子页示例：薪跳设置（点卡片进入）<span> · 全屏、只含本分区、返回/保存</span></div>
+<div class="ph"><div class="inner">
+  <div class="hl" style="font-size:21px;font-weight:700;color:#16323B;margin-bottom:4px">薪跳设置</div>
+
+  <div class="banner"><div class="t">💼　薪跳</div><div class="s">工资 · 时间 · 加班 · 发薪日</div></div>
+
+  <div class="lb">每天工资</div>
+  <div class="in">300.00</div>
+  <div class="lb">月薪（自动折算日薪）</div>
+  <div class="in">6,600.00</div>
+  <div style="font-size:11.5px;color:#8AA6B0;margin-top:6px">本月 22 个工作日 · 月薪 = 日薪 × 22</div>
+
+  <div class="lb">工作时间</div>
+  <div class="trow"><div class="tb">上班 08:00</div><div class="tb">下班 17:00</div></div>
+  <div class="lb">午休时间</div>
+  <div class="trow"><div class="tb">午休开始 11:30</div><div class="tb">午休结束 12:30</div></div>
+
+  <div class="lb">加班费</div>
+  <div class="trow"><div class="tb" style="background:#047857;border-color:#047857;color:#fff;font-weight:700">1.5 倍</div><div class="tb">2 倍</div><div class="tb">3 倍</div></div>
+  <div class="trow"><div class="tb">下班即算</div><div class="tb">宽限 15 分钟</div><div class="tb" style="background:#047857;border-color:#047857;color:#fff;font-weight:700">宽限 30 分钟</div><div class="tb">宽限 1 小时</div></div>
+
+  <div class="lb">发薪日提醒</div>
+  <div class="trow"><div class="tb" style="flex:0 0 auto;padding:0 18px">每月 15 号发薪</div><div class="tb" style="flex:0 0 auto;padding:0 18px">已开启</div></div>
+
+  <div class="trow"><div class="tb">加班与出勤规则</div></div>
+
+  <div class="btnrow"><div class="btn">返回</div><div class="btn pri">保存</div></div>
+</div></div>
+
+</body></html>

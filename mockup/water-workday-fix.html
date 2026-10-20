@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+     padding:16px 10px 40px;display:flex;flex-direction:column;align-items:center}
+.phead{width:100%;max-width:392px;margin:6px auto 20px}
+.phead h1{font-size:20px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.phead p{font-size:12.5px;color:#475569;line-height:1.7;margin-top:8px}
+.ph{width:100%;max-width:392px;border-radius:24px;padding:14px 14px 18px;margin-bottom:18px;
+    background:linear-gradient(168deg,#07110F,#081518 55%,#071019);position:relative;overflow:hidden}
+.ph::before{content:"";position:absolute;inset:-25%;z-index:0;
+  background:radial-gradient(46% 38% at 22% 18%,rgba(16,185,129,.45),transparent 70%),
+             radial-gradient(40% 35% at 82% 26%,rgba(34,211,238,.34),transparent 70%),
+             radial-gradient(38% 40% at 62% 88%,rgba(139,92,246,.25),transparent 72%);
+  filter:blur(34px)}
+.ph>*{position:relative;z-index:2}
+.card{background:linear-gradient(152deg,rgba(255,255,255,.095),rgba(255,255,255,.032));border-radius:20px;
+      padding:14px 16px;border:1px solid rgba(255,255,255,.10);margin-bottom:12px}
+.s1{font-size:11.5px;color:rgba(232,255,247,.6);letter-spacing:.04em}
+.s2{font-size:13px;color:rgba(232,255,247,.88);margin-top:9px;line-height:1.65}
+.s2 b{color:#34D399}
+.s2 .old{color:#FB7185;font-weight:650}
+.s2 .new{color:#5EEAD4;font-weight:700}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;background:#fff;border-radius:12px;overflow:hidden}
+.tbl th{background:#F1F5F4;color:#46626B;font-weight:600;padding:8px 11px;text-align:left;font-size:11.5px}
+.tbl td{padding:8px 11px;border-top:1px solid #EEF3F2;color:#16323B;line-height:1.5}
+.tbl .ok{color:#047857;font-weight:700}
+.tbl .no{color:#94A3B8}
+.tbl .hl{background:#F0FDF9}
+.lbl{font-size:12px;font-weight:700;margin-bottom:8px;padding:3px 11px;border-radius:999px;display:inline-block}
+.lbl.bad{background:#FFE4E6;color:#BE123C}.lbl.good{background:#D1FAE5;color:#047857}
+.hint{font-size:11px;color:#64748B;line-height:1.6;margin-top:8px}
+.note{width:100%;max-width:392px;background:#ECFDF5;border-radius:14px;padding:13px 15px;border:1px solid #CDEEE5}
+.note b{font-size:12.5px;color:#065F46;display:block;margin-bottom:7px}
+.note li{font-size:11.8px;color:#047857;line-height:1.65;margin:4px 0 4px 15px}
+</style></head><body>
+
+<div class="phead">
+  <h1>喝水提醒 · 感知出勤</h1>
+  <p>周日你标记了出勤（在上班），但喝水提醒却跳过今天排到明天 —— 因为提醒日只认「周一至五」。现在改为：<b>标记出勤的日子，当天也照常提醒</b>。</p>
+</div>
+
+<!-- 修改前 -->
+<div class="ph">
+  <div class="lbl bad">修改前 · 你在上班，提醒却跳过今天</div>
+  <div class="card">
+    <div class="s1">今日喝水 1000 / 3000 ml</div>
+  </div>
+  <div class="card">
+    <div class="s2">下次提醒 10月12日 09:30 <span class="old">✕ 今天明明出勤了</span></div>
+  </div>
+</div>
+
+<!-- 修改后 -->
+<div class="ph">
+  <div class="lbl good">修改后 · 出勤日 = 提醒日</div>
+  <div class="card">
+    <div class="s1">今日喝水 1000 / 3000 ml</div>
+  </div>
+  <div class="card">
+    <div class="s2">下次提醒 <span class="new">11:00</span>（当天） <span class="new">✓</span></div>
+  </div>
+</div>
+
+<!-- 逻辑表 -->
+<div style="width:100%;max-width:392px">
+<div class="lbl" style="background:#EFF6FF;color:#1D4ED8">新的提醒日判定</div>
+<table class="tbl">
+<tr><th>当天情况</th><th>提醒？</th></tr>
+<tr><td>周一至周五（工作日）</td><td class="ok">✓ 照常提醒</td></tr>
+<tr class="hl"><td><b>周末 / 节假日 + 已标记出勤</b></td><td class="ok">✓ <b>当天也提醒（本次修复）</b></td></tr>
+<tr><td>周末 / 节假日 未出勤</td><td class="no">不提醒（在家休息）</td></tr>
+<tr><td>标记出勤后又取消</td><td class="no">恢复不提醒</td></tr>
+</table>
+<div class="hint">标记/取消出勤的瞬间即生效（主卡、胶囊长按、日历三处入口都会立即重排提醒）。</div>
+</div>
+
+<div class="note" style="margin-top:14px">
+  <b>时间窗口（沿用设置）</b>
+  <ul>
+    <li>提醒时段：<b>上班 → 下班</b>之间（跳过午休），间隔可选 30/45/60/90/120 分钟</li>
+    <li>出勤日的提醒走同一时间窗口 —— 例如上班 08:00、间隔 90 分钟 → 首条 09:30，之后 11:00、12:30…</li>
+    <li>午休期间、下班后不打扰；喝水达标后当天静默</li>
+  </ul>
+</div>
+
+</body></html>

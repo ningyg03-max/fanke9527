@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eef1f4;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:16px;align-items:center}
+.wrap{width:392px}
+.cap{font-size:13px;font-weight:700;color:#111827;margin-bottom:8px}
+.cap .tag{font-size:11px;padding:2px 9px;border-radius:8px;margin-right:6px;vertical-align:1px}
+.cap .bad{background:#FFE4E6;color:#BE123C}
+.cap .good{background:#D1FAE5;color:#047857}
+.note{font-size:11.5px;color:#6b7280;line-height:1.55;margin:-4px 0 8px}
+/* 页面背景（模拟 App 深色页） */
+.ph{border-radius:18px;padding:18px 16px 22px;background:linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26)}
+.phlabel{font-size:11px;color:#7FA9A5;margin-bottom:10px}
+/* 对话框（白色=修复前 / 深色=修复后） */
+.dlg{border-radius:14px;padding:0;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,.5);max-width:330px;margin:0 auto}
+.dlg.white{background:#FFFFFF}
+.dlg.dark{background:#424242}
+.dt{font-size:16px;font-weight:700;padding:18px 22px 10px}
+.dlg.white .dt{color:#202124}
+.dlg.dark .dt{color:#FFFFFF}
+.drow{display:flex;align-items:center;padding:5px 22px}
+.dlab{font-size:14px;flex:1}
+.dlg.white .dlab{color:#E8F4F2}
+.dlg.dark .dlab{color:#E8F4F2}
+.dinp{width:86px;height:40px;border-radius:8px;background:#0D1C20;border:1px solid #1F3A38;color:#E8F4F2;
+   font-size:14.5px;font-weight:500;display:flex;align-items:center;justify-content:center}
+.dunit{font-size:12.5px;margin-left:8px}
+.dlg.white .dunit{color:#9FB8BE}
+.dlg.dark .dunit{color:#9FB8BE}
+.dhint{font-size:11px;padding:6px 22px 0;line-height:1.5}
+.dlg.white .dhint{color:#7E9AA3}
+.dlg.dark .dhint{color:#9FB8BE}
+.dsep{height:1px;margin:12px 22px 0}
+.dlg.white .dsep{background:#E3EFEC}
+.dlg.dark .dsep{background:#5A5A5A}
+.dcalc{display:flex;padding:9px 22px 0}
+.dcalc .k{font-size:12.5px;flex:1}
+.dlg.white .dcalc .k{color:#9FB8BE}
+.dlg.dark .dcalc .k{color:#B8C8CC}
+.dcalc .v{font-weight:600}
+.dlg.white .dcalc .v{color:#9FB8BE}
+.dlg.dark .dcalc .v{color:#B8C8CC}
+.dcalc.hl{padding-top:6px;padding-bottom:8px}
+.dcalc.hl .k{font-size:13.5px}
+.dlg.white .dcalc.hl .k{color:#E8F4F2}
+.dlg.dark .dcalc.hl .k{color:#FFFFFF}
+.dcalc.hl .v{font-size:13.5px;color:#34D399;font-weight:700}
+.dbtns{display:flex;justify-content:flex-end;gap:6px;padding:6px 14px 14px}
+.db{font-size:13.5px;font-weight:600;padding:8px 14px;border-radius:8px;color:#34D399}
+/* 标注 */
+.problem{position:relative}
+.mark{display:inline-block;font-size:10px;background:#BE123C;color:#fff;border-radius:8px;
+   padding:2px 7px;margin-left:6px;vertical-align:2px}
+/* 说明卡 */
+.card{background:#fff;border-radius:12px;padding:13px 15px;font-size:11.5px;color:#4b5563;line-height:1.65}
+.card b{color:#047857}
+.card .warn{color:#B45309;font-weight:700}
+.row2{display:flex;gap:10px;font-size:11.5px}
+.row2 div{flex:1;background:#F1F5F4;border-radius:8px;padding:9px 11px;color:#46626B;line-height:1.5}
+.row2 b{color:#16323B}
+</style></head><body>
+
+<!-- ══════ 修复前 ══════ -->
+<div class="wrap">
+<div class="cap"><span class="tag bad">修复前</span>深色模式 · 弹窗还是白底</div>
+<div class="ph">
+  <div class="phlabel">页面是深色（手动绘制）…</div>
+  <div class="dlg white">
+    <div class="dt">编辑「年假」</div>
+    <div class="drow"><span class="dlab problem">今年总额<span class="mark">几乎看不见</span></span><span class="dinp">10</span><span class="dunit">天</span></div>
+    <div class="drow"><span class="dlab problem">手动调整<span class="mark">几乎看不见</span></span><span class="dinp">-1</span><span class="dunit">天</span></div>
+    <div class="dhint">例：开始用本 App 前已休过 3 天 → 填 -3；去年结转 +2 天 → 填 +2。</div>
+    <div class="dsep"></div>
+    <div class="dcalc"><span class="k">已用（自动统计今年）</span><span class="v">1.5 天</span></div>
+    <div class="dcalc hl"><span class="k">剩余</span><span class="v">7.5 天</span></div>
+    <div class="dbtns"><span class="db">取消</span><span class="db">保存</span></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════ 修复后 ══════ -->
+<div class="wrap">
+<div class="cap"><span class="tag good">修复后</span>弹窗跟随系统 → 自动深色</div>
+<div class="ph">
+  <div class="phlabel">页面深色，弹窗也深色 —— 对比度达标</div>
+  <div class="dlg dark">
+    <div class="dt">编辑「年假」</div>
+    <div class="drow"><span class="dlab">今年总额</span><span class="dinp">10</span><span class="dunit">天</span></div>
+    <div class="drow"><span class="dlab">手动调整</span><span class="dinp">-1</span><span class="dunit">天</span></div>
+    <div class="dhint">例：开始用本 App 前已休过 3 天 → 填 -3；去年结转 +2 天 → 填 +2。</div>
+    <div class="dsep"></div>
+    <div class="dcalc"><span class="k">已用（自动统计今年）</span><span class="v">1.5 天</span></div>
+    <div class="dcalc hl"><span class="k">剩余</span><span class="v">7.5 天</span></div>
+    <div class="dbtns"><span class="db">取消</span><span class="db">保存</span></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════ 覆盖范围 ══════ -->
+<div class="wrap"><div class="card">
+✍️ <b>一处修复，全局生效</b>（零 Java 改动，只在主题里加了 3 个钩子）：<br>
+<div class="row2" style="margin-top:8px">
+  <div><b>34+ 处弹窗</b><br>AlertDialog<br>（编辑/选择/确认框）</div>
+  <div><b>设置页</b><br>自定义 Dialog<br>（SettingsDialog）</div>
+  <div><b>时间选择器</b><br>上下班/午休时间<br>的滚轮弹窗</div>
+</div>
+<div style="margin-top:8px">🌗 <span class="warn">浅色模式保持不变</span> —— 只有系统处于深色模式时才切换到深色弹窗。</div>
+</div></div>
+
+</body></html>

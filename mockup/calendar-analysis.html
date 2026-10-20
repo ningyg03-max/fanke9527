@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>工资日历 · 改造分析</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0B1714;font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ color:#E8F2EE;padding:16px 0 40px;display:flex;flex-direction:column;align-items:center}
+.page{width:393px}
+h1{font-size:17px;font-weight:800;padding:0 20px}
+.intro{font-size:11.5px;color:#7C939C;line-height:1.7;padding:0 20px;margin-top:6px}
+.sec{margin-top:22px}
+h2{font-size:13.5px;font-weight:800;padding:0 20px;display:flex;align-items:center;gap:8px;color:#CFE3DC}
+.num{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+ font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sub{font-size:11px;color:#64748B;padding:0 20px;margin:5px 0 10px;line-height:1.65}
+.card{background:#12241F;border-radius:18px;padding:14px;margin:0 20px;border:1px solid #1D3830}
+.gradnote{background:linear-gradient(135deg,#0E5F4A,#12987A);border-radius:18px;padding:14px;margin:0 20px;color:#fff}
+
+/* ── 日历网格 ── */
+.weekhead{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:5px}
+.weekhead div{text-align:center;font-size:10px;color:#5C7A72;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cell{border-radius:8px;min-height:50px;padding:3px 2px 4px;display:flex;flex-direction:column;
+ align-items:center;justify-content:flex-start;position:relative;background:#162E28}
+.cell.empty{background:transparent}
+.cell .d{font-size:11px;font-weight:700;color:#A8C4BC;line-height:1.15}
+.cell .m{font-size:8.5px;font-weight:700;color:#3FD9A0;line-height:1.25;margin-top:1px;letter-spacing:-.2px}
+.cell .o{font-size:8px;font-weight:700;color:#FFB020;line-height:1.2;letter-spacing:-.2px}
+.cell.off{background:#111F1B}
+.cell.off .d{color:#4E6A63}
+.cell.off .m{color:#2E5A4E}
+.cell.today{outline:1.5px solid #3FD9A0;outline-offset:-1px}
+.cell.sel{background:#1E4A3D;outline:1.5px solid #5EEAD4;outline-offset:-1px}
+.cell .dot{position:absolute;top:3px;right:3px;width:4px;height:4px;border-radius:50%}
+
+/* ── 详情卡 ── */
+.detailrow{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid #1D3830;font-size:12.5px}
+.detailrow:last-child{border-bottom:none}
+.detailrow .k{color:#7C939C}
+.detailrow .v{font-weight:700;font-variant-numeric:tabular-nums}
+.detailrow .v.g{color:#3FD9A0}.detailrow .v.a{color:#FFB020}.detailrow .v.b{color:#6FB6FF}
+.total{display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:4px;border-top:1.5px solid #235045}
+.total .k{font-size:12px;color:#A8C4BC}
+.total .v{font-size:19px;font-weight:800;color:#3FD9A0;font-variant-numeric:tabular-nums}
+
+/* ── 方案对比 ── */
+.opt{margin:0 20px 12px;background:#12241F;border-radius:16px;padding:13px;border:1px solid #1D3830}
+.opt h3{font-size:12.5px;font-weight:800;color:#CFE3DC;margin-bottom:7px;display:flex;gap:6px;align-items:center}
+.tag{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:6px}
+.t-rec{background:#0B7A5C;color:#fff}.t-ok{background:#2A4A42;color:#9FC4BA}.t-bad{background:#4A2020;color:#FFAAAA}
+.opt p{font-size:11px;color:#7C939C;line-height:1.7}
+.opt p b{color:#A8C4BC}
+.measure{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:#5EEAD4;background:#0D1F1A;
+ border-radius:6px;padding:6px 8px;margin-top:8px;line-height:1.6}
+table{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px}
+th{text-align:left;color:#5C7A72;font-weight:600;padding:4px 6px;font-size:10px}
+td{padding:5px 6px;border-top:1px solid #1D3830;color:#A8C4BC;vertical-align:top}
+td.mono{font-variant-numeric:tabular-nums;font-family:ui-monospace,Menlo,monospace}
+.legend{display:flex;gap:12px;flex-wrap:wrap;padding:0 20px;margin-top:10px;font-size:10.5px;color:#7C939C}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle}
+</style></head><body>
+
+<div class="page">
+  <h1>工资日历 · 改造分析</h1>
+  <p class="intro">现有数据（2026-10 真实值）· 屏幕 393dp · 一格可用宽度 ≈ <b>45dp</b></p>
+
+  <!-- ══ 硬约束 ══ -->
+  <div class="sec">
+    <h2><span class="num">!</span>先说一个绕不开的约束</h2>
+    <div class="sub">日历是 7 列，一格只有约 45dp 宽。而你要求一格显示<b>两个金额</b>。</div>
+    <div class="card">
+      <div class="measure">393dp 屏幕 − 20×2 页边距 − 16×2 卡内边距 = <b>321dp</b>
+321dp ÷ 7 列 − 间隙 ≈ <b>45dp / 格</b>
+
+「¥ 1,007.78」原尺寸 = 8 字符 × ~4.4dp = <b>约 39dp</b>  → 只剩 6dp 余量
+再加一个「¥ 781.59」→ 必须换行，两行各 ~8dp</div>
+      <p style="font-size:11px;color:#7C939C;line-height:1.7;margin-top:9px">
+        结论：<b style="color:#A8C4BC">能显示，但必须缩写</b>——去掉「¥」和小数点。
+        完整数字（¥1,007.78）一行都嫌挤，两个更不可能。
+      </p>
+    </div>
+  </div>
+
+  <!-- ══ 实测渲染 ══ -->
+  <div class="sec">
+    <h2><span class="num">1</span>按真实尺寸画出来看看</h2>
+    <div class="sub">下面是 1:1 的 393dp 宽度，用你 10 月的真实数据。斜体数字是缩写的实际大小。</div>
+
+    <div class="gradnote" style="margin-bottom:12px">
+      <div style="font-size:11px;opacity:.75">本月累计已赚</div>
+      <div style="font-size:27px;font-weight:800;margin-top:2px">¥ 6,828.27</div>
+      <div style="font-size:11px;opacity:.8;margin-top:4px">9 个工作日 · 日均 758.70 元</div>
+    </div>
+
+    <div class="card" id="cal"></div>
+
+    <div class="legend">
+      <span><i style="background:#3FD9A0"></i>日薪 / 到手</span>
+      <span><i style="background:#FFB020"></i>加班费</span>
+      <span><i style="background:#2A4A42"></i>休息日</span>
+      <span><i style="background:#5EEAD4"></i>今天</span>
+    </div>
+  </div>
+
+  <!-- ══ 详情卡 ══ -->
+  <div class="sec">
+    <h2><span class="num">2</span>点某一天 → 下方详情（完整数字在这里）</h2>
+    <div class="sub">格子负责「一眼看全月」，完整拆分放到详情里 —— 这样两边都不用将就。</div>
+    <div class="card">
+      <div style="font-size:12px;color:#7C939C;margin-bottom:8px">10 月 14 日 · 周三 · 有加班</div>
+      <div class="detailrow"><span class="k">日薪</span><span class="v">¥ 1,007.78</span></div>
+      <div class="detailrow"><span class="k">加班费 <span style="color:#FFB020">3 小时 37 分</span></span><span class="v a">+ ¥ 781.59</span></div>
+      <div class="detailrow"><span class="k">外快</span><span class="v b">+ ¥ 0.00</span></div>
+      <div class="detailrow"><span class="k">补录</span><span class="v b">+ ¥ 0.00</span></div>
+      <div class="total"><span class="k">当天到手</span><span class="v">¥ 1,789.37</span></div>
+    </div>
+  </div>
+
+  <!-- ══ 方案 ══ -->
+  <div class="sec">
+    <h2><span class="num">3</span>三种格子写法，选一个</h2>
+
+    <div class="opt">
+      <h3><span class="tag t-rec">推荐</span>方案 A · 日薪在上、加班费在下（橙色 +）</h3>
+      <p>加班日的格子分两行：上面 <b>1.0k</b> 是日薪，下面 <b>+782</b> 是加班费（橙色，一眼识别）。
+      没有加班的日子只有一行，格子更清爽。<b>不需要点击就能看到加班</b>。</p>
+      <div class="measure">优点：加班一目了然，符合你「显示日薪多少、加班费多少」的要求
+代价：金额要缩写（1008 → 1.0k 或 1008），7.5–8.5sp</div>
+    </div>
+
+    <div class="opt">
+      <h3><span class="tag t-ok">备选</span>方案 B · 只显示总额 + 加班标记</h3>
+      <p>格子只放当天到手（<b>1.8k</b>），有加班就在右上角点一个橙色小圆点。
+      想看「日薪/加班费各多少」要点开详情。</p>
+      <div class="measure">优点：格子最干净，字最大（9–10sp）
+缺点：看不到加班金额，只有「有/没有」</div>
+    </div>
+
+    <div class="opt">
+      <h3><span class="tag t-ok">备选</span>方案 C · 全部缩写，两行数字不标注</h3>
+      <p>格子两行数字，不用「+」区分：上行 <b>1008</b>，下行 <b>782</b>（橙色）。
+      靠颜色区分日薪和加班费。</p>
+      <div class="measure">优点：数字完整（去小数点）
+缺点：首次看需要理解颜色含义，可能误读成两个独立金额</div>
+    </div>
+  </div>
+
+  <!-- ══ 两个页面的分工 ══ -->
+  <div class="sec">
+    <h2><span class="num">4</span>两个页面怎么分工（避免重复）</h2>
+    <div class="card">
+      <table>
+        <tr><th style="width:88px">页面</th><th>改成</th><th style="width:64px">可点</th></tr>
+        <tr>
+          <td><b>工资日历</b></td>
+          <td>整页换成日历网格<br><span style="color:#5C7A72">保留：月份切换、补记、点某天补记/标记出勤/请假</span></td>
+          <td>是</td>
+        </tr>
+        <tr>
+          <td><b>月度战报</b></td>
+          <td>「每日明细」列表 → 同样换成日历网格<br><span style="color:#5C7A72">保留：汇总卡、最高的一天、存钱罐</span></td>
+          <td>否（纯看）</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ 需要处理的数据问题 ══ -->
+  <div class="sec">
+    <h2><span class="num">5</span>要处理的 4 个数据问题</h2>
+    <div class="card">
+      <table>
+        <tr><th style="width:96px">问题</th><th>说明</th></tr>
+        <tr>
+          <td><b>加班费怎么算出来</b></td>
+          <td><span class="mono">加班费 = 当天入账 − ArchiveSync.expectedCents(当天)</span><br>
+          <span style="color:#5C7A72">已核对：10/14 的 1789.37 − 1007.78 = 781.59 ✓</span></td>
+        </tr>
+        <tr>
+          <td><b>日薪按哪个值</b></td>
+          <td>按<b>当前设置</b>的日薪反推。缺点是<b>改过工资后，历史日期的「日薪」会用新值显示</b>，与当天实际入账对不上。要精确就得改存储格式（记下当时的日薪）——这是个小工程，要不要做你定。</td>
+        </tr>
+        <tr>
+          <td><b>补齐空白天数</b></td>
+          <td>现在列表只显示<b>有记录的日子</b>（10/7、10/1–5 直接不出现）。日历天然显示 1–31 全部，无记录的日子显示为「休息日」灰色。</td>
+        </tr>
+        <tr>
+          <td><b>一天多种状态</b></td>
+          <td>同一天可能既出勤又加班又请假（少见）。格子里以<b>加班 > 出勤 > 请假 > 休息日</b> 的优先级显示一个标记，完整信息在详情里。</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2><span class="num">6</span>工作量估计</h2>
+    <div class="card">
+      <table>
+        <tr><th>项</th><th style="width:56px">量</th></tr>
+        <tr><td>新增「一天金额拆分」纯函数 <span class="mono">DayBreakdown</span>（日薪/加班/外快/补录）</td><td>小</td></tr>
+        <tr><td>日历网格控件（复用在两个页面）</td><td>中</td></tr>
+        <tr><td>点选 + 详情卡</td><td>小</td></tr>
+        <tr><td>两个页面接入</td><td>小</td></tr>
+        <tr><td>回归测试</td><td>小</td></tr>
+      </table>
+      <p style="font-size:11px;color:#7C939C;line-height:1.7;margin-top:9px">
+        没有权限、没有联网、没有新数据格式（若不做「历史日薪」精确化）。
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+// 用你 10 月的真实数据
+const DATA = {
+  6:{m:0,o:0,state:'comp'},
+  8:{m:1007.78,o:0,state:'leave'},
+  9:{m:1007.78,o:0,state:'leave'},
+  10:{m:1007.78,o:0,state:'work'},
+  11:{m:0,o:0,state:'comp'},
+  12:{m:1007.78,o:0,state:'work'},
+  13:{m:1007.78,o:0,state:'work'},
+  14:{m:1007.78,o:781.59,state:'ot'},
+};
+const REST = [3,4,7];   // 10/3 10/4 10/7 休息/假期
+function fmt(n){
+  if(n===0) return '0';
+  if(n>=1000) return (n/1000).toFixed(1)+'k';
+  return String(Math.round(n));
+}
+const grid = document.getElementById('cal');
+const head = document.createElement('div');
+head.className = 'weekhead';
+['日','一','二','三','四','五','六'].forEach(w=>{
+  const d=document.createElement('div'); d.textContent=w; head.appendChild(d);
+});
+grid.appendChild(head);
+const g = document.createElement('div');
+g.className='grid';
+// 2026-10-01 是星期四 → 前面补 4 个空格
+for(let i=0;i<4;i++){const c=document.createElement('div');c.className='cell empty';g.appendChild(c);}
+for(let day=1;day<=31;day++){
+  const rec = DATA[day];
+  const c = document.createElement('div');
+  c.className = 'cell';
+  // 10/1-10/7 国庆假 → 灰
+  const isHoliday = day<=7 && day!==6 && day!==5;
+  if(!rec && (isHoliday || day>14)) c.classList.add('off');
+  if(day===15) c.classList.add('today');
+  if(day===14) c.classList.add('sel');
+
+  const d = document.createElement('div'); d.className='d'; d.textContent=day; c.appendChild(d);
+
+  if(rec){
+    if(rec.o>0){
+      const m=document.createElement('div'); m.className='m'; m.textContent=fmt(rec.m); c.appendChild(m);
+      const o=document.createElement('div'); o.className='o'; o.textContent='+'+fmt(rec.o); c.appendChild(o);
+    } else if(rec.m>0){
+      const m=document.createElement('div'); m.className='m'; m.textContent=fmt(rec.m); c.appendChild(m);
+    } else {
+      const m=document.createElement('div'); m.className='o'; m.textContent='调休'; c.appendChild(m);
+    }
+    if(rec.state==='leave'){
+      const dot=document.createElement('div'); dot.className='dot'; dot.style.background='#9B8CFF'; c.appendChild(dot);
+    }
+  } else if(isHoliday){
+    const m=document.createElement('div'); m.className='o'; m.style.color='#4E6A63'; m.textContent='休'; c.appendChild(m);
+  }
+  g.appendChild(c);
+}
+grid.appendChild(g);
+</script>
+</body></html>

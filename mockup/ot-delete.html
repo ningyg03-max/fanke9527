@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eef1f4;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:18px;align-items:center}
+.wrap{width:384px}
+.cap{font-size:13.5px;font-weight:700;color:#111827;margin-bottom:2px}
+.cap span{font-size:11px;font-weight:400;color:#6b7280}
+.sub{font-size:11.5px;color:#6b7280;line-height:1.5;margin-bottom:10px}
+.ph{border-radius:16px;padding:12px 16px 16px;background:linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26)}
+.hero{border-radius:20px;padding:16px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#065F46,#0B8A6A 33%,#0E9C8C 66%,#14B8A6);
+  box-shadow:0 5px 14px rgba(0,0,0,.5)}
+.hero:before{content:"";position:absolute;width:130px;height:130px;border-radius:50%;
+  background:rgba(255,255,255,.12);top:-42px;right:-34px}
+.hero>*{position:relative;z-index:2}
+.caps{display:flex;gap:7px;margin-bottom:12px}
+.cap1{flex:1;height:40px;border-radius:20px;display:flex;align-items:center;justify-content:center;
+      font-size:12.5px;overflow:hidden;white-space:nowrap;padding:0 8px}
+.cap1.idle{background:rgba(255,255,255,.19);color:rgba(255,255,255,.90);font-weight:500}
+.cap1.rec{background:rgba(255,255,255,.36);color:#FFFFFF;font-weight:700}
+.cap1.run{background:#FFFFFF;color:#0A5C48;font-weight:800}
+.hrow{display:flex;align-items:center;height:22px;margin-bottom:12px}
+.dotw{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.65);margin-right:7px}
+.hlab{font-size:11px;color:rgba(255,255,255,.78);letter-spacing:.12em;font-weight:600;flex:1}
+.clock{font-size:11.5px;color:rgba(255,255,255,.72)}
+.amt{font-size:40px;font-weight:700;color:#fff;letter-spacing:-1.4px;line-height:1;
+  display:flex;align-items:baseline;gap:2px}
+.amt .c{font-size:21px;font-weight:600}
+.chip{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:11.5px;
+      padding:5px 10px;border-radius:18px;margin-top:10px}
+.dv{height:1px;background:rgba(255,255,255,.22);margin:11px 0 8px}
+.sch{font-size:11px;color:rgba(255,255,255,.78)}
+/* 弹窗 */
+.dlg{background:#fff;border-radius:16px;padding:0;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.28);
+     margin-top:10px}
+.dt{font-size:16px;font-weight:700;color:#16323B;padding:18px 20px 6px}
+.dm{font-size:12.5px;color:#61808C;line-height:1.55;padding:0 20px 14px}
+.dacts{display:flex;justify-content:flex-end;gap:6px;padding:6px 12px 14px;flex-wrap:wrap}
+.dbtn{font-size:13.5px;font-weight:600;padding:9px 14px;border-radius:8px;color:#047857}
+.dbtn.n{color:#61808C}
+.dbtn.danger{color:#BE123C}
+/* 长按菜单 */
+.menu{background:#fff;border-radius:14px;padding:8px 0;box-shadow:0 10px 30px rgba(0,0,0,.28);margin-top:10px}
+.mitem{font-size:14px;color:#16323B;padding:12px 18px;border-bottom:1px solid #F2F6F5}
+.mitem:last-child{border-bottom:none}
+.mitem.danger{color:#BE123C}
+.mtitle{font-size:12px;color:#8AA6B0;padding:10px 18px 4px;font-weight:600}
+.hint{background:#ECFDF5;border-radius:10px;padding:9px 11px;font-size:11px;color:#047857;
+      line-height:1.5;margin-top:8px}
+.hint b{color:#065F46}
+.hint.warn{background:#FFF7EA;color:#92400E}
+.hint.warn b{color:#78350F}
+</style></head><body>
+
+<!-- ══════ B：三选一确认框 ══════ -->
+<div class="wrap"><div class="cap">B · 已结束时的确认框 <span>(三选一)</span></div>
+<div class="sub">点「⏱ ¥112.50」后弹出 —— 新增「删除记录」，解决误触无法恢复的问题。</div>
+<div class="ph"><div class="hero">
+  <div class="caps">
+    <div class="cap1 rec">⏱ ¥112.50</div>
+    <div class="cap1 idle">🏖 请假</div>
+    <div class="cap1 idle">💰 外快</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:44:07</span></div>
+  <div class="amt"><span class="c">¥</span>890.28</div>
+  <div class="chip">● 今日下班 · 加班 2:30 结算</div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>
+<div class="dlg">
+  <div class="dt">今天的加班记录</div>
+  <div class="dm">已结束加班 2:30:00，要重新开始还是删除这条记录？</div>
+  <div class="dacts">
+    <span class="dbtn n">取消</span>
+    <span class="dbtn danger">删除记录</span>
+    <span class="dbtn">重来</span>
+  </div>
+</div>
+<div class="hint">🔧 <b>删除记录</b> = 清除加班，金额回滚（¥112.50 从累计和存钱罐里减掉）<br>
+<b>重来</b> = 清除 + 立即重新开始计时（原行为）</div>
+</div></div>
+
+<!-- ══════ C：长按胶囊菜单 ══════ -->
+<div class="wrap"><div class="cap">C · 长按胶囊菜单 <span>(任意状态可用)</span></div>
+<div class="sub">四种胶囊都支持长按，菜单按当前状态给出可用操作（没记录则无菜单）。</div>
+<div class="ph"><div class="hero">
+  <div class="caps">
+    <div class="cap1 run">⏱ 加班中</div>
+    <div class="cap1 idle">🏖 请假</div>
+    <div class="cap1 idle">💰 外快</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:44:07</span></div>
+  <div class="amt"><span class="c">¥</span>785.28</div>
+  <div class="chip">● 加班费 ¥7.50 · 1.5 倍结算</div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>
+<div class="menu">
+  <div class="mtitle">长按「⏱ 加班中」</div>
+  <div class="mitem danger">删除今天的加班记录</div>
+  <div class="mitem" style="color:#8AA6B0">取消</div>
+</div>
+<div class="hint warn">⚠️ 长按是隐藏交互 —— 用于<b>误触后立即恢复</b>（无需先点结束）</div>
+</div></div>
+
+<!-- ══════ 各胶囊长按菜单对照 ══════ -->
+<div class="wrap"><div class="cap">四种胶囊的长按菜单对照</div>
+<div class="sub">每个菜单都只在「有记录」时出现，无记录则长按无效（不会误操作）。</div>
+<div class="menu">
+  <div class="mtitle">⏱ 加班（已开始/已结束）</div>
+  <div class="mitem danger">删除今天的加班记录</div>
+</div>
+<div class="menu">
+  <div class="mtitle">🏖 请假（已标记）</div>
+  <div class="mitem danger">取消请假</div>
+</div>
+<div class="menu">
+  <div class="mtitle">🏢 出勤（已打卡）</div>
+  <div class="mitem danger">取消出勤标记</div>
+</div>
+<div class="menu">
+  <div class="mtitle">💰 外快（已记录）</div>
+  <div class="mitem danger">删除外快记录</div>
+</div>
+<div class="hint">✅ 四种操作现在都能「一键撤销」—— 完整闭环</div>
+</div>
+
+<!-- ══════ 日历入口 ══════ -->
+<div class="wrap"><div class="cap">补充入口 · 工资日历长按</div>
+<div class="sub">日历里长按某天，若那天有加班记录，菜单会多一项。</div>
+<div class="menu" style="margin-top:0">
+  <div class="mtitle">10 月 10 日 · 长按菜单</div>
+  <div class="mitem">标记请假</div>
+  <div class="mitem">记外快</div>
+  <div class="mitem danger">删除加班记录</div>
+  <div class="mitem">删除这天的记录</div>
+</div>
+<div class="hint">补记场景：很久以前误记的加班，也能从日历里清掉</div>
+</div>
+
+</body></html>

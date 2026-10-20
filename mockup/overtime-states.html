@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b0d11;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:18px;
+     display:flex;gap:16px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:7px}
+.cap{font-size:12px;color:#7d8794;text-align:center}
+.cap b{display:block;font-size:13px;color:#eef2f7;font-weight:700;margin-bottom:2px}
+.phone{width:384px;border-radius:24px;overflow:hidden;flex-shrink:0;box-shadow:0 10px 40px rgba(0,0,0,.6);
+       background:linear-gradient(180deg,#ecfbf4,#eef6fe 55%,#f1f6ff);padding:0 16px 20px}
+.sbar{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 4px;font-size:11px;color:#7a99a3}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:5px 2px 12px}
+.ttl{font-size:19px;font-weight:700;color:#16323b}
+.gear{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.9);color:#61808c;
+      display:flex;align-items:center;justify-content:center;font-size:14px}
+.hero{border-radius:24px;padding:20px;overflow:hidden;position:relative;
+  background:linear-gradient(135deg,#0ea47a,#10b981 42%,#22c6b4 74%,#38bdf8 130%);
+  box-shadow:0 12px 28px rgba(16,185,129,.3)}
+.hero:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.12);top:-70px;right:-50px}
+.hero:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08);bottom:-60px;left:-30px}
+.hero>*{position:relative}
+/* 加班行 */
+.otrow{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.20);border-radius:20px;
+       padding:9px 6px 9px 14px;margin-bottom:14px}
+.otrow .st{flex:1;font-size:13px;color:#fff}
+.otrow .ac{font-size:13px;font-weight:700;color:#fff;background:rgba(255,255,255,.24);
+           padding:5px 12px;border-radius:14px}
+.hl{font-size:11.5px;color:rgba(255,255,255,.78);letter-spacing:1.3px;font-weight:600}
+.hc{font-size:12px;color:rgba(255,255,255,.72)}
+.ha{font-size:46px;font-weight:700;color:#fff;margin-top:10px;letter-spacing:-1px;line-height:1.05}
+.ha .c{font-size:24px;font-weight:600}
+.hst{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:12px;
+      padding:6px 12px;border-radius:20px;margin-top:11px}
+.hb{height:8px;border-radius:5px;background:rgba(255,255,255,.26);margin-top:15px;overflow:hidden}
+.hb>i{display:block;height:100%;background:#fff;border-radius:5px}
+.hs{display:grid;grid-template-columns:repeat(4,1fr);margin-top:16px}
+.hs .v{font-size:13.5px;font-weight:600;color:#fff;text-align:center}
+.hs .k{font-size:10.5px;color:rgba(255,255,255,.72);text-align:center;margin-top:4px}
+.hd{height:1px;background:rgba(255,255,255,.22);margin:14px 0 10px}
+.hsch{font-size:11.5px;color:rgba(255,255,255,.78)}
+</style></head><body>
+
+<!-- 状态 1：没加班（按钮诱导） -->
+<div class="col"><div class="cap"><b>① 下班后 · 未打卡</b>点一下开始计加班</div>
+<div class="phone"><div class="sbar"><span>17:35</span><span>5G ▮▮▮</span></div>
+<div class="nav"><span class="ttl">SalaryJump</span><span class="gear">⚙</span></div>
+<div class="hero">
+  <div class="otrow"><span class="st">今天加班了？</span><span class="ac">开始</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span class="hl">今日已赚</span><span class="hc">17:35:02</span></div>
+  <div class="ha"><span class="c">¥</span>300.00</div>
+  <div class="hst">● 今日下班 · 工资已满额</div>
+  <div class="hb"><i style="width:100%"></i></div>
+  <div class="hs">
+    <div><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥37.50</div><div class="k">每小时</div></div>
+    <div><div class="v">¥0.63</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.01</div><div class="k">每秒</div></div></div>
+  <div class="hd"></div>
+  <div class="hsch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- 状态 2：加班中 -->
+<div class="col"><div class="cap"><b>② 加班中 · 计时</b>点「结束」冻结时长</div>
+<div class="phone"><div class="sbar"><span>19:05</span><span>5G ▮▮▮</span></div>
+<div class="nav"><span class="ttl">SalaryJump</span><span class="gear">⚙</span></div>
+<div class="hero">
+  <div class="otrow"><span class="st">⏱ 加班中 1:05:32</span><span class="ac">结束</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span class="hl">今日已赚</span><span class="hc">19:05:32</span></div>
+  <div class="ha"><span class="c">¥</span>340.94</div>
+  <div class="hst">● 加班费 ¥40.94 · 1.5 倍结算</div>
+  <div class="hb"><i style="width:100%"></i></div>
+  <div class="hs">
+    <div><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥37.50</div><div class="k">每小时</div></div>
+    <div><div class="v">¥0.63</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.01</div><div class="k">每秒</div></div></div>
+  <div class="hd"></div>
+  <div class="hsch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- 状态 3：已结束 -->
+<div class="col"><div class="cap"><b>③ 已结束 · 冻结</b>可点「重来」</div>
+<div class="phone"><div class="sbar"><span>21:20</span><span>5G ▮▮▮</span></div>
+<div class="nav"><span class="ttl">SalaryJump</span><span class="gear">⚙</span></div>
+<div class="hero">
+  <div class="otrow"><span class="st">今日加班 2:30:00 · ¥168.75 元</span><span class="ac">重来</span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span class="hl">今日已赚</span><span class="hc">21:20:11</span></div>
+  <div class="ha"><span class="c">¥</span>468.75</div>
+  <div class="hst">● 加班费 ¥168.75 · 1.5 倍结算</div>
+  <div class="hb"><i style="width:100%"></i></div>
+  <div class="hs">
+    <div><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥37.50</div><div class="k">每小时</div></div>
+    <div><div class="v">¥0.63</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.01</div><div class="k">每秒</div></div></div>
+  <div class="hd"></div>
+  <div class="hsch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+</body></html>

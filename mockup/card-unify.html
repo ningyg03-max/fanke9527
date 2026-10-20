@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070a;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:14px;
+     display:flex;flex-direction:column;gap:22px}
+.wrap{display:flex;flex-direction:column;gap:7px}
+.cap{font-size:13px;font-weight:700;color:#e2e8f0;display:flex;align-items:center;gap:8px}
+.cap .bdg{font-size:10px;padding:2px 8px;border-radius:7px}
+.b-now{background:#3a1f22;color:#f87171}
+.b-new{background:#123a2c;color:#4ade80}
+.cap .sub{font-size:10.5px;color:#7d8794;font-weight:400}
+.ph{width:384px;border-radius:0;padding:12px 20px 22px;background:linear-gradient(180deg,#ECFBF4,#EEF6FE 55%,#F1F6FF)}
+/* ── 主卡 ── */
+.hero{border-radius:24px;padding:20px;position:relative;overflow:hidden;box-shadow:0 5px 14px rgba(16,185,129,.30)}
+.hero>*{position:relative;z-index:2}
+.hg{position:absolute;border-radius:50%;background:rgba(255,255,255,.12);z-index:1}
+.hg.b{background:rgba(255,255,255,.08)}
+.hrow{display:flex;align-items:center;gap:7px;height:24px}
+.dotw{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.65)}
+.hlab{font-size:11.5px;color:rgba(255,255,255,.78);letter-spacing:.12em;font-weight:600;flex:1}
+.clock{font-size:12px;color:rgba(255,255,255,.72)}
+.amt{font-size:46px;font-weight:700;color:#fff;letter-spacing:-1.5px;margin-top:6px;line-height:1}
+.amt .c{font-size:24px;font-weight:600}
+.pill{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:12px;
+      padding:6px 11px;border-radius:20px;margin-top:12px}
+.pb{height:6px;border-radius:4px;background:rgba(255,255,255,.26);margin-top:16px;overflow:hidden}
+.pb>i{display:block;height:100%;background:#fff;border-radius:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:14px}
+.stats .v{font-size:13px;font-weight:600;color:#fff;text-align:center}
+.stats .k{font-size:10.5px;color:rgba(255,255,255,.72);text-align:center;margin-top:3px}
+.dv{height:1px;background:rgba(255,255,255,.22);margin:13px 0 9px}
+.sch{font-size:11.5px;color:rgba(255,255,255,.78)}
+/* ── 白卡 ── */
+.card{border-radius:24px;padding:20px;margin-top:14px;box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.chead{display:flex;align-items:center;gap:7px;height:24px}
+.cdot{width:7px;height:7px;border-radius:50%}
+.clab{font-size:11.5px;color:#8AA6B0;letter-spacing:.12em;font-weight:600;flex:1}
+.lk{font-size:12.5px;color:#0369A1;font-weight:600}
+.lk.g{color:#047857}
+.nb{font-size:32px;font-weight:700;letter-spacing:-1px;margin-top:9px;line-height:1;display:flex;align-items:baseline;gap:3px}
+.nb .un{font-size:15px;color:#61808C;font-weight:400}
+.pb2{height:6px;border-radius:4px;background:#E6F2EE;margin-top:13px;overflow:hidden}
+.pb2>i{display:block;height:100%;border-radius:4px}
+.btns{display:flex;gap:9px;margin-top:16px}
+.b1{flex:1;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center;
+    font-size:14.5px;font-weight:700;color:#052E3F;background:linear-gradient(135deg,#0284C7,#0891B2);
+    box-shadow:0 3px 9px rgba(14,165,233,.30)}
+.b2{width:88px;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center;
+    font-size:12.5px;color:#2E5A55;background:#F7FCFA;border:1.5px solid #D3E9E3}
+.sub{font-size:11.5px;color:#61808C;margin-top:11px}
+.dv2{height:1px;background:#E3EFEC;margin:15px 0 13px}
+.goal{display:flex;align-items:center;justify-content:space-between}
+.goal .n{font-size:13px;font-weight:600;color:#16323B}
+.chip{font-size:11.5px;color:#047857;background:#ECFDF5;padding:5px 10px;border-radius:12px;margin-left:9px}
+</style></head><body>
+
+<!-- ═══ 现状 ═══ -->
+<div class="wrap"><div class="cap"><span class="bdg b-now">现状</span>主卡 4 色渐变（绿→青→蓝）+ 白卡纯白
+  <span class="sub">材质断层：装饰度/色彩体系差距大</span></div>
+<div class="ph">
+  <div class="hero" style="background:linear-gradient(135deg,#0EA47A,#10B981 33%,#22C6B4 66%,#38BDF8)">
+    <div class="hg" style="width:150px;height:150px;top:-42px;right:-38px"></div>
+    <div class="hg b" style="width:110px;height:110px;bottom:-48px;left:-30px"></div>
+    <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">17:23:15</span></div>
+    <div class="amt"><span class="c">¥</span>777.78</div>
+    <div class="pill">● 今天下班 · 工资已满额</div>
+    <div class="pb"><i style="width:100%"></i></div>
+    <div class="stats">
+      <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+      <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+      <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+      <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+    </div>
+    <div class="dv"></div>
+    <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>
+  <div class="card" style="background:#FFFFFF">
+    <div class="chead"><span class="cdot" style="background:#0EA5E9"></span><span class="clab">今日喝水</span>
+      <span class="lk">记录</span><span class="lk" style="margin-left:14px">统计</span></div>
+    <div class="nb" style="color:#0369A1">2350<span class="un">/ 3000 ml</span></div>
+    <div class="pb2"><i style="width:78%;background:#0EA5E9"></i></div>
+    <div class="btns"><div class="b1">喝水 +550 ml</div><div class="b2">选饮品</div></div>
+    <div class="sub">下次提醒 10月12日 09:30 · 约 149 kcal · 含糖 1 杯</div>
+  </div>
+  <div class="card" style="background:#FFFFFF">
+    <div class="chead"><span class="cdot" style="background:#10B981"></span><span class="clab">累计收入</span>
+      <span class="lk g">明细 ›</span></div>
+    <div class="nb" style="color:#047857">¥ 1,427.78<span class="chip">1 天</span></div>
+    <div class="sub" style="margin-top:8px">按工作日累计</div>
+    <div class="dv2"></div>
+    <div class="goal"><span class="n">🎯 MacBook Pro 23,560.00</span><span class="lk g" style="font-size:12.5px">设置</span></div>
+    <div class="pb2"><i style="width:6%;background:#10B981"></i></div>
+    <div class="sub">已攒 1,427.78 · 还差 22,132.22 · 约还需 29 个工作日</div>
+  </div>
+</div></div>
+
+<!-- ═══ 方案 1：主卡渐变收敛 ═══ -->
+<div class="wrap"><div class="cap"><span class="bdg b-new">方案 1</span>主卡渐变收敛为绿色系（去蓝端）
+  <span class="sub">只改 1 行颜色 · 主卡不再"跑蓝"</span></div>
+<div class="ph">
+  <div class="hero" style="background:linear-gradient(135deg,#0EA47A,#10B981 33%,#22C6B4 66%,#2DD4BF)">
+    <div class="hg" style="width:150px;height:150px;top:-42px;right:-38px"></div>
+    <div class="hg b" style="width:110px;height:110px;bottom:-48px;left:-30px"></div>
+    <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">17:23:15</span></div>
+    <div class="amt"><span class="c">¥</span>777.78</div>
+    <div class="pill">● 今天下班 · 工资已满额</div>
+    <div class="pb"><i style="width:100%"></i></div>
+    <div class="stats">
+      <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+      <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+      <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+      <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+    </div>
+    <div class="dv"></div>
+    <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>
+  <div class="card" style="background:#FFFFFF">
+    <div class="chead"><span class="cdot" style="background:#0EA5E9"></span><span class="clab">今日喝水</span>
+      <span class="lk">记录</span><span class="lk" style="margin-left:14px">统计</span></div>
+    <div class="nb" style="color:#0369A1">2350<span class="un">/ 3000 ml</span></div>
+    <div class="pb2"><i style="width:78%;background:#0EA5E9"></i></div>
+    <div class="btns"><div class="b1">喝水 +550 ml</div><div class="b2">选饮品</div></div>
+    <div class="sub">下次提醒 10月12日 09:30 · 约 149 kcal · 含糖 1 杯</div>
+  </div>
+  <div class="card" style="background:#FFFFFF">
+    <div class="chead"><span class="cdot" style="background:#10B981"></span><span class="clab">累计收入</span>
+      <span class="lk g">明细 ›</span></div>
+    <div class="nb" style="color:#047857">¥ 1,427.78<span class="chip">1 天</span></div>
+    <div class="sub" style="margin-top:8px">按工作日累计</div>
+    <div class="dv2"></div>
+    <div class="goal"><span class="n">🎯 MacBook Pro 23,560.00</span><span class="lk g" style="font-size:12.5px">设置</span></div>
+    <div class="pb2"><i style="width:6%;background:#10B981"></i></div>
+    <div class="sub">已攒 1,427.78 · 还差 22,132.22 · 约还需 29 个工作日</div>
+  </div>
+</div></div>
+
+<!-- ═══ 方案 2：收敛 + 白卡微渐变 ═══ -->
+<div class="wrap"><div class="cap"><span class="bdg b-new">方案 2</span>方案 1 + 白卡微渐变（白 → 极淡同色，对角同向）
+  <span class="sub">三卡共享"渐变材质"，浓度不同（主卡 100% / 白卡 ~5%）</span></div>
+<div class="ph">
+  <div class="hero" style="background:linear-gradient(135deg,#0EA47A,#10B981 33%,#22C6B4 66%,#2DD4BF)">
+    <div class="hg" style="width:150px;height:150px;top:-42px;right:-38px"></div>
+    <div class="hg b" style="width:110px;height:110px;bottom:-48px;left:-30px"></div>
+    <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">17:23:15</span></div>
+    <div class="amt"><span class="c">¥</span>777.78</div>
+    <div class="pill">● 今天下班 · 工资已满额</div>
+    <div class="pb"><i style="width:100%"></i></div>
+    <div class="stats">
+      <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+      <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+      <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+      <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+    </div>
+    <div class="dv"></div>
+    <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>
+  <div class="card" style="background:linear-gradient(135deg,#FFFFFF 25%,#EAF6FF)">
+    <div class="chead"><span class="cdot" style="background:#0EA5E9"></span><span class="clab">今日喝水</span>
+      <span class="lk">记录</span><span class="lk" style="margin-left:14px">统计</span></div>
+    <div class="nb" style="color:#0369A1">2350<span class="un">/ 3000 ml</span></div>
+    <div class="pb2"><i style="width:78%;background:#0EA5E9"></i></div>
+    <div class="btns"><div class="b1">喝水 +550 ml</div><div class="b2">选饮品</div></div>
+    <div class="sub">下次提醒 10月12日 09:30 · 约 149 kcal · 含糖 1 杯</div>
+  </div>
+  <div class="card" style="background:linear-gradient(135deg,#FFFFFF 25%,#EAFBF2)">
+    <div class="chead"><span class="cdot" style="background:#10B981"></span><span class="clab">累计收入</span>
+      <span class="lk g">明细 ›</span></div>
+    <div class="nb" style="color:#047857">¥ 1,427.78<span class="chip">1 天</span></div>
+    <div class="sub" style="margin-top:8px">按工作日累计</div>
+    <div class="dv2"></div>
+    <div class="goal"><span class="n">🎯 MacBook Pro 23,560.00</span><span class="lk g" style="font-size:12.5px">设置</span></div>
+    <div class="pb2"><i style="width:6%;background:#10B981"></i></div>
+    <div class="sub">已攒 1,427.78 · 还差 22,132.22 · 约还需 29 个工作日</div>
+  </div>
+</div></div>
+
+<!-- ═══ 方案 3：方案2 + 主卡再淡一档 ═══ -->
+<div class="wrap"><div class="cap"><span class="bdg b-new">方案 3</span>方案 2 + 主卡"降噪"（渐变更平缓 + 弱化蓝）
+  <span class="sub">若仍觉得主卡太跳，可再降一档</span></div>
+<div class="ph">
+  <div class="hero" style="background:linear-gradient(135deg,#0C9B72,#0FAE7B 40%,#17BE9A 70%,#21CDB4);box-shadow:0 5px 14px rgba(16,185,129,.24)">
+    <div class="hg" style="width:150px;height:150px;top:-42px;right:-38px;background:rgba(255,255,255,.09)"></div>
+    <div class="hg b" style="width:110px;height:110px;bottom:-48px;left:-30px;background:rgba(255,255,255,.06)"></div>
+    <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">17:23:15</span></div>
+    <div class="amt"><span class="c">¥</span>777.78</div>
+    <div class="pill">● 今天下班 · 工资已满额</div>
+    <div class="pb"><i style="width:100%"></i></div>
+    <div class="stats">
+      <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+      <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+      <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+      <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+    </div>
+    <div class="dv"></div>
+    <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>
+  <div class="card" style="background:linear-gradient(135deg,#FFFFFF 25%,#EAF6FF)">
+    <div class="chead"><span class="cdot" style="background:#0EA5E9"></span><span class="clab">今日喝水</span>
+      <span class="lk">记录</span><span class="lk" style="margin-left:14px">统计</span></div>
+    <div class="nb" style="color:#0369A1">2350<span class="un">/ 3000 ml</span></div>
+    <div class="pb2"><i style="width:78%;background:#0EA5E9"></i></div>
+    <div class="btns"><div class="b1">喝水 +550 ml</div><div class="b2">选饮品</div></div>
+    <div class="sub">下次提醒 10月12日 09:30 · 约 149 kcal · 含糖 1 杯</div>
+  </div>
+  <div class="card" style="background:linear-gradient(135deg,#FFFFFF 25%,#EAFBF2)">
+    <div class="chead"><span class="cdot" style="background:#10B981"></span><span class="clab">累计收入</span>
+      <span class="lk g">明细 ›</span></div>
+    <div class="nb" style="color:#047857">¥ 1,427.78<span class="chip">1 天</span></div>
+    <div class="sub" style="margin-top:8px">按工作日累计</div>
+    <div class="dv2"></div>
+    <div class="goal"><span class="n">🎯 MacBook Pro 23,560.00</span><span class="lk g" style="font-size:12.5px">设置</span></div>
+    <div class="pb2"><i style="width:6%;background:#10B981"></i></div>
+    <div class="sub">已攒 1,427.78 · 还差 22,132.22 · 约还需 29 个工作日</div>
+  </div>
+</div></div>
+
+</body></html>

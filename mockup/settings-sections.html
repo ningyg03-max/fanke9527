@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f2f4f7;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px}
+.dlg{width:360px;margin:0 auto;border-radius:20px;overflow:hidden;background:#fff;
+     box-shadow:0 12px 40px rgba(0,0,0,.22)}
+.pad{padding:20px 22px 18px}
+h1{font-size:21px;font-weight:700;color:#16323B;margin-bottom:0}
+.sh{border-radius:16px;padding:13px 16px;margin-top:14px;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,#0EA47A,#10B981 33%,#22C6B4 66%,#2DD4BF);
+    box-shadow:0 4px 10px rgba(16,185,129,.28)}
+.sh:before{content:"";position:absolute;width:110px;height:110px;border-radius:50%;
+           background:rgba(255,255,255,.13);top:-34px;right:-24px}
+.sh>*{position:relative}
+.sh .t{font-size:15.5px;font-weight:700;color:#fff}
+.sh .s{font-size:11px;color:rgba(255,255,255,.78);margin-top:4px}
+.lb{font-size:13px;color:#61808C;margin-top:18px}
+.in{margin-top:8px;height:44px;border-radius:9px;background:#EFF7F6;border:1px solid #E3EFEC;
+    display:flex;align-items:center;padding:0 14px;font-size:18px;color:#16323B;font-weight:600}
+.trow{display:flex;gap:9px;margin-top:8px}
+.tb{flex:1;height:42px;border-radius:21px;background:#F7FCFA;border:1.5px solid #D3E9E3;
+    display:flex;align-items:center;justify-content:center;font-size:12.5px;color:#16323B}
+.chk{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px;color:#16323B}
+.box{width:18px;height:18px;border-radius:4px;background:#047857;color:#fff;font-size:12px;
+     display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chips{display:flex;gap:7px;margin-top:8px}
+.chip{flex:1;height:38px;border-radius:19px;display:flex;align-items:center;justify-content:center;
+      font-size:12.5px;background:#F7FCFA;border:1.5px solid #D3E9E3;color:#16323B}
+.chip.on{background:#047857;border-color:#047857;color:#fff;font-weight:700}
+.btn{height:42px;border-radius:9px;background:#EFF7F6;border:1px solid #E3EFEC;
+     display:flex;align-items:center;justify-content:center;font-size:14px;color:#16323B;margin-top:8px}
+.btn2{display:flex;gap:10px;margin-top:8px}
+.btn2 .btn{flex:1;margin-top:0}
+.note{font-size:11.5px;color:#8AA6B0;line-height:1.5;margin-top:6px}
+.rowline{display:flex;align-items:center;gap:8px;margin-top:8px}
+.rowline .t{font-size:14px;color:#16323B}
+.sw{width:44px;height:26px;border-radius:13px;background:#047857;margin-left:auto;position:relative}
+.sw:before{content:"";position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;
+           top:3px;right:3px}
+.tools{display:flex;gap:10px;margin-top:8px}
+.tools .btn{flex:1;margin-top:0}
+.version{font-size:11.5px;color:#8AA6B0;margin-top:14px}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.act{height:42px;padding:0 22px;border-radius:9px;display:flex;align-items:center;font-size:14px;
+     background:#EFF7F6;border:1px solid #E3EFEC;color:#16323B}
+.act.pri{background:#047857;border-color:#047857;color:#fff;font-weight:600}
+.divider{text-align:center;font-size:11px;color:#b9c6cc;margin-top:14px}
+</style></head><body>
+<div class="dlg"><div class="pad">
+
+  <h1>SalaryJump 设置</h1>
+
+  <!-- ═══ 薪跳 ═══ -->
+  <div class="sh"><div class="t">💼　薪跳</div><div class="s">工资 · 时间 · 加班 · 发薪日</div></div>
+  <div class="lb">每天工资</div>
+  <div class="in">300.00</div>
+  <div class="lb">月薪（自动折算日薪）</div>
+  <div class="in">6,600.00</div>
+  <div class="note">本月 22 个工作日 · 月薪 = 日薪 × 22</div>
+  <div class="lb">工作时间</div>
+  <div class="trow"><div class="tb">上班 08:00</div><div class="tb">下班 17:00</div></div>
+  <div class="lb">午休时间</div>
+  <div class="trow"><div class="tb">午休开始 11:30</div><div class="tb">午休结束 12:30</div></div>
+  <div class="lb">工作日规则</div>
+  <div class="trow"><div class="tb">按时间自动判断 ▾</div></div>
+  <div class="lb">加班费</div>
+  <div class="chk"><span class="box">✓</span>下班后继续累计（按加班倍率）</div>
+  <div class="chips"><div class="chip on">1.5 倍</div><div class="chip">2 倍</div><div class="chip">3 倍</div></div>
+  <div class="chips"><div class="chip">下班即算</div><div class="chip">宽限 15 分钟</div><div class="chip on">宽限 30 分钟</div><div class="chip">宽限 1 小时</div></div>
+  <div class="chk"><span class="box">✓</span>读取日历中的休/班标记（优先采用）</div>
+  <div class="lb">发薪日提醒</div>
+  <div class="rowline"><span class="t">每月</span><span class="in" style="width:56px;height:40px;margin:0;justify-content:center">15</span><span class="t">号发薪</span><span class="sw"></span></div>
+  <div class="note">当天与前一天 10:00 提醒，通知里可直接打开上月战报</div>
+  <div class="btn" style="margin-top:12px">加班与出勤规则</div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ═══ 喝水 ═══ -->
+  <div class="sh" style="margin-top:0"><div class="t">💧　喝水提醒</div><div class="s">提醒 · 饮品 · 热量</div></div>
+  <div class="chk"><span class="box">✓</span>开启工作时间喝水提醒</div>
+  <div class="lb">提醒间隔</div>
+  <div class="trow"><div class="tb">90 分钟 ▾</div></div>
+  <div class="lb">每天喝水总量（ml）</div>
+  <div class="in">3000</div>
+  <div class="lb">饮品名称 · 容量 · 热量（每100ml）</div>
+  <div class="btn">参考表</div>
+  <div class="note">热量按每 100ml 计，点「参考表」查常见饮品数值；含糖标记仅用于统计。</div>
+  <div class="lb">提醒方式</div>
+  <div class="chk"><span class="box">✓</span>铃音和震动</div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ═══ 工具与安全 ═══ -->
+  <div class="sh" style="margin-top:0"><div class="t">🔧　工具与安全</div><div class="s">备份 · 诊断 · 隐私锁</div></div>
+  <div class="tools"><div class="btn">更新节假日</div><div class="btn">数据备份</div></div>
+  <div class="tools"><div class="btn">网络诊断</div><div class="btn">清除崩溃记录</div></div>
+  <div class="note" style="margin-top:8px">上次更新: 2026-10-10 18:30</div>
+  <div class="tools"><div class="btn">隐私锁</div><div class="btn">月度战报</div></div>
+  <div class="btn">加班与请假说明</div>
+  <div class="version">SalaryJump 3.22</div>
+
+  <div class="actions"><div class="act">取消</div><div class="act pri">保存</div></div>
+
+</div></div>
+</body></html>

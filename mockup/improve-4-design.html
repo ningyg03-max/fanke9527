@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ padding:16px 12px 44px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:420px}
+h1{font-size:20px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12.5px;color:#475569;line-height:1.75;margin-top:7px}
+.sec{margin-top:26px}
+.sec .hd{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.num{width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+ font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec h2{font-size:15.5px;font-weight:800;color:#0F172A;letter-spacing:-.2px}
+.sec .sub{font-size:11.5px;color:#64748B;margin:6px 0 12px;line-height:1.65}
+.screen{border-radius:22px;padding:16px 14px 18px;background:linear-gradient(168deg,#EAF7F2,#E8F1F7 55%,#EDEFF9);
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.75)}
+.card{background:linear-gradient(152deg,rgba(255,255,255,.9),rgba(255,255,255,.66));border-radius:22px;
+ border:1px solid rgba(255,255,255,.95);box-shadow:0 16px 32px -20px rgba(6,95,70,.25);padding:14px}
+/* —— 饮品对比 —— */
+.cmp{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.cmp>div{flex:1;min-width:170px;max-width:196px}
+.cmplbl{font-size:11px;font-weight:750;padding:3px 10px;border-radius:999px;display:inline-block;margin-bottom:8px}
+.cmplbl.bad{background:#FFE4E6;color:#BE123C}
+.cmplbl.good{background:#D1FAE5;color:#047857}
+/* 旧列表 */
+.oldrow{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.oldname{flex:1;height:36px;border-radius:8px;background:#F2F7F5;border:1px solid #E3EFEC;
+ display:flex;align-items:center;padding:0 10px;font-size:12px;color:#16323B}
+.oldml{width:56px;height:36px;border-radius:8px;background:#F2F7F5;border:1px solid #E3EFEC;
+ display:flex;align-items:center;justify-content:center;font-size:12px;color:#16323B;font-weight:650}
+.oldu{font-size:10.5px;color:#8AA6B0}
+.oldtip{font-size:10.5px;color:#94A3B8;margin-top:8px;line-height:1.5}
+/* 新网格 */
+.sectl{font-size:10.5px;font-weight:700;color:#8AA6B0;letter-spacing:.05em;margin:2px 0 7px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.dcell{border-radius:12px;background:#F2F7F5;border:1px solid #E3EFEC;padding:9px 10px;
+ display:flex;flex-direction:column;gap:2px}
+.dcell.fav{background:linear-gradient(135deg,#E7F8F1,#E6F5F5);border-color:#A7E3D2}
+.dcell .n{font-size:12.5px;font-weight:700;color:#0A3B31;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dcell .m{font-size:10px;color:#7C939C}
+.newtip{font-size:10.5px;color:#94A3B8;margin-top:8px;line-height:1.5}
+.adrow{margin-top:7px;height:38px;border-radius:12px;border:1px dashed #BCD3CC;
+ display:flex;align-items:center;justify-content:center;font-size:12px;color:#0B7A5C;font-weight:650;background:rgba(255,255,255,.5)}
+/* —— 设置项 —— */
+.setrow{display:flex;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid rgba(10,59,49,.07)}
+.setrow:last-child{border-bottom:none}
+.setrow .lab{flex:1;font-size:13.5px;color:#16323B}
+.tbtn{font-size:13px;font-weight:650;color:#0A3B31;padding:7px 13px;border-radius:9px;background:rgba(10,59,49,.05);border:1px solid rgba(10,59,49,.12)}
+.sw{width:42px;height:25px;border-radius:13px;background:#0FA98A;position:relative;flex-shrink:0}
+.sw i{position:absolute;width:21px;height:21px;border-radius:50%;background:#fff;top:2px;right:2px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw.off{background:#CBD5D0}
+.sw.off i{right:auto;left:2px}
+.radio{display:flex;align-items:center;gap:9px;padding:9px 2px}
+.rd{width:17px;height:17px;border-radius:50%;border:2px solid #B9CCC6;flex-shrink:0}
+.rd.on{border-color:#0FA98A;background:radial-gradient(circle,#0FA98A 44%,transparent 48%)}
+.radio .rl{font-size:13px;color:#16323B}
+.radio .rh{font-size:10.5px;color:#8AA6B0;margin-left:auto}
+/* —— 小人反应 —— */
+.reacts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.react{width:112px;background:#fff;border-radius:16px;border:1px solid #E2E8EC;padding:11px 9px;text-align:center}
+.react .vb{width:88px;height:92px;margin:0 auto}
+.react .rn{font-size:12px;font-weight:750;color:#0F172A;margin-top:6px}
+.react .rd2{font-size:10px;color:#64748B;margin-top:3px;line-height:1.45}
+/* —— 年度总览 —— */
+.ychart{display:flex;align-items:flex-end;gap:4px;height:96px;padding:0 2px;margin-top:6px}
+.ybar{flex:1;border-radius:4px 4px 2px 2px;background:linear-gradient(180deg,#2DD4BF,#0EAE8C);position:relative}
+.ybar.zero{background:#E3EFEC}
+.ylab{display:flex;gap:4px;padding:0 2px;margin-top:5px}
+.ylab span{flex:1;text-align:center;font-size:8.5px;color:#94A3B8}
+.ystat{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.ys{flex:1;min-width:88px;background:#F2F7F5;border-radius:11px;padding:9px 11px}
+.ys .k{font-size:10px;color:#8AA6B0}
+.ys .v{font-size:14px;font-weight:750;color:#0A3B31;margin-top:3px}
+.ys .v small{font-size:10px;font-weight:600;color:#7C939C}
+.note{background:#fff;border-radius:14px;padding:13px 15px;border:1px solid #E2E8EC;font-size:11.8px;color:#475569;line-height:1.7;margin-top:12px}
+.note b{color:#0B7A5C}
+.foot{background:#ECFDF5;border:1px solid #CDEEE5;border-radius:16px;padding:15px 17px;margin-top:26px;
+ font-size:12px;color:#065F46;line-height:1.8}
+.foot b{display:block;font-size:13px;margin-bottom:7px}
+.foot code{background:rgba(6,95,70,.08);border-radius:4px;padding:1px 5px;font-size:11px}
+svg{display:block;width:100%;height:100%}
+</style></head><body>
+<div class="page">
+  <h1>4 项改进 · 设计方案</h1>
+  <p class="intro">按你的选定：① 小人 2.0 ② 年度总览 ③ 独立喝水时段 ④ 饮品列表优化。先看方案，确认后我按顺序开发。</p>
+
+  <!-- ═══════════ ④ 饮品列表 ═══════════ -->
+  <div class="sec">
+    <div class="hd"><span class="num">④</span><h2>饮品列表优化（先做，改动最急）</h2></div>
+    <div class="sub">现状：垂直列表每行「名字 + 容量输入框」，8 个饮品就占满一屏还多；每加一个就更长。<b>新方案：2 列网格 + 「常喝」置顶</b> —— 高度直接减半，常用的永远在最上面。</div>
+    <div class="cmp">
+      <div>
+        <span class="cmplbl bad">现状 · 一屏放不下</span>
+        <div class="screen" style="padding:12px 10px">
+          <div class="oldrow"><span class="oldname">白开水</span><span class="oldml">500</span><span class="oldu">ml</span></div>
+          <div class="oldrow"><span class="oldname">咖啡</span><span class="oldml">500</span><span class="oldu">ml</span></div>
+          <div class="oldrow"><span class="oldname">东方树叶</span><span class="oldml">500</span><span class="oldu">ml</span></div>
+          <div class="oldrow"><span class="oldname">精酿啤酒</span><span class="oldml">500</span><span class="oldu">ml</span></div>
+          <div class="oldrow"><span class="oldname">运动饮料</span><span class="oldml">550</span><span class="oldu">ml</span></div>
+          <div class="oldrow"><span class="oldname">维C泡腾片</span><span class="oldml">500</span><span class="oldu">ml</span></div>
+          <div class="oldrow"><span class="oldname">小瓶矿泉水</span><span class="oldml">380</span><span class="oldu">ml</span></div>
+          <div class="adrow">＋ 添加饮品</div>
+          <div class="oldtip">7 项已占 400dp+，需滚动才能看到「添加」</div>
+        </div>
+      </div>
+      <div>
+        <span class="cmplbl good">方案 · 网格 + 常喝</span>
+        <div class="screen" style="padding:12px 10px">
+          <div class="sectl">★ 常喝（自动记录）</div>
+          <div class="grid2">
+            <div class="dcell fav"><span class="n">白开水</span><span class="m">500 ml</span></div>
+            <div class="dcell fav"><span class="n">咖啡</span><span class="m">500 ml</span></div>
+          </div>
+          <div class="sectl" style="margin-top:10px">全部饮品</div>
+          <div class="grid2">
+            <div class="dcell"><span class="n">东方树叶</span><span class="m">500 ml</span></div>
+            <div class="dcell"><span class="n">精酿啤酒</span><span class="m">500 ml</span></div>
+            <div class="dcell"><span class="n">运动饮料</span><span class="m">550 ml</span></div>
+            <div class="dcell"><span class="n">维C泡腾片</span><span class="m">500 ml</span></div>
+            <div class="dcell"><span class="n">小瓶矿泉水</span><span class="m">380 ml</span></div>
+            <div class="dcell" style="border-style:dashed;background:rgba(255,255,255,.5)">
+              <span class="n" style="color:#0B7A5C">＋ 添加</span><span class="m">新饮品</span></div>
+          </div>
+          <div class="newtip">全部内容一屏内可见，无需滚动 · 点格子直接记录 · 长按可补记 / 改容量</div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>交互变化</b>：<br>
+      · <b>点格子</b> = 立即按当前容量记录（比现在少一步，容量直接从设置读取）<br>
+      · <b>长按格子</b> = 弹出菜单：补记（选时间）/ 修改容量 / 编辑饮品<br>
+      · <b>常喝区</b> = 自动记录最近使用的 2 个，永远置顶 —— 日常操作零滚动
+    </div>
+  </div>
+</div>
+</body></html>
+
+<div class="page">
+  <!-- ═══════════ ③ 独立喝水时段 ═══════════ -->
+  <div class="sec">
+    <div class="hd"><span class="num">③</span><h2>独立喝水时段</h2></div>
+    <div class="sub">现状：喝水提醒时段<b>借用工资的工作时间</b>（上班-下班、跳过午休、跳过周末）—— 想改喝水时段就得动工资设置。新方案：<b>独立可设</b>，互不干扰。</div>
+    <div class="screen"><div class="card">
+      <div class="setrow"><span class="lab">提醒时段</span></div>
+      <div class="radio"><span class="rd on"></span><span class="rl">跟随工作时间</span><span class="rh">08:00 - 17:00 · 跳过午休</span></div>
+      <div class="radio"><span class="rd"></span><span class="rl">自定义时段</span><span class="rh">独立于工资设置</span></div>
+      <div style="margin:8px 2px 2px;padding:10px 12px;border-radius:12px;background:rgba(10,59,49,.04)">
+        <div class="setrow" style="border:none;padding:4px 0">
+          <span class="lab" style="font-size:12.5px">每日</span>
+          <span class="tbtn">08:00</span><span style="font-size:12px;color:#7C939C">至</span><span class="tbtn">20:00</span>
+        </div>
+        <div class="setrow" style="border:none;padding:4px 0">
+          <span class="lab" style="font-size:12.5px">午休期间也提醒</span>
+          <span class="sw off"><i></i></span>
+        </div>
+        <div class="setrow" style="border:none;padding:4px 0">
+          <span class="lab" style="font-size:12.5px">周末也提醒</span>
+          <span class="sw"><i></i></span>
+        </div>
+      </div>
+      <div class="setrow" style="padding-top:12px"><span class="lab">提醒间隔</span><span class="tbtn">90 分钟</span></div>
+    </div></div>
+    <div class="note">
+      存储：<code>water_window_mode</code>（0 跟随 / 1 自定义）· <code>water_win_start/end</code> · <code>water_skip_break</code> · <code>water_weekend</code>。<br>
+      调度逻辑只在 <code>isAllowedNow / nextReminderAfter</code> 两处切换时间来源，其余不变。
+    </div>
+  </div>
+
+  <!-- ═══════════ ① 小人 2.0 ═══════════ -->
+  <div class="sec">
+    <div class="hd"><span class="num">①</span><h2>小人 2.0 · 互动 + 成就</h2></div>
+    <div class="sub"><b>互动</b>：戳一下小人 → 随机反应（3 种）；<b>成就</b>：存钱罐里程碑 / 发薪日 → 自动触发庆祝动画。</div>
+
+    <div class="sectl" style="margin:10px 0 8px">戳一下（随机三选一，持续 2 秒后回到正常状态）</div>
+    <div class="reacts">
+      <div class="react"><div class="vb" id="r1"></div><div class="rn">摸鱼被抓</div><div class="rd2">瞪大眼 + 感叹号</div></div>
+      <div class="react"><div class="vb" id="r2"></div><div class="rn">加油！</div><div class="rd2">举拳 + 星星闪</div></div>
+      <div class="react"><div class="vb" id="r3"></div><div class="rn">嘿嘿</div><div class="rd2">脸红 + 眯眼笑</div></div>
+    </div>
+
+    <div class="sectl" style="margin:16px 0 8px">成就庆祝（自动触发）</div>
+    <div class="screen"><div class="card" style="display:flex;flex-direction:column;align-items:center;gap:6px">
+      <div style="width:110px;height:114px" id="r4"></div>
+      <div style="font-size:13px;font-weight:750;color:#0A3B31">🎉 存钱罐已达 50%！</div>
+      <div style="font-size:11px;color:#7C939C">再攒 ¥11,066.11 就完成一半了</div>
+    </div></div>
+    <div class="note">
+      <b>触发时机</b>：① 存钱罐跨越 25 / 50 / 75 / 100%（每个里程碑只庆祝一次）；② 发薪日当天（小人眼睛变成 ¥）。<br>
+      <b>庆祝动画</b>：小人蹦跳 + 满屏彩带（复用现成动画引擎）。<br>
+      <b>实现</b>：<code>WorkerPetView.poke()</code> 加临时反应姿势（2 秒 overlay）；里程碑用 <code>prefs</code> 记录已庆祝等级防重复。
+    </div>
+  </div>
+
+  <!-- ═══════════ ② 年度总览 ═══════════ -->
+  <div class="sec">
+    <div class="hd"><span class="num">②</span><h2>年度总览</h2></div>
+    <div class="sub">现在只有「月度战报」，看不到全年。数据全部现成（<code>SalaryHistory</code> 存全年、<code>LeaveRecord</code> 全量），新增一个页面即可。</div>
+    <div class="screen"><div class="card">
+      <div style="font-size:15px;font-weight:750;color:#0A3B31;text-align:center;margin-bottom:2px">2026 年</div>
+      <div style="text-align:center;font-size:11px;color:#7C939C">全年总收入</div>
+      <div style="text-align:center;font-size:32px;font-weight:800;color:#063A2C;letter-spacing:-1px;margin:6px 0 2px">¥ 89,432.10</div>
+      <div style="text-align:center;font-size:11px;color:#0FA98A;font-weight:650">较去年 +12.3%</div>
+      <div class="ychart" id="ychart"></div>
+      <div class="ylab"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span></div>
+      <div class="ystat">
+        <div class="ys"><div class="k">出勤天数</div><div class="v">183 <small>天</small></div></div>
+        <div class="ys"><div class="k">请假</div><div class="v">9 <small>天</small></div></div>
+        <div class="ys"><div class="k">加班总时长</div><div class="v">46 <small>小时</small></div></div>
+        <div class="ys"><div class="k">外快总额</div><div class="v">¥ 3,200</div></div>
+        <div class="ys"><div class="k">最佳月份</div><div class="v">10 月 <small>¥12.4k</small></div></div>
+        <div class="ys"><div class="k">日均</div><div class="v">¥ 489</div></div>
+      </div>
+      <div class="sectl" style="margin:14px 0 7px">假期使用（今年）</div>
+      <div class="ystat" style="margin-top:0">
+        <div class="ys"><div class="k">年假</div><div class="v">已用 1.5 <small>· 剩 8.5 天</small></div></div>
+        <div class="ys"><div class="k">育儿假</div><div class="v">已用 2 <small>· 剩 8 天</small></div></div>
+        <div class="ys"><div class="k">调休</div><div class="v">剩 5 <small>天</small></div></div>
+      </div>
+    </div></div>
+    <div class="note">
+      <b>入口</b>：月度战报页顶部加「年度」按钮 ↔ 双向切换。<br>
+      <b>内容</b>：全年收入 + 12 月柱状图（vs 去年对比）· 6 项统计 · 假期使用汇总 · 点柱子可跳对应月报。
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>开发顺序（按改动量从小到大）</b>
+    ④ 饮品网格（~半天）→ ③ 独立喝水时段（~半天）→ ① 小人 2.0（1天）→ ② 年度总览（1天）。<br>
+    每完成一项出一个版本，你可以逐个验收。<br><br>
+    <b>回复「全部确认」或指出要调整的部分</b>，我立即开工。
+  </div>
+</div>
+
+<script>
+/* ═══ 小人 SVGs ═══ */
+const P = {
+  bodyTop:'#2ECFA0', bodyBottom:'#0C8B6F', face:'#063A2F', faceFaint:'rgba(6,58,47,.55)',
+  limb:'#063A2F', caseColor:'#B08968', caseDark:'#8F6B4A',
+  moon:'#FCD34D', conf:['#F472B6','#FCD34D','#60A5FA','#34D399','#FB923C']
+};
+function para(x,t){ return Math.sin(t*3.14159)*x; }
+function wrap(gi, inner){
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">`
+   + `<defs><linearGradient id="${gi}" x1="0" y1="0" x2="0" y2="1">`
+   + `<stop offset="0" stop-color="${P.bodyTop}"/><stop offset="1" stop-color="${P.bodyBottom}"/></linearGradient></defs>`
+   + inner + `</svg>`;
+}
+function shadowY(cy){ return `<ellipse cx="50" cy="${cy}" rx="16" ry="3.4" fill="rgba(10,30,25,.10)"/>`; }
+function bodyS(cx,cy,rx,ry,gi){ return `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${gi})"/>`
+  + `<ellipse cx="${cx-rx*.62+1}" cy="${cy-ry*.57}" rx="${rx*.28}" ry="${ry*.2}" fill="rgba(255,255,255,.30)"/>`; }
+function armD(d){ return `<path d="${d}" stroke="${P.limb}" stroke-width="3" fill="none" stroke-linecap="round"/>`; }
+function sparkleS(cx,cy,r,color){ return `<path d="M${cx} ${cy-r} L${cx+r*.3} ${cy-r*.3} L${cx+r} ${cy} L${cx+r*.3} ${cy+r*.3} L${cx} ${cy+r} L${cx-r*.3} ${cy+r*.3} L${cx-r} ${cy} L${cx-r*.3} ${cy-r*.3} Z" fill="${color}"/>`; }
+
+/* ① 摸鱼被抓：大圆眼 + 感叹号 */
+function rSurprised(t){
+  const jitter = Math.sin(t*18)*0.7;
+  return wrap('rg1', shadowY(91)
+   + `<g transform="translate(${jitter.toFixed(2)} 0)">`
+   + bodyS(50,58,21,24,'rg1')
+   + armD('M31 58 Q24 54 22 48') + armD('M69 58 Q76 54 78 48')
+   + `<line x1="43" y1="82" x2="41" y2="89" stroke="${P.limb}" stroke-width="3" stroke-linecap="round"/>`
+   + `<line x1="57" y1="82" x2="59" y2="89" stroke="${P.limb}" stroke-width="3" stroke-linecap="round"/>`
+   + `<circle cx="43.5" cy="53" r="4.2" fill="#fff"/><circle cx="43.5" cy="53" r="2.1" fill="${P.face}"/>`
+   + `<circle cx="56.5" cy="53" r="4.2" fill="#fff"/><circle cx="56.5" cy="53" r="2.1" fill="${P.face}"/>`
+   + `<circle cx="50" cy="64" r="2.8" fill="${P.face}"/>`
+   + `<text x="26" y="36" font-size="15" font-weight="800" fill="#EF4444">!</text>`
+   + `<text x="66" y="34" font-size="15" font-weight="800" fill="#EF4444">!</text>`
+   + `</g>`);
+}
+/* ② 加油：举拳 + 星星 */
+function rCheer(t){
+  const punch = 4.2 + Math.sin(t*6.2)*1.6;
+  return wrap('rg2', shadowY(91)
+   + bodyS(50,58,21,24,'rg2')
+   + armD(`M31 56 Q24 50 22 ${(42-punch).toFixed(1)}`)
+   + armD('M69 56 Q76 60 77 66')
+   + `<circle cx="${22}" cy="${(40-punch).toFixed(1)}" r="4.2" fill="url(#rg2)" stroke="${P.limb}" stroke-width="1.6"/>`
+   + `<line x1="43" y1="82" x2="41" y2="89" stroke="${P.limb}" stroke-width="3" stroke-linecap="round"/>`
+   + `<line x1="57" y1="82" x2="59" y2="89" stroke="${P.limb}" stroke-width="3" stroke-linecap="round"/>`
+   + `<path d="M40 52 Q43.5 48 47 52" stroke="${P.face}" stroke-width="2" fill="none" stroke-linecap="round"/>`
+   + `<path d="M53 52 Q56.5 48 60 52" stroke="${P.face}" stroke-width="2" fill="none" stroke-linecap="round"/>`
+   + `<path d="M44 61 Q50 68 56 61 Z" fill="${P.face}"/>`
+   + sparkleS(74, 36, 4.5*(1+0.3*Math.sin(t*7)), P.moon)
+   + sparkleS(28, 28, 3.2*(1+0.3*Math.sin(t*7+2)), P.moon));
+}
+/* ③ 嘿嘿：脸红 + 眯眼 */
+function rShy(t){
+  const tilt = Math.sin(t*2.6)*3;
+  return wrap('rg3', shadowY(91)
+   + `<g transform="rotate(${tilt.toFixed(1)} 50 78)">`
+   + bodyS(50,58,21,24,'rg3')
+   + armD('M31 58 Q24 62 24 68') + armD('M69 58 Q76 62 76 68')
+   + `<line x1="43" y1="82" x2="41" y2="89" stroke="${P.limb}" stroke-width="3" stroke-linecap="round"/>`
+   + `<line x1="57" y1="82" x2="59" y2="89" stroke="${P.limb}" stroke-width="3" stroke-linecap="round"/>`
+   + `<path d="M40 54 Q43.5 50 47 54" stroke="${P.face}" stroke-width="2" fill="none" stroke-linecap="round"/>`
+   + `<path d="M53 54 Q56.5 50 60 54" stroke="${P.face}" stroke-width="2" fill="none" stroke-linecap="round"/>`
+   + `<path d="M46 62 Q50 66 54 62" stroke="${P.face}" stroke-width="2" fill="none" stroke-linecap="round"/>`
+   + `<ellipse cx="37" cy="61" rx="4.6" ry="3" fill="rgba(244,114,182,.45)"/>`
+   + `<ellipse cx="63" cy="61" rx="4.6" ry="3" fill="rgba(244,114,182,.45)"/>`
+   + `</g>`);
+}
+/* ④ 庆祝：举双手 + 彩带 */
+function rCelebrate(t){
+  const jump = Math.abs(Math.sin(t*3.4))*4.5;
+  let conf='';
+  for(let i=0;i<7;i++){
+    const ph=((t/2.2)+i*0.15)%1;
+    conf += `<circle cx="${(20+i*10+Math.sin(t*2+i)*2).toFixed(1)}" cy="${(6+ph*40).toFixed(1)}" r="2.2" fill="${P.conf[i%5]}" fill-opacity="${(1-ph*.7).toFixed(2)}"/>`;
+  }
+  return wrap('rg4', shadowY(92,1-jump/14)
+   + `<g transform="translate(0 ${(-jump).toFixed(1)})">`
+   + bodyS(50,56,21,23,'rg4')
+   + armD('M31 50 Q23 42 21 33') + armD('M69 50 Q77 42 79 33')
+   + `<line x1="43" y1="79" x2="40" y2="86" stroke="${P.limb}" stroke-width="3" stroke-linecap="round"/>`
+   + `<line x1="57" y1="79" x2="60" y2="86" stroke="${P.limb}" stroke-width="3" stroke-linecap="round"/>`
+   + `<path d="M39 50 Q43.5 45 48 50" stroke="${P.face}" stroke-width="2" fill="none" stroke-linecap="round"/>`
+   + `<path d="M52 50 Q56.5 45 61 50" stroke="${P.face}" stroke-width="2" fill="none" stroke-linecap="round"/>`
+   + `<path d="M43 60 Q50 69 57 60 Z" fill="${P.face}"/>`
+   + `</g>` + conf);
+}
+/* ═══ 绑定 ═══ */
+const REG = {r1:[rSurprised,'rg1'], r2:[rCheer,'rg2'], r3:[rShy,'rg3'], r4:[rCelebrate,'rg4']};
+function tick(now){
+  const t = now/1000;
+  for (const id in REG) {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = REG[id][0](t);
+  }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+/* 看门狗（后台节流兜底） */
+let last = performance.now();
+setInterval(()=>{ if(performance.now()-last>800){ for(const id in REG){const el=document.getElementById(id); if(el) el.innerHTML=REG[id][0](performance.now()/1000);} } }, 200);
+
+/* ═══ 年度柱状图 ═══ */
+const vals = [6800,7200,7000,7500,7300,7100,7600,7400,7000,12400,7000,0];
+const max = Math.max(...vals);
+document.getElementById('ychart').innerHTML = vals.map((v,i)=>{
+  const h = v>0 ? Math.max(6, v/max*92) : 4;
+  return `<div class="ybar${v>0?'':' zero'}" style="height:${h.toFixed(0)}px" title="${v}"></div>`;
+}).join('');
+</script>
+</body></html>

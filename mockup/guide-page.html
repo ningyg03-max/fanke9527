@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f2f4f7;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px}
+.phone{width:384px;margin:0 auto;border-radius:26px;overflow:hidden;
+       background:linear-gradient(180deg,#ECFBF4,#EEF6FE 55%,#F1F6FF);padding:14px 20px 24px}
+.hd{display:flex;align-items:center;height:42px;margin-bottom:8px}
+.bk{height:42px;padding:0 16px;border-radius:21px;background:#F7FCFA;border:1.5px solid #D3E9E3;
+    display:flex;align-items:center;font-size:13px;color:#16323B;font-weight:500}
+.tt{flex:1;text-align:center;font-size:20px;font-weight:700;color:#16323B}
+.pad{width:60px}
+.intro{font-size:12px;color:#61808C;line-height:1.5;margin:10px 0 4px}
+/* 分区头 */
+.sh{border-radius:20px;padding:16px 18px;margin-top:20px;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,#0EA47A,#10B981 33%,#22C6B4 66%,#2DD4BF);
+    box-shadow:0 5px 12px rgba(16,185,129,.28)}
+.sh:before{content:"";position:absolute;width:130px;height:130px;border-radius:50%;
+           background:rgba(255,255,255,.12);top:-40px;right:-30px}
+.sh>*{position:relative}
+.sh .t{font-size:17px;font-weight:700;color:#fff}
+.sh .s{font-size:11.5px;color:rgba(255,255,255,.78);margin-top:5px}
+/* 内容卡 */
+.card{border-radius:22px;padding:16px 18px;margin-top:12px;
+      background:radial-gradient(circle at 90% 4%, rgba(16,185,129,.11), transparent 52%),linear-gradient(135deg,#FFFFFF 44%,#E7F8F0);
+      box-shadow:0 3px 9px rgba(0,0,0,.05)}
+.ct{font-size:14px;font-weight:700;color:#16323B}
+.bd{font-size:12.5px;color:#61808C;line-height:1.55;margin-top:9px;white-space:pre-line}
+.fm{font-size:12.5px;font-weight:600;color:#047857;background:#ECFDF5;border-radius:10px;
+    padding:10px 12px;margin-top:10px;line-height:1.4}
+.et{font-size:11.5px;font-weight:600;color:#8AA6B0;margin-top:14px;margin-bottom:4px;letter-spacing:.05em}
+.er{display:flex;align-items:center;margin-top:8px;font-size:12.5px}
+.er .n{flex:1;color:#16323B}
+.er .r{color:#61808C;text-align:right}
+.er .m{color:#047857;font-weight:700;font-size:13px;width:90px;text-align:right;margin-left:10px}
+.st{display:flex;align-items:flex-start;margin-top:9px}
+.st .num{width:20px;height:20px;border-radius:10px;background:#ECFDF5;color:#047857;
+         font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;
+         flex-shrink:0;margin-top:1px}
+.st .tx{font-size:12.5px;color:#16323B;line-height:1.45;margin-left:10px;flex:1}
+.tr{display:flex;align-items:center;margin-top:9px;font-size:12.5px}
+.tr .n{flex:1;color:#16323B}
+.tr .p{font-weight:700;color:#047857}
+.tr .p.mute{color:#61808C}
+.footer{font-size:11.5px;color:#8AA6B0;line-height:1.5;margin-top:18px}
+</style></head><body>
+<div class="phone">
+  <div class="hd"><span class="bk">返回</span><span class="tt">加班与请假</span><span class="pad"></span></div>
+  <div class="intro">这两项都会直接改变当天的收入计算。了解规则后，记错钱的可能性就很小了。</div>
+
+  <!-- ═══ 加班 ═══ -->
+  <div class="sh"><div class="t">⏱ 加班费</div><div class="s">下班后继续工作 · 按时长自动计算</div></div>
+
+  <div class="card">
+    <div class="ct">它是怎么工作的</div>
+    <div class="bd">先在下班时间过后，到主卡「今天加班了？」这一行点「开始」；
+结束工作后点「结束」，这段时长会按加班倍率折算成钱。
+加班收入实时显示，结束时自动记入工资日历。</div>
+  </div>
+
+  <div class="card">
+    <div class="ct">计算方式</div>
+    <div class="fm">加班费 = 加班时长 × 每分钟工资 × 加班倍率</div>
+    <div class="bd">其中：每分钟工资 = 日薪 ÷ 每日工作分钟数（自动扣除午休）。
+所以加班费和你设置里的「每天工资」是同一套比例，不需要单独配置。</div>
+    <div class="et">示例（日薪 ¥300 · 每天工作 8 小时）</div>
+    <div class="er"><span class="n">加班 2 小时</span><span class="r">1.5 倍</span><span class="m">¥112.50</span></div>
+    <div class="er"><span class="n">加班 1 小时</span><span class="r">2 倍</span><span class="m">¥75.00</span></div>
+  </div>
+
+  <div class="card">
+    <div class="ct">计时起点（重要）</div>
+    <div class="fm">起点固定为「下班时间 + 宽限」，与你什么时候点击无关。</div>
+    <div class="bd">例：17:00 下班、宽限 30 分钟 ——
+即使你 20:00 才想起来点「开始」，也仍然从 17:30 起算，不会被扣掉。</div>
+    <div class="bd">宽限可在设置里选择：下班即算 / 15 分钟 / 30 分钟 / 1 小时。</div>
+  </div>
+
+  <div class="card">
+    <div class="ct">加班倍率</div>
+    <div class="bd">1.5 倍 / 2 倍 / 3 倍三档可选，按你公司的规定在设置里切换即可。</div>
+    <div class="et">常见约定（仅供参考）</div>
+    <div class="er"><span class="n">工作日加班</span><span class="r">1.5 倍</span><span class="m"></span></div>
+    <div class="er"><span class="n">休息日加班</span><span class="r">2 倍</span><span class="m"></span></div>
+    <div class="er"><span class="n">法定节假日</span><span class="r">3 倍</span><span class="m"></span></div>
+  </div>
+
+  <div class="card">
+    <div class="ct">操作流程</div>
+    <div class="st"><span class="num">1</span><span class="tx">下班时间过后，主卡出现「今天加班了？」，点「开始」</span></div>
+    <div class="st"><span class="num">2</span><span class="tx">计时中显示「⏱ 加班中 0:32:15」，可随时查看</span></div>
+    <div class="st"><span class="num">3</span><span class="tx">点「结束」结算，显示「今日加班 2:30:00 · ¥112.50 元」</span></div>
+    <div class="st"><span class="num">4</span><span class="tx">想重记：点「重来」清除今天的加班记录，重新开始</span></div>
+    <div class="bd">提示：标记请假后，加班行会自动隐藏（请假当天不可能在加班）。</div>
+  </div>
+
+  <!-- ═══ 请假 ═══ -->
+  <div class="sh"><div class="t">🏖 请假</div><div class="s">标记当天 · 按类型比例调整收入</div></div>
+
+  <div class="card">
+    <div class="ct">为什么需要标记</div>
+    <div class="bd">默认每个工作日都按「上满班」算钱。
+如果当天请假却不标记，这一天的收入就会被算多 —— 标记后金额自动按比例调整。</div>
+  </div>
+
+  <div class="card">
+    <div class="ct">五种类型与收入比例</div>
+    <div class="tr"><span class="n">年假 / 调休 / 婚假</span><span class="p">100%（全薪）</span></div>
+    <div class="tr"><span class="n">病假</span><span class="p">60%</span></div>
+    <div class="tr"><span class="n">事假</span><span class="p mute">0%（无薪）</span></div>
+    <div class="bd">比例在标记时自动带入，不需要手填。</div>
+  </div>
+
+  <div class="card">
+    <div class="ct">整天 / 半天</div>
+    <div class="fm">半天收入 = 整天收入 × 50%</div>
+    <div class="bd">例：病假整天是 60% 日薪，病假半天就是 60% × 50% = 30% 日薪。</div>
+  </div>
+
+  <div class="card">
+    <div class="ct">两个标记入口</div>
+    <div class="st"><span class="num">1</span><span class="tx">主卡「今天请假了？[标记]」 —— 两步：选类型 → 选整天 / 半天</span></div>
+    <div class="st"><span class="num">2</span><span class="tx">忘记标记也没关系：下班后文案自动变成「今天请假了吗？[补记]」，随时补</span></div>
+    <div class="st"><span class="num">3</span><span class="tx">更早的日期：工资日历里长按某一天 →「标记请假」即可补录</span></div>
+    <div class="bd">已标记的日期在日历里用紫色显示；长按还能「修改请假记录」或「取消请假」。</div>
+  </div>
+
+  <div class="card">
+    <div class="ct">计算示例（日薪 ¥300）</div>
+    <div class="er"><span class="n">年假 · 整天</span><span class="r">100%</span><span class="m">¥300.00</span></div>
+    <div class="er"><span class="n">病假 · 整天</span><span class="r">60%</span><span class="m">¥180.00</span></div>
+    <div class="er"><span class="n">病假 · 半天</span><span class="r">30%</span><span class="m">¥90.00</span></div>
+    <div class="er"><span class="n">事假 · 整天</span><span class="r">0%</span><span class="m">¥0.00</span></div>
+  </div>
+
+  <div class="footer">加班费与请假金额都会记入工资日历；
+修改「每天工资」后，已有的历史记录不会自动重算。</div>
+</div>
+</body></html>

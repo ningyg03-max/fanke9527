@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="app_accent">#ff10b981</color>
+    <color name="app_amber">#ffb45309</color>
+    <color name="app_background">#ffecfbf4</color>
+    <color name="app_blue">#ff0ea5e9</color>
+    <color name="app_border">#ffe3efec</color>
+    <color name="app_muted">#ff61808c</color>
+    <color name="app_surface">#ffffffff</color>
+    <color name="app_text">#ff16323b</color>
+    <color name="widget_accent">#ff059669</color>
+    <color name="widget_background_color">#99ffffff</color>
+    <color name="widget_border_color">#2410b981</color>
+    <color name="widget_button_background">#1a10b981</color>
+    <color name="widget_progress_track">#1f047857</color>
+    <color name="widget_text_primary">#ff16323b</color>
+    <color name="widget_text_secondary">#ff61808c</color>
+</resources>

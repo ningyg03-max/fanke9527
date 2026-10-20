@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>工位显示时间线 · SalaryJump</title>
+<style>
+  :root{
+    --bg:#14161c; --card:#1c1f28; --line:#2b2f3c; --text:#e8eaf0; --muted:#8b91a3;
+    --on:#4a9eff; --onbg:rgba(74,158,255,.16); --off:#3a3f4d; --offbg:rgba(58,63,77,.28);
+    --warn:#ffb020; --warnbg:rgba(255,176,32,.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font:14px/1.6 -apple-system,"PingFang SC","Noto Sans CJK SC",sans-serif;padding:20px}
+  h1{font-size:17px;margin-bottom:4px}
+  .sub{color:var(--muted);font-size:12.5px;margin-bottom:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+  h2{font-size:13.5px;color:var(--muted);font-weight:600;letter-spacing:.02em;margin-bottom:12px}
+  .row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .lbl{width:86px;flex:none;font-size:12px;color:var(--muted);text-align:right}
+  .track{flex:1;display:flex;height:30px;border-radius:7px;overflow:hidden;border:1px solid var(--line)}
+  .seg{display:flex;align-items:center;justify-content:center;font-size:11px;white-space:nowrap;overflow:hidden}
+  .on{background:var(--onbg);color:var(--on);flex:1}
+  .off{background:var(--offbg);color:var(--muted)}
+  .edge{background:var(--warnbg);color:var(--warn);flex:1;font-size:10.5px}
+  .marks{display:flex;margin-left:96px;color:var(--muted);font-size:10.5px;justify-content:space-between;margin-top:-3px;margin-bottom:12px}
+  .k{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+  .k i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:11.5px}
+  td.mono{font-variant-numeric:tabular-nums;font-family:ui-monospace,Menlo,monospace}
+  .hi{color:var(--on)} .wa{color:var(--warn)} .mu{color:var(--muted)}
+  .note{background:var(--warnbg);border:1px solid rgba(255,176,32,.3);border-radius:9px;padding:11px 13px;font-size:12.5px;color:#ffd58a;margin-top:12px}
+  .big{font-size:22px;font-weight:700;color:var(--on);font-variant-numeric:tabular-nums}
+  .bigwrap{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+</style>
+</head>
+<body>
+
+<h1>工位（办公桌）显示时间线</h1>
+<div class="sub">SalaryJump 3.61 · <code>PetState.isAtDesk()</code> · 默认作息 08:00–17:00、午休 11:30–12:30</div>
+
+<div class="card">
+  <h2>结论</h2>
+  <div class="bigwrap"><span class="big">2 小时</span><span class="mu">下班后工位保留时长（默认）</span></div>
+  <div class="mu" style="font-size:12.5px">17:00 下班 → <b class="hi">19:00 仍显示</b> → <b class="wa">19:01 起只剩小人</b></div>
+</div>
+
+<div class="card">
+  <h2>一天的时间线</h2>
+
+  <div class="row">
+    <div class="lbl">工作日</div>
+    <div class="track">
+      <div class="seg off" style="flex:8">00:00–08:00 无桌</div>
+      <div class="seg on" style="flex:11">08:00–19:00 有桌</div>
+      <div class="seg off" style="flex:5">19:01–24:00 无桌</div>
+    </div>
+  </div>
+  <div class="marks"><span>00:00</span><span>08:00</span><span class="hi">17:00 下班</span><span class="wa">19:01 消失</span><span>24:00</span></div>
+
+  <div class="row" style="margin-top:6px">
+    <div class="lbl">其中 17:00 后</div>
+    <div class="track">
+      <div class="seg on" style="flex:2">下班快乐 + 工位（宽限 2h）</div>
+      <div class="seg off" style="flex:1">只有小人</div>
+    </div>
+  </div>
+
+  <div class="k">
+    <span><i style="background:var(--on)"></i>工位显示</span>
+    <span><i style="background:var(--off)"></i>只有小人</span>
+    <span>午休 11:30–12:30 期间工位<b>照常显示</b>（属于工作时间内）</span>
+  </div>
+</div>
+
+<div class="card">
+  <h2>判定顺序（代码实际逻辑）</h2>
+  <table>
+    <tr><th style="width:34px">#</th><th>条件</th><th style="width:130px">结果</th></tr>
+    <tr><td class="mono">①</td><td>当天加班打卡<b>进行中</b></td><td><span class="hi">显示</span> <span class="mu">（无时间上限）</span></td></tr>
+    <tr><td class="mono">②</td><td>还没到上班时间</td><td><span class="mu">不显示</span></td></tr>
+    <tr><td class="mono">③</td><td>今天不该在工位<br><span class="mu">（休息日未出勤 / 已请假）</span></td><td><span class="mu">不显示</span></td></tr>
+    <tr><td class="mono">④</td><td>已过 <span class="mono">下班时间 + 120 分钟</span></td><td><span class="mu">不显示</span></td></tr>
+    <tr><td class="mono">⑤</td><td>其余</td><td><span class="hi">显示</span></td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>各下班时间的消失时刻</h2>
+  <table>
+    <tr><th>下班时间</th><th>工位消失</th><th>实际保留</th></tr>
+    <tr><td class="mono">17:00</td><td class="mono hi">19:01</td><td>121 分钟</td></tr>
+    <tr><td class="mono">18:00</td><td class="mono hi">20:01</td><td>121 分钟</td></tr>
+    <tr><td class="mono">19:00</td><td class="mono hi">21:01</td><td>121 分钟</td></tr>
+    <tr><td class="mono">20:00</td><td class="mono hi">22:01</td><td>121 分钟</td></tr>
+    <tr><td class="mono">21:00</td><td class="mono hi">23:01</td><td>121 分钟</td></tr>
+    <tr><td class="mono">22:00</td><td class="mono wa">00:00（次日）</td><td class="wa">120 分钟</td></tr>
+    <tr><td class="mono">23:00</td><td class="mono wa">00:00（次日）</td><td class="wa">仅 59 分钟</td></tr>
+  </table>
+  <div class="note">
+    <b>⚠ 边界问题</b>：当下班时间晚于 <span class="mono">21:59</span>，<code>下班+120</code> 会越过午夜，
+    判定④永不触发，工位会一直显示到 <span class="mono">23:59</span>，到次日 <span class="mono">00:00</span>
+    才被判定②「未到上班时间」兜掉。<br>
+    结果：下班越晚，宽限越短。<b>23:00 下班只剩 59 分钟</b>，与设计的 2 小时不一致。
+  </div>
+</div>
+
+</body>
+</html>

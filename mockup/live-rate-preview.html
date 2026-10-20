@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>实时读数 · 实际效果</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#E9F1EF}
+body{font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ width:384px;margin:0 auto;padding:16px 20px 30px;color:#16323B;font-size:13px}
+h1{font-size:17px;font-weight:800;margin-bottom:4px}
+.lead{font-size:11.5px;color:#5A7680;line-height:1.7;margin-bottom:14px}
+.sec{margin-top:22px}
+h2{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.num{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+ font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.num.bad{background:linear-gradient(135deg,#9F1239,#E11D48)}
+.card{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+p{font-size:11.5px;color:#475569;line-height:1.8}
+p b{color:#16323B}
+code{background:#F1F5F4;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#0F766E;font-family:ui-monospace,Menlo,monospace}
+
+/* ── Hero 卡真实模拟 ── */
+.hero{background:linear-gradient(150deg,#0E5F4A,#12987A);border-radius:22px;padding:18px 20px;color:#fff;
+ margin-bottom:12px;box-shadow:0 4px 16px rgba(11,122,92,.22)}
+.hlbl{font-size:12px;opacity:.72;letter-spacing:.1em}
+.hamt{font-size:38px;font-weight:800;letter-spacing:-1.2px;line-height:1.1;margin-top:4px;
+ font-variant-numeric:tabular-nums}
+.hrow{display:flex;align-items:center;gap:8px;margin-top:12px}
+.hrow .l{flex:1;min-width:0}
+.petcol{width:104px;flex:none;display:flex;flex-direction:column;align-items:center}
+.petbox{width:104px;height:109px;display:flex;align-items:center;justify-content:center}
+.mood{font-size:10px;color:rgba(255,255,255,.72);white-space:nowrap;margin-top:1px}
+.fat{font-size:9.5px;color:rgba(255,255,255,.6);line-height:1.25;text-align:center}
+.chip{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:6px 12px;
+ font-size:12px;margin-top:12px}
+.bar{height:8px;background:rgba(255,255,255,.2);border-radius:4px;margin-top:16px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#6EE7B7,#A7F3D0);border-radius:4px}
+.stats{display:flex;margin-top:16px}
+.st{flex:1;text-align:center}
+.st .v{font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.st .k{font-size:10.5px;opacity:.7;margin-top:2px}
+.sched{font-size:11.5px;opacity:.8;margin-top:14px;border-top:1px solid rgba(255,255,255,.15);padding-top:11px}
+
+.tag{display:inline-block;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:6px;margin-left:6px}
+.t-now{background:#FEE2E2;color:#991B1B}.t-new{background:#D1FAE5;color:#047857}
+.note{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;
+ font-size:11.5px;color:#78350F;line-height:1.8;margin-top:10px}
+.note b{color:#92400E}
+.ok{background:#F0FDF4;border:1px solid #BBF7D0;color:#166534}
+.ask{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:13px 15px;margin-top:14px}
+.ask h3{font-size:12.5px;color:#1E3A8A;margin-bottom:8px}
+.ask li{font-size:11.5px;color:#334155;line-height:1.9;margin-left:16px}
+.ask li b{color:#1E3A8A}
+table{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px}
+th{text-align:left;color:#64748B;font-weight:600;padding:5px 6px;font-size:10px;background:#F8FBFA}
+td{padding:6px;border-top:1px solid #EEF3F2;color:#475569;vertical-align:top}
+td b{color:#16323B}
+.mono{font-family:ui-monospace,Menlo,monospace}
+</style></head><body>
+
+<h1>实时读数 · 实际是什么效果</h1>
+<p class="lead">先说个纠正：我上次的描述不准确，下面用真实尺寸画出来。</p>
+
+<!-- ══ 纠正 ══ -->
+<div class="sec">
+  <h2><span class="num bad">!</span>先纠正：主卡已经有费率了</h2>
+  <div class="card">
+    <table>
+      <tr><th style="width:110px">我上次说</th><th>实际</th></tr>
+      <tr><td>「加一行实时读数」</td><td><b>已经有</b>「每小时 / 每分钟 / 每秒」四个费率</td></tr>
+      <tr><td>「这一小时 ¥35.20」</td><td>已经有了，就是「<b>每小时 ¥35.20</b>」</td></tr>
+    </table>
+    <p style="margin-top:10px">
+      但有个<b>真问题</b>：这些数字是<b>静态费率</b>（<code>日薪 ÷ 工作时长</code>），
+      <b>只在改设置时更新</b>。所以周末、下班后、请假时 —— 它们照样显示 <code>¥35.20</code>，
+      好像在说「你还在赚」。<b>这才是「实时读数」真正该解决的问题。</b>
+    </p>
+  </div>
+</div>
+
+<!-- ══ 现在 ══ -->
+<div class="sec">
+  <h2><span class="num">1</span>现在长这样</h2>
+  <div class="hero">
+    <div class="hlbl">今日已赚</div>
+    <div class="hamt">¥ 287.50</div>
+    <div class="hrow">
+      <div class="l"></div>
+      <div class="petcol">
+        <div class="petbox">
+          <svg viewBox="0 0 100 100" style="width:78%;height:78%">
+            <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>
+            <ellipse cx="50" cy="90" rx="16" ry="3.4" fill="rgba(10,30,25,.10)"/>
+            <ellipse cx="50" cy="58" rx="21" ry="24" fill="url(#g1)"/>
+            <ellipse cx="44" cy="50" rx="8" ry="5.6" fill="rgba(255,255,255,.30)"/>
+            <path d="M31 58 Q25 64 26 70" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M69 58 Q74 63 73 68" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M43 82 L40 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+            <path d="M57 82 L61 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="43.5" cy="54" r="2.7" fill="#063A2F"/><circle cx="56.5" cy="54" r="2.7" fill="#063A2F"/>
+            <path d="M45 65 Q47.5 62 50 65 Q52.5 68 55 65" stroke="#063A2F" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="mood">键盘敲起来</div>
+      </div>
+    </div>
+    <div><span class="chip">工作中 · 距下班 2:13</span></div>
+    <div class="bar"><i style="width:68%"></i></div>
+    <div class="stats">
+      <div class="st"><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+      <div class="st"><div class="v">¥35.20</div><div class="k">每小时</div></div>
+      <div class="st"><div class="v">¥0.59</div><div class="k">每分钟</div></div>
+      <div class="st"><div class="v">¥0.01</div><div class="k">每秒</div></div>
+    </div>
+    <div class="sched">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>
+  <p style="font-size:11px;color:#7E9AA3">
+    问题：「每小时 ¥35.20」<b>下班后、周末也这么显示</b>（它只是个费率表）。
+  </p>
+</div>
+
+<!-- ══ 方案 A ══ -->
+<div class="sec">
+  <h2><span class="num">2</span>方案 A · 费率跟着状态变<span class="tag t-new">推荐</span></h2>
+  <div class="hero">
+    <div class="hlbl">今日已赚</div>
+    <div class="hamt">¥ 287.50</div>
+    <div class="hrow">
+      <div class="l"></div>
+      <div class="petcol">
+        <div class="petbox">
+          <svg viewBox="0 0 100 100" style="width:78%;height:78%">
+            <defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>
+            <ellipse cx="50" cy="90" rx="16" ry="3.4" fill="rgba(10,30,25,.10)"/>
+            <ellipse cx="50" cy="58" rx="21" ry="24" fill="url(#g2)"/>
+            <ellipse cx="44" cy="50" rx="8" ry="5.6" fill="rgba(255,255,255,.30)"/>
+            <path d="M31 58 Q25 64 26 70" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M69 58 Q74 63 73 68" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M43 82 L40 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+            <path d="M57 82 L61 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="43.5" cy="54" r="2.7" fill="#063A2F"/><circle cx="56.5" cy="54" r="2.7" fill="#063A2F"/>
+            <path d="M45 65 Q47.5 62 50 65 Q52.5 68 55 65" stroke="#063A2F" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="mood">键盘敲起来</div>
+      </div>
+    </div>
+    <div><span class="chip">工作中 · 距下班 2:13</span></div>
+    <div class="bar"><i style="width:68%"></i></div>
+    <div class="stats">
+      <div class="st"><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+      <div class="st"><div class="v" style="color:#A7F3D0">¥35.20</div><div class="k">每小时 <b style="opacity:1">● 赚中</b></div></div>
+      <div class="st"><div class="v" style="opacity:.45">—</div><div class="k">每分钟</div></div>
+      <div class="st"><div class="v" style="opacity:.45">—</div><div class="k">每秒</div></div>
+    </div>
+    <div class="sched">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>
+
+  <div class="card" style="margin-top:0">
+    <p><b>做法</b>：费率不在工作时，就灰掉或换成状态词。</p>
+    <table style="margin-top:8px">
+      <tr><th style="width:92px">时刻</th><th>显示</th></tr>
+      <tr><td>工作中</td><td><b style="color:#0B7A5C">¥35.20</b> · 赚中</td></tr>
+      <tr><td>午休 / 下班后</td><td><span class="mono" style="color:#94A3B8">—</span>（灰）</td></tr>
+      <tr><td>加班中</td><td><b style="color:#B45309">¥52.80</b> · 加班 1.5 倍</td></tr>
+      <tr><td>休息日 / 请假</td><td><span class="mono" style="color:#94A3B8">—</span>（灰）</td></tr>
+      <tr><td>休息日出勤</td><td><b style="color:#0B7A5C">¥70.40</b> · 2 倍</td></tr>
+    </table>
+    <div class="note ok" style="margin-top:10px">
+      <b>为什么推荐</b>：改动极小（一个方法里加判断），但<b>立刻能看懂「现在到底在不在赚」</b>。
+      而且不加新元素 —— 原来的四个格子还是四个格子。
+    </div>
+  </div>
+</div>
+
+<!-- ══ 方案 B ══ -->
+<div class="sec">
+  <h2><span class="num">3</span>方案 B · 小人下方显示钱</h2>
+  <div class="hero">
+    <div class="hlbl">今日已赚</div>
+    <div class="hamt">¥ 287.50</div>
+    <div class="hrow">
+      <div class="l"></div>
+      <div class="petcol">
+        <div class="petbox" style="height:92px">
+          <svg viewBox="0 0 100 100" style="width:78%;height:78%">
+            <defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>
+            <ellipse cx="50" cy="90" rx="16" ry="3.4" fill="rgba(10,30,25,.10)"/>
+            <ellipse cx="50" cy="58" rx="21" ry="24" fill="url(#g3)"/>
+            <ellipse cx="44" cy="50" rx="8" ry="5.6" fill="rgba(255,255,255,.30)"/>
+            <path d="M31 58 Q25 64 26 70" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M69 58 Q74 63 73 68" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M43 82 L40 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+            <path d="M57 82 L61 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="43.5" cy="54" r="2.7" fill="#063A2F"/><circle cx="56.5" cy="54" r="2.7" fill="#063A2F"/>
+            <path d="M45 65 Q47.5 62 50 65 Q52.5 68 55 65" stroke="#063A2F" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="mood" style="color:#A7F3D0;font-weight:700">¥35.2/时</div>
+        <div class="fat">赚中</div>
+      </div>
+    </div>
+    <div><span class="chip">工作中 · 距下班 2:13</span></div>
+    <div class="bar"><i style="width:68%"></i></div>
+    <div class="stats">
+      <div class="st"><div class="v">¥300.00</div><div class="k">今日目标</div></div>
+      <div class="st"><div class="v">¥35.20</div><div class="k">每小时</div></div>
+      <div class="st"><div class="v">¥0.59</div><div class="k">每分钟</div></div>
+      <div class="st"><div class="v">¥0.01</div><div class="k">每秒</div></div>
+    </div>
+    <div class="sched">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>
+
+  <div class="card" style="margin-top:0">
+    <p>
+      <b>做法</b>：小人下方那行（现在显示「键盘敲起来」）换成短读数 <code>¥35.2/时</code> + <code>赚中</code>。
+    </p>
+    <p style="margin-top:6px">
+      <b>但空间很紧</b>：小人列只有 104dp 宽（10sp 字体下约 10 个汉字）。
+      我上次写的「工作中 · 这一小时 ¥35.20 · 今天已赚 ¥287.50」<b>根本放不下</b> —— 这是我的错。
+    </p>
+    <div class="note">
+      <b>副作用</b>：点心小人的时候，那行会被点击语录占用。所以「读数」和「语录」要抢同一块地方 ——
+      要么点击后几秒再切回读数，要么二选一。
+    </div>
+  </div>
+</div>
+
+<!-- ══ 对比 ══ -->
+<div class="sec">
+  <h2><span class="num">4</span>怎么选</h2>
+  <div class="card">
+    <table>
+      <tr><th style="width:56px"></th><th style="width:120px">方案 A</th><th>方案 B</th></tr>
+      <tr><td>改动</td><td>小（改费率显示逻辑）</td><td>中（要处理和语录的冲突）</td></tr>
+      <tr><td>新增元素</td><td>无</td><td>无（复用心情那行）</td></tr>
+      <tr><td>解决的问题</td><td><b>「现在到底在不在赚」</b></td><td>让小人直接连着钱</td></tr>
+      <tr><td>风险</td><td>低</td><td>中（和点击语录抢位置）</td></tr>
+    </table>
+    <div class="note ok" style="margin-top:10px">
+      <b>我的建议</b>：<b>先只做 A</b>。它解决的是真问题（费率误导），
+      改动小、零风险，而且不引入新元素。<br><br>
+      B 更像是「让小人更有趣」，可以等 A 用一段时间后再说 ——
+      而且 B 和「语录」必然要妥协，不一定值得。
+    </div>
+  </div>
+</div>
+
+<div class="ask">
+  <h3>你的判断</h3>
+  <ul>
+    <li><b>要做 A 吗？</b>（费率跟状态变：非工作时灰掉 / 加班显示倍率）</li>
+    <li><b>A 里非工作时的显示</b>：灰掉的 <span class="mono">—</span>，还是显示「已封顶」「今天不赚」这类文字？</li>
+    <li><b>要做 B 吗？</b>如果做，点击语录显示几秒后切回读数？（建议 3 秒）</li>
+  </ul>
+</div>
+
+</body></html>

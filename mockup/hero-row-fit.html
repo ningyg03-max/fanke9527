@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>金额与小人 · 排版修复对比</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px 10px 40px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:760px}
+h1{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12px;color:#475569;line-height:1.75;margin-top:7px}
+.sec{margin-top:24px}
+h2{font-size:14.5px;font-weight:800;color:#0F172A;display:flex;align-items:center;gap:8px}
+.num{width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sub{font-size:11.5px;color:#64748B;margin:6px 0 12px;line-height:1.65}
+.card{background:#F4F8F9;border-radius:20px;padding:20px;border:1px solid #E2E8EC;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:0}
+.amtwrap{flex:1;min-width:0;overflow:hidden}
+.amt{font-weight:700;color:#0B3B33;white-space:nowrap;letter-spacing:-.5px}
+.petcol{display:flex;flex-direction:column;align-items:center;flex:none}
+.petbox{display:flex;align-items:center;justify-content:center}
+.mood{font-size:10px;color:#7C939C;white-space:nowrap}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;margin-bottom:8px}
+.bad{background:#FECDD3;color:#9F1239}
+.good{background:#D1FAE5;color:#047857}
+.note{background:#fff;border-radius:14px;padding:13px 15px;border:1px solid #E2E8EC;font-size:11.8px;color:#475569;line-height:1.75;margin-top:12px}
+.note b{color:#0B7A5C}
+code{background:#F1F5F4;border-radius:4px;padding:1px 4px;font-size:10.5px;color:#0F766E}
+.rowlbl{font-size:11px;color:#64748B;margin:10px 0 4px}
+</style></head><body>
+<div class="page">
+  <h1>金额被小人挤掉 — 修复对比</h1>
+  <p class="intro">
+    真机 393dp 宽 · 主卡左右各 20dp 内边距 · 一行可用 <b>313dp</b><br>
+    金额「¥ 1234.56」在 46sp 下约需 <b>231dp</b>
+  </p>
+
+  <div class="sec">
+    <h2><span class="num">1</span>修复前</h2>
+    <div class="sub">金额固定 46sp，小人按用户选的尺寸占位 → 中/大 时金额被切掉一截。</div>
+    <div id="before"></div>
+  </div>
+
+  <div class="sec">
+    <h2><span class="num">2</span>修复后</h2>
+    <div class="sub">
+      ① 金额按实际可用宽度算字号（<code>HeroFit.amountTextSizePx</code>）<br>
+      ② 小人最多占一行 42%（<code>HeroFit.petWidthDp</code>），保证金额这边够用
+    </div>
+    <div id="after"></div>
+  </div>
+
+  <div class="note">
+    <b>规则</b>：小人尺寸是「上限」不是「保证」——窄屏上会按 42% 压缩，
+    下限 64dp。金额字号夹在 <b>24–46sp</b>，永远优先放得下。
+  </div>
+</div>
+
+<script>
+const ROW = 313;            // 可用宽度 dp
+const AMT = '¥ 1234.56';
+const SIZES = [
+  {name: '小', dp: 88},
+  {name: '中', dp: 104},
+  {name: '大', dp: 120},
+];
+const PET_MAX_SHARE = 0.42, PET_MIN = 64;
+const AMT_MIN = 24, AMT_MAX = 46;
+
+// 纯函数：与 HeroFit 一致
+function petWidthDp(rowW, requested) {
+  if (rowW <= 0) return requested;
+  const cap = Math.round(rowW * PET_MAX_SHARE);
+  return Math.max(PET_MIN, Math.min(requested, cap));
+}
+function petHeightDp(w) { return Math.round(w * 92 / 88); }
+
+// 用 canvas 量文字宽度（1px 字号 → 每 px 字号的宽度）
+const cvs = document.createElement('canvas');
+const ctx = cvs.getContext('2d');
+function widthAt(sizePx, font) {
+  ctx.font = font;
+  return ctx.measureText(AMT).width * (sizePx / sizePx);
+}
+// 返回 {size, textWidth}
+function fitAmount(availPx, wAtRef, refPx) {
+  const maxPx = AMT_MAX * 1, minPx = AMT_MIN * 1;
+  if (availPx <= 0 || wAtRef <= 0) return {size: maxPx, w: wAtRef * maxPx / refPx};
+  let need = refPx * availPx / wAtRef;
+  const size = Math.max(minPx, Math.min(maxPx, need));
+  return {size, w: wAtRef * size / refPx};
+}
+
+function petSvg(size) {
+  const s = 100;
+  const inner = `
+  <defs><linearGradient id="g${size}" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>
+  <ellipse cx="50" cy="90" rx="16" ry="3.4" fill="rgba(10,30,25,.10)"/>
+  <ellipse cx="50" cy="58" rx="21" ry="24" fill="url(#g${size})"/>
+  <ellipse cx="44" cy="50" rx="8" ry="5.6" fill="rgba(255,255,255,.30)"/>
+  <path d="M31 58 Q25 64 26 70" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M69 58 Q74 63 73 68" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M43 82 L40 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+  <path d="M57 82 L61 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="43.5" cy="54" r="2.7" fill="#063A2F"/><circle cx="56.5" cy="54" r="2.7" fill="#063A2F"/>
+  <path d="M45 65 Q47.5 62 50 65 Q52.5 68 55 65" stroke="#063A2F" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+  return `<svg viewBox="0 0 ${s} ${s}" style="width:100%;height:100%">${inner}</svg>`;
+}
+
+function render(target, fixed) {
+  const host = document.getElementById(target);
+  host.innerHTML = '';
+  SIZES.forEach(sz => {
+    const petW = fixed ? petWidthDp(ROW, sz.dp) : sz.dp;
+    const avail = ROW - petW;
+    const refPx = 100;
+    const wAtRef = 100 * 4.6;              // 参考字号 100px 下这段文字的宽度
+    const fit = fixed
+      ? fitAmount(avail, wAtRef, refPx)
+      : {size: AMT_MAX, w: wAtRef * AMT_MAX / refPx};
+    const clipped = fit.w > avail + 0.5;
+
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+      <div class="rowlbl">选「${sz.name}」· 小人 ${sz.dp}dp${fixed ? ` → 实际 ${petW}dp` : ''} · 金额可用 ${avail}dp</div>
+      <div class="card">
+        <div class="row">
+          <div class="amtwrap" style="width:${avail}px">
+            <span class="amt" style="font-size:${fit.size.toFixed(1)}px">${AMT}</span>
+          </div>
+          <div class="petcol" style="width:${petW}px">
+            <div class="petbox" style="width:${petW}px;height:${petHeightDp(petW)}px">${petSvg(sz.dp)}</div>
+            <div class="mood">咖啡续命中</div>
+          </div>
+        </div>
+        <div style="margin-top:8px">
+          <span class="tag ${clipped ? 'bad' : 'good'}">
+            ${clipped ? `✗ 金额被切掉 ${(fit.w - avail).toFixed(0)}dp` : `✓ 金额完整（字号 ${fit.size.toFixed(0)}sp）`}
+          </span>
+        </div>
+      </div>`;
+    host.appendChild(wrap);
+  });
+}
+render('before', false);
+render('after', true);
+</script>
+</body></html>

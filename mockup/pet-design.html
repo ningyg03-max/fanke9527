@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+     padding:16px 10px 46px;display:flex;flex-direction:column;align-items:center}
+.phead{width:100%;max-width:410px;margin:6px auto 24px}
+.phead h1{font-size:21px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.phead p{font-size:12.5px;color:#475569;line-height:1.75;margin-top:8px}
+.phead .lg{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.phead .lg span{font-size:10.5px;padding:4px 10px;border-radius:999px;background:#fff;color:#334155;border:1px solid #D8E0E6}
+.sec{width:100%;max-width:410px;margin:0 auto 30px}
+.sec h2{font-size:15.5px;font-weight:800;color:#0F172A;letter-spacing:-.2px;display:flex;align-items:center;gap:8px}
+.sec h2 .n{width:26px;height:26px;border-radius:9px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+   font-size:12.5px;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+.sec .sub{font-size:11.5px;color:#64748B;margin:6px 0 14px;line-height:1.6}
+/* 图鉴 grid */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gcard{background:#fff;border-radius:16px;padding:14px 12px 12px;border:1px solid #E2E8EC;display:flex;flex-direction:column;align-items:center;gap:2px}
+.gcard .svgbox{width:96px;height:96px;display:flex;align-items:center;justify-content:center}
+.gcard .nm{font-size:13px;font-weight:750;color:#0F172A;margin-top:4px}
+.gcard .wh{font-size:10.5px;color:#0E9E7E;font-weight:650;margin-top:2px;text-align:center;line-height:1.45}
+.gcard .cap{font-size:10.5px;color:#94A3B8;margin-top:3px;text-align:center;line-height:1.45}
+.gcard.dark{background:linear-gradient(168deg,#0A201C,#0B2329);border-color:rgba(45,212,191,.16)}
+.gcard.dark .nm{color:#E8FFFA}.gcard.dark .wh{color:#34D399}.gcard.dark .cap{color:#5B7C7C}
+/* 主卡 mockup */
+.phone{border-radius:40px;padding:7px;background:linear-gradient(160deg,rgba(255,255,255,.95),rgba(222,229,234,.95));
+       border:1px solid rgba(100,116,139,.25);box-shadow:0 34px 66px -44px rgba(15,23,42,.55);width:100%;max-width:392px;margin:0 auto}
+.screen{position:relative;border-radius:34px;overflow:hidden;padding:14px 13px 18px;isolation:isolate;
+  background:linear-gradient(168deg,#EAF7F2,#E8F1F7 55%,#EDEFF9)}
+.screen::before{content:"";position:absolute;inset:-25%;z-index:0;pointer-events:none;
+  background:radial-gradient(46% 38% at 20% 14%,rgba(16,185,129,.30),transparent 68%),
+             radial-gradient(42% 36% at 84% 22%,rgba(34,211,238,.22),transparent 68%),
+             radial-gradient(40% 42% at 58% 92%,rgba(139,92,246,.14),transparent 70%);
+  filter:blur(30px)}
+.screen>*{position:relative;z-index:2}
+.sb{display:flex;justify-content:space-between;font-size:10.5px;color:#5F7A74;padding:1px 8px 8px}
+.apph{display:flex;align-items:center;gap:8px;padding:0 4px 10px}
+.apph .lg2{width:21px;height:21px;border-radius:7px;background:linear-gradient(135deg,#10B981,#14B8A6);box-shadow:0 4px 14px -4px rgba(16,150,120,.5)}
+.apph b{font-size:13px;font-weight:750;color:#0A3B31;flex:1}
+.apph .gear{width:26px;height:26px;border-radius:50%;border:1px solid rgba(10,59,49,.16);display:flex;align-items:center;justify-content:center;font-size:12px;color:#3D6A60;background:rgba(255,255,255,.6)}
+.card{background:linear-gradient(152deg,rgba(255,255,255,.88),rgba(255,255,255,.66));border-radius:26px;
+  padding:15px;border:1px solid rgba(255,255,255,.95);box-shadow:0 24px 46px -22px rgba(6,95,70,.28),0 3px 9px -4px rgba(6,95,70,.12)}
+.caps{display:flex;gap:7px;margin-bottom:11px}
+.cap0{height:34px;border-radius:999px;flex:1;display:flex;align-items:center;justify-content:center;font-size:12px;
+  background:rgba(10,59,49,.05);border:1px solid rgba(10,59,49,.10);color:rgba(10,59,49,.68)}
+.cap0.rec{background:rgba(11,158,125,.14);border-color:rgba(11,158,125,.32);color:#0A7A62;font-weight:750}
+.hl{display:flex;align-items:center;gap:6px;font-size:11.5px;color:rgba(10,59,49,.62)}
+.hl .dot{width:6px;height:6px;border-radius:50%;background:#0B9E7D;box-shadow:0 0 8px #0B9E7D}
+.hl .clock{margin-left:auto;font-size:11px;color:rgba(10,59,49,.45);font-variant-numeric:tabular-nums}
+.amtrow{display:flex;align-items:center;gap:10px;margin-top:8px}
+.amt{font-size:40px;font-weight:770;color:#063A2C;letter-spacing:-1.6px;line-height:1;font-variant-numeric:tabular-nums}
+.petbox{width:88px;height:96px;margin-left:auto;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.petbadge{font-size:9.5px;font-weight:700;color:#0B7A62;background:rgba(11,158,125,.13);
+  padding:3px 9px;border-radius:8px;margin-top:5px;display:inline-block}
+.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 11px;border-radius:999px;font-size:11px;
+  background:rgba(180,83,9,.09);border:1px solid rgba(180,83,9,.22);color:#92400E;margin-top:9px}
+.pbar{height:7px;border-radius:4px;background:rgba(10,59,49,.09);margin-top:11px;overflow:hidden}
+.pbar i{display:block;height:100%;width:24%;border-radius:4px;background:linear-gradient(90deg,#0EAE8C,#2DD4BF)}
+.s4{display:flex;justify-content:space-between;margin-top:12px;padding:0 2px}
+.s4 div{display:flex;flex-direction:column;gap:3px}
+.s4 b{font-size:12.5px;color:#0A3B31;font-weight:750;font-variant-numeric:tabular-nums}
+.s4 span{font-size:9.5px;color:rgba(10,59,49,.42)}
+.hr{height:1px;background:rgba(10,59,49,.08);margin:11px 0 9px}
+.sched{font-size:10.5px;color:rgba(10,59,49,.44)}
+/* 小组件 mock */
+.home{border-radius:22px;padding:14px;background:
+  radial-gradient(120% 90% at 20% 8%,#d8c9e8,transparent 60%),
+  radial-gradient(100% 80% at 85% 30%,#bfd4e8,transparent 55%),
+  linear-gradient(160deg,#cdd7e3,#c3ccd8 60%,#cfd6e0)}
+.wdg{border-radius:19px;padding:13px 15px;background:rgba(255,255,255,.80);box-shadow:0 10px 26px -14px rgba(15,40,35,.35);
+  border:1px solid rgba(16,185,129,.16)}
+.w1{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:#20343a;margin-bottom:4px}
+.w1 b{font-weight:750}
+.wrow{display:flex;align-items:center;gap:8px}
+.wamt{font-size:24px;font-weight:750;color:#3b3f7a;letter-spacing:-.5px;flex:1}
+.wpet{width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.w2{font-size:12px;font-weight:650;color:#D97706;margin-top:3px}
+.wbar{height:5px;border-radius:3px;background:rgba(30,60,60,.10);margin-top:8px;overflow:hidden}
+.wbar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#10B981,#14B8A6);width:24%}
+.w3{font-size:11px;color:#33454d;margin-top:8px}
+.w4{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:10.5px;color:#33454d}
+.w5{background:rgba(16,185,129,.10);border-radius:999px;padding:3px 9px;font-weight:650;color:#0d7a63}
+/* 一周条 */
+.week{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px}
+.wd{flex:0 0 86px;background:#fff;border-radius:14px;border:1px solid #E2E8EC;padding:10px 6px 8px;text-align:center}
+.wd.hl{background:linear-gradient(168deg,#F0FDF9,#EAFBF4);border-color:#A7F3D0}
+.wd .day{font-size:11px;font-weight:750;color:#0F172A}
+.wd .svgbox{width:64px;height:64px;margin:4px auto 2px}
+.wd .mood{font-size:10px;color:#475569;line-height:1.5}
+.wd .mood b{color:#0B7A5C}
+/* 分析表 */
+.tbl{width:100%;border-collapse:collapse;font-size:11.5px;background:#fff;border-radius:12px;overflow:hidden}
+.tbl th{background:#F1F5F4;color:#46626B;font-weight:600;padding:8px 10px;text-align:left;font-size:11px}
+.tbl td{padding:8px 10px;border-top:1px solid #EEF3F2;color:#16323B;line-height:1.5}
+.tbl td b{color:#0B7A5C}
+.note{background:#fff;border-radius:14px;padding:14px 16px;border:1px solid #E2E8EC;font-size:11.8px;color:#475569;line-height:1.7}
+.note b{color:#0B7A5C}
+.note code{background:#F1F5F4;border-radius:4px;padding:1px 5px;font-size:11px;color:#0F766E}
+.q{background:#ECFDF5;border:1px solid #CDEEE5;border-radius:14px;padding:14px 16px;font-size:11.8px;color:#065F46;line-height:1.75}
+.q b{display:block;font-size:12.5px;margin-bottom:7px}
+</style>
+</head><body>
+
+<div class="phead">
+  <h1>打工小人 · 设计样例</h1>
+  <p>给主卡那块空白（大数字右侧）加一个用代码画的小人偶 —— 它根据<b>时段 + 星期 + 你的实际状态</b>，把「今天是什么心情」直接演出来。上下班、加班、摸鱼、出勤……各有不同姿势。</p>
+  <div class="lg"><span>✦ 9 种状态姿势</span><span>✦ 上下班变化</span><span>✦ 一周心路历程</span><span>✦ 同步到小组件</span></div>
+</div>
+
+<!-- ══════════ 1. 状态图鉴 ══════════ -->
+<div class="sec">
+  <h2><span class="n">1</span>状态图鉴 · 深色模式下的 8 个姿势</h2>
+  <div class="sub">每个姿势都对应 App 里已有的状态机（SalarySnapshot.state），无需新增判定逻辑。</div>
+  <div class="grid" id="gallery"></div>
+</div>
+
+<!-- ══════════ 2. 主卡位置 ══════════ -->
+<div class="sec">
+  <h2><span class="n">2</span>主卡落位 · 大数字右侧空白处</h2>
+  <div class="sub">你圈出的那块空白正好放下：小人 88×96dp，随状态切换姿势 + 一句心情标签。</div>
+  <div class="phone"><div class="screen" id="hero"></div></div>
+</div>
+
+<!-- ══════════ 3. 小组件 ══════════ -->
+<div class="sec">
+  <h2><span class="n">3</span>小组件 · 金额右侧同步显示</h2>
+  <div class="sub">小组件是 RemoteViews，不能直接跑动画 —— 但可以预渲染成 Bitmap 塞进 ImageView，和主卡完全同一个姿势库。</div>
+  <div class="home"><div class="wdg" id="widget"></div></div>
+</div>
+
+<!-- ══════════ 4. 一周心路历程 ══════════ -->
+<div class="sec">
+  <h2><span class="n">4</span>一周心路历程 · 星期氛围叠加</h2>
+  <div class="sub">在时段姿势之上再叠一层「星期气场」：周一的乌云、周五的彩带、周日的焦虑沙漏。横滑查看 →</div>
+  <div class="week" id="week"></div>
+</div>
+<script>
+/* ══════════════ 打工小人 · SVG 绘制（与将来 Canvas 实现一一对应） ══════════════
+   设计规范：
+   - 身体：一颗小绿豆（椭圆），主题绿渐变，深浅色模式都清晰
+   - 五官：两点眼 + 弧线嘴，表情随状态变化
+   - 配件：公文包 / 笔记本 / 饭碗 / 咖啡 / 彩带 / 乌云 / 枕头 / 月亮
+   - 姿态：站姿 / 走路 / 坐着搬砖 / 躺平 / 蹦跳
+   ═══════════════════════════════════════════════════════════════════ */
+
+const C = {
+  face: '#063A2F',
+  faceLight: 'rgba(6,58,47,.55)',
+  shadow: 'rgba(10,30,25,.12)',
+  case: '#B08968', caseDark: '#8F6B4A',
+  laptop: '#2E4046', laptopLight: '#48626A',
+  bowl: '#FFFFFF', rice: '#F7F3E8',
+  coffee: '#FFFFFF',
+  cloud: '#93A7B4', rain: '#6FB3E0',
+  moon: '#FCD34D', conf: ['#F472B6','#FCD34D','#60A5FA','#34D399','#FB923C'],
+  pillow: '#DCE9F2',
+  phone: '#2E4046',
+};
+
+/* 公共零件 */
+function shadow(y) { return `<ellipse cx="50" cy="${y || 90}" rx="16" ry="3.4" fill="${C.shadow}"/>`; }
+function body(cx, cy, rx, ry, rot) {
+  const t = rot ? ` transform="rotate(${rot} ${cx} ${cy})"` : '';
+  return `<g${t}>
+    <ellipse cx="${cx}" cy="${cy}" rx="${rx||21}" ry="${ry||24}" fill="url(#petg)"/>
+    <ellipse cx="${cx-6}" cy="${cy-10}" rx="8" ry="6" fill="rgba(255,255,255,.30)"/>
+  </g>`;
+}
+function eyesN(cx, cy, d) { // 普通睁眼
+  const dx = d || 6.5;
+  return `<circle cx="${cx-dx}" cy="${cy}" r="2.7" fill="${C.face}"/><circle cx="${cx+dx}" cy="${cy}" r="2.7" fill="${C.face}"/>`;
+}
+function eyesClosedHappy(cx, cy, d) { // ^ ^
+  const dx = d || 6.5;
+  return `<path d="M${cx-dx-3} ${cy+1.5} Q${cx-dx} ${cy-3.5} ${cx-dx+3} ${cy+1.5}" stroke="${C.face}" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M${cx+dx-3} ${cy+1.5} Q${cx+dx} ${cy-3.5} ${cx+dx+3} ${cy+1.5}" stroke="${C.face}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+}
+function eyesDead(cx, cy, d) { // = =
+  const dx = d || 6.5;
+  return `<path d="M${cx-dx-3} ${cy} L${cx-dx+3} ${cy}" stroke="${C.face}" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M${cx+dx-3} ${cy} L${cx+dx+3} ${cy}" stroke="${C.face}" stroke-width="2.2" stroke-linecap="round"/>`;
+}
+function eyesHalf(cx, cy, d) { // 半闭（下眼眶圆弧 + 虹膜）
+  const dx = d || 6.5;
+  return `<path d="M${cx-dx-3} ${cy+1} Q${cx-dx} ${cy+4.6} ${cx-dx+3} ${cy+1}" stroke="${C.face}" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M${cx+dx-3} ${cy+1} Q${cx+dx} ${cy+4.6} ${cx+dx+3} ${cy+1}" stroke="${C.face}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+}
+function eyesSad(cx, cy, d) { // 下垂眼
+  const dx = d || 6.5;
+  return `<circle cx="${cx-dx}" cy="${cy+1}" r="2.6" fill="${C.face}"/><circle cx="${cx+dx}" cy="${cy+1}" r="2.6" fill="${C.face}"/>
+          <path d="M${cx-dx-3.4} ${cy-3.4} L${cx-dx+2} ${cy-1.6}" stroke="${C.face}" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M${cx+dx+3.4} ${cy-3.4} L${cx+dx-2} ${cy-1.6}" stroke="${C.face}" stroke-width="1.6" stroke-linecap="round"/>`;
+}
+function mouth(cx, cy, kind) { // 嘴形
+  switch (kind) {
+    case 'smileS': return `<path d="M${cx-4} ${cy} Q${cx} ${cy+4} ${cx+4} ${cy}" stroke="${C.face}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+    case 'smileB': return `<path d="M${cx-6} ${cy-1} Q${cx} ${cy+7} ${cx+6} ${cy-1}" stroke="${C.face}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+    case 'o':      return `<circle cx="${cx}" cy="${cy+1}" r="2.6" fill="${C.face}"/>`;
+    case 'flat':   return `<path d="M${cx-4.5} ${cy+1} L${cx+4.5} ${cy+1}" stroke="${C.face}" stroke-width="2" stroke-linecap="round"/>`;
+    case 'wavy':   return `<path d="M${cx-5} ${cy+2} Q${cx-2.5} ${cy-1} ${cx} ${cy+2} Q${cx+2.5} ${cy+5} ${cx+5} ${cy+2}" stroke="${C.face}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+    case 'open':   return `<path d="M${cx-4.5} ${cy-1} Q${cx} ${cy+5.5} ${cx+4.5} ${cy-1} Z" fill="${C.face}"/>`;
+  }
+  return '';
+}
+function arms(down) { return down; }
+function legsStand(y0) { return `<path d="M43 ${y0} L41.5 ${y0+7}" stroke="${C.face}" stroke-width="3" stroke-linecap="round"/><path d="M57 ${y0} L58.5 ${y0+7}" stroke="${C.face}" stroke-width="3" stroke-linecap="round"/>`; }
+function legsWalk(y0) { return `<path d="M43 ${y0} L37 ${y0+6}" stroke="${C.face}" stroke-width="3" stroke-linecap="round"/><path d="M57 ${y0} L63 ${y0+3}" stroke="${C.face}" stroke-width="3" stroke-linecap="round"/>`; }
+function fmt(s) { return s.replace(/\s+/g, ' '); }
+
+/* ══════════ 各状态姿势 ══════════ */
+function pet(state) {
+  switch (state) {
+
+  case 'commute': /* 还没上班 · 通勤赶路 */
+    return fmt(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      ${shadow(91)}
+      ${body(50, 58)}
+      <path d="M31 56 Q24 60 22 66" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M69 56 Q75 60 76 65" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <rect x="70" y="66" width="15" height="12" rx="2.5" fill="${C.case}"/>
+      <rect x="70" y="66" width="15" height="4.5" rx="2.2" fill="${C.caseDark}"/>
+      <path d="M74.5 66 L74.5 63.5 Q77.5 61.5 80.5 63.5 L80.5 66" stroke="${C.caseDark}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      ${legsWalk(80)}
+      ${eyesN(50, 54)}
+      ${mouth(50, 63, 'o')}
+      <path d="M22 44 L27 46" stroke="${C.faceLight}" stroke-width="2" stroke-linecap="round"/>
+      <path d="M20 50 L26 51.5" stroke="${C.faceLight}" stroke-width="2" stroke-linecap="round"/>
+      <path d="M73 36 L78 38" stroke="${C.faceLight}" stroke-width="2" stroke-linecap="round"/>
+      <path d="M75 42 L81 43.5" stroke="${C.faceLight}" stroke-width="2" stroke-linecap="round"/>
+    </svg>`);
+
+  case 'workam': /* 上午 · 元气搬砖 */
+    return fmt(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      ${shadow(91)}
+      ${body(50, 54, 21, 22)}
+      <path d="M33 60 Q40 68 45 71" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M67 60 Q60 68 55 71" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <rect x="34" y="73" width="32" height="4" rx="2" fill="${C.laptop}"/>
+      <rect x="38" y="64" width="24" height="9" rx="1.6" fill="${C.laptopLight}"/>
+      ${eyesN(50, 50)}
+      ${mouth(50, 59, 'smileS')}
+      <path d="M74 28 L75.6 33.4 L81 35 L75.6 36.6 L74 42 L72.4 36.6 L67 35 L72.4 33.4 Z" fill="#FCD34D"/>
+    </svg>`);
+
+  case 'lunch': /* 午休 · 干饭 */
+    return fmt(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      ${shadow(91)}
+      ${body(50, 54, 21, 22)}
+      <path d="M31 58 Q26 63 28 68" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M69 58 Q74 63 72 68" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      ${legsStand(78)}
+      <ellipse cx="50" cy="76" rx="14" ry="5.4" fill="${C.bowl}" stroke="#E4E9EC" stroke-width="1"/>
+      <ellipse cx="50" cy="74.4" rx="10.6" ry="4" fill="${C.rice}"/>
+      <path d="M60 62 L70 58" stroke="#C79A5B" stroke-width="2" stroke-linecap="round"/>
+      <path d="M61.6 64.4 L71.6 60.4" stroke="#C79A5B" stroke-width="2" stroke-linecap="round"/>
+      ${eyesClosedHappy(50, 52)}
+      ${mouth(50, 61, 'open')}
+      <path d="M74 36 L76 31" stroke="#FCD34D" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M78 40 L83 38.4" stroke="#FCD34D" stroke-width="2.4" stroke-linecap="round"/>
+    </svg>`);
+
+  case 'workpm': /* 下午 · 硬撑 */
+    return fmt(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      ${shadow(91)}
+      ${body(50, 58)}
+      <path d="M31 56 Q26 62 28 68" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M69 56 Q74 60 73 64" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <rect x="70" y="62" width="10" height="10" rx="2" fill="${C.coffee}" stroke="#E4E9EC" stroke-width="1"/>
+      <path d="M80 64.5 Q83.6 64.5 83.6 67 Q83.6 69.5 80 69.5" stroke="#E4E9EC" stroke-width="1.6" fill="none"/>
+      <path d="M73 58 Q74 54.6 73 51" stroke="#B9C6CE" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".8"/>
+      <path d="M77 59 Q78 55 77 52" stroke="#B9C6CE" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".55"/>
+      ${legsStand(80)}
+      ${eyesHalf(50, 54)}
+      ${mouth(50, 63, 'flat')}
+      <path d="M28 40 Q30 44 28 48 Q26 44 28 40 Z" fill="#7CC6F2"/>
+    </svg>`);
+
+  case 'offwork': /* 下班 · 满血复活 */
+    return fmt(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      ${shadow(92)}
+      ${body(50, 52, 21, 23)}
+      <path d="M31 46 Q22 40 20 32" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M69 46 Q78 40 80 32" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M43 74 L38 80" stroke="${C.face}" stroke-width="3" stroke-linecap="round"/>
+      <path d="M57 74 L62 80" stroke="${C.face}" stroke-width="3" stroke-linecap="round"/>
+      ${eyesClosedHappy(50, 48)}
+      ${mouth(50, 58, 'smileB')}
+      <circle cx="24" cy="20" r="2.6" fill="${C.conf[0]}"/>
+      <circle cx="76" cy="22" r="2.6" fill="${C.conf[1]}"/>
+      <circle cx="34" cy="12" r="2.2" fill="${C.conf[2]}"/>
+      <circle cx="66" cy="10" r="2.2" fill="${C.conf[3]}"/>
+      <path d="M50 6 L51.4 10.6 L56 12 L51.4 13.4 L50 18 L48.6 13.4 L44 12 L48.6 10.6 Z" fill="${C.conf[1]}"/>
+    </svg>`);
+
+  case 'overtime': /* 加班 · 爆肝 */
+    return fmt(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      ${shadow(91)}
+      ${body(50, 56, 21, 22)}
+      <path d="M33 62 Q40 69 45 72" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M67 62 Q60 69 55 72" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <rect x="34" y="74" width="32" height="4" rx="2" fill="${C.laptop}"/>
+      <rect x="38" y="65" width="24" height="9" rx="1.6" fill="${C.laptopLight}"/>
+      ${eyesN(50, 51)}
+      <path d="M41 57 Q44 59.4 47 57" stroke="rgba(6,58,47,.34)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M53 57 Q56 59.4 59 57" stroke="rgba(6,58,47,.34)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      ${mouth(50, 63, 'wavy')}
+      <path d="M28 42 Q30 46 28 50 Q26 46 28 42 Z" fill="#7CC6F2"/>
+      <path d="M74 44 Q76 47.6 74 51 Q72 47.6 74 44 Z" fill="#7CC6F2"/>
+      <circle cx="80" cy="30" r="2" fill="rgba(6,58,47,.5)"/>
+      <circle cx="85" cy="27" r="1.5" fill="rgba(6,58,47,.36)"/>
+      <path d="M16 28 A10 10 0 0 1 31 24 A8 8 0 0 1 33 38 L17 38 A7 7 0 0 1 16 28 Z" fill="${C.moon}"/>
+    </svg>`);
+
+  case 'weekend': /* 休息日 · 躺平快乐 */
+    return fmt(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="48" cy="84" rx="26" ry="4" fill="${C.shadow}"/>
+      <rect x="20" y="68" width="26" height="15" rx="7" fill="${C.pillow}"/>
+      <ellipse cx="56" cy="64" rx="26" ry="16" fill="url(#petg)"/>
+      <ellipse cx="48" cy="58" rx="9" ry="5" fill="rgba(255,255,255,.28)"/>
+      ${eyesClosedHappy(60, 60, 5.6)}
+      ${mouth(60, 68, 'smileS')}
+      <path d="M36 78 L33 84" stroke="${C.face}" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M44 80 L43 86" stroke="${C.face}" stroke-width="2.6" stroke-linecap="round"/>
+      <text x="76" y="40" font-size="13" font-weight="700" fill="rgba(11,158,125,.55)" font-family="ui-rounded,sans-serif">Z</text>
+      <text x="84" y="31" font-size="10" font-weight="700" fill="rgba(11,158,125,.4)" font-family="ui-rounded,sans-serif">z</text>
+      <text x="89" y="24" font-size="7.5" font-weight="700" fill="rgba(11,158,125,.28)" font-family="ui-rounded,sans-serif">z</text>
+      <path d="M22 36 Q23.4 32 25 36 Q23.4 40 22 36 M25 36 Q26.4 32 28 36 Q26.4 40 25 36" fill="rgba(11,158,125,.4)"/>
+    </svg>`);
+
+  case 'leave': /* 请假 · 家里躺 */
+    return fmt(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="48" cy="84" rx="26" ry="4" fill="${C.shadow}"/>
+      <rect x="20" y="68" width="26" height="15" rx="7" fill="${C.pillow}"/>
+      <ellipse cx="56" cy="64" rx="26" ry="16" fill="url(#petg)"/>
+      <ellipse cx="48" cy="58" rx="9" ry="5" fill="rgba(255,255,255,.28)"/>
+      ${eyesClosedHappy(60, 60, 5.6)}
+      ${mouth(60, 68, 'smileS')}
+      <rect x="52" y="48" width="9" height="14" rx="2.4" fill="${C.phone}" transform="rotate(18 56 55)"/>
+      <path d="M37 78 L34 84" stroke="${C.face}" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M45 80 L44 86" stroke="${C.face}" stroke-width="2.6" stroke-linecap="round"/>
+      <text x="76" y="40" font-size="13" font-weight="700" fill="rgba(124,107,214,.6)" font-family="ui-rounded,sans-serif">Z</text>
+      <text x="84" y="31" font-size="10" font-weight="700" fill="rgba(124,107,214,.42)" font-family="ui-rounded,sans-serif">z</text>
+      <text x="89" y="24" font-size="7.5" font-weight="700" fill="rgba(124,107,214,.3)" font-family="ui-rounded,sans-serif">z</text>
+    </svg>`);
+
+  case 'holidaywork': /* 休息日出勤 · 苦命打工 */
+    return fmt(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      ${shadow(91)}
+      ${body(50, 60)}
+      <path d="M31 58 Q25 64 26 70" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M69 58 Q74 63 73 68" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <rect x="69" y="69" width="15" height="12" rx="2.5" fill="${C.case}"/>
+      <rect x="69" y="69" width="15" height="4.5" rx="2.2" fill="${C.caseDark}"/>
+      <path d="M73.5 69 L73.5 66.5 Q76.5 64.5 79.5 66.5 L79.5 69" stroke="${C.caseDark}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M43 82 L40 88" stroke="${C.face}" stroke-width="3" stroke-linecap="round"/>
+      <path d="M57 82 L61 88" stroke="${C.face}" stroke-width="3" stroke-linecap="round"/>
+      ${eyesSad(50, 56)}
+      ${mouth(50, 65, 'wavy')}
+      <path d="M30 42 A9 9 0 0 1 44 38 A7 7 0 0 1 46 51 L31 51 A6.4 6.4 0 0 1 30 42 Z" fill="${C.cloud}"/>
+      <path d="M36 53 L35 58" stroke="${C.rain}" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M41 53 L40 57.6" stroke="${C.rain}" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M63 44 Q65 47.6 63 51 Q61 47.6 63 44 Z" fill="#7CC6F2"/>
+    </svg>`);
+
+  case 'monday': /* 周一综合症（叠加态示意） */
+    return fmt(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      ${shadow(91)}
+      ${body(50, 60, 21, 23)}
+      <path d="M31 60 Q27 66 29 71" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M69 60 Q73 66 71 71" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      ${legsStand(82)}
+      ${eyesDead(50, 56)}
+      ${mouth(50, 65, 'flat')}
+      <path d="M28 40 A9 9 0 0 1 42 36 A7 7 0 0 1 44 49 L29 49 A6.4 6.4 0 0 1 28 40 Z" fill="${C.cloud}"/>
+      <path d="M34 51 L33 56" stroke="${C.rain}" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M39 51 L38 55.6" stroke="${C.rain}" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M44 51 L43.4 55" stroke="${C.rain}" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>`);
+
+  case 'friday': /* 周五（叠加态示意） */
+    return fmt(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      ${shadow(91)}
+      ${body(50, 56)}
+      ${eyesClosedHappy(50, 52)}
+      ${mouth(50, 62, 'smileB')}
+      <path d="M31 54 Q24 49 22 43" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M69 54 Q76 49 78 43" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      ${legsStand(79)}
+      <circle cx="26" cy="28" r="2.4" fill="${C.conf[0]}"/>
+      <circle cx="74" cy="30" r="2.4" fill="${C.conf[1]}"/>
+      <circle cx="34" cy="18" r="2" fill="${C.conf[2]}"/>
+      <circle cx="66" cy="16" r="2" fill="${C.conf[3]}"/>
+    </svg>`);
+
+  case 'sunday': /* 周日晚 · 焦虑沙漏 */
+    return fmt(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      ${shadow(91)}
+      ${body(50, 58)}
+      <path d="M31 56 Q27 62 29 67" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M69 56 Q73 62 71 67" stroke="${C.face}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      ${legsStand(80)}
+      ${eyesN(50, 54)}
+      ${mouth(50, 63, 'wavy')}
+      <path d="M40 53.4 Q43 55.4 46 53.4" stroke="rgba(6,58,47,.34)" stroke-width="1.6" fill="none"/>
+      <path d="M54 53.4 Q57 55.4 60 53.4" stroke="rgba(6,58,47,.34)" stroke-width="1.6" fill="none"/>
+      <path d="M76 30 L86 30 L80.6 37 L86 44 L76 44 L81.4 37 Z" fill="#F4C76B" stroke="#E0A93F" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M78.6 41 L83.4 41 L81 43.6 Z" fill="#E0A93F"/>
+      <circle cx="34" cy="34" r="2" fill="rgba(6,58,47,.4)"/>
+      <circle cx="30" cy="30" r="1.4" fill="rgba(6,58,47,.3)"/>
+    </svg>`);
+  }
+  return '';
+}
+
+/* 渐变定义（全局共享） */
+document.body.insertAdjacentHTML('afterbegin',
+  `<svg width="0" height="0" style="position:absolute"><defs>
+    <linearGradient id="petg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2ECFA0"/>
+      <stop offset="1" stop-color="#0C8B6F"/>
+    </linearGradient>
+  </defs></svg>`);
+</script>
+<script>
+/* ══════════ 填充：状态图鉴 ══════════ */
+const GALLERY = [
+  { s:'commute',  nm:'通勤赶路',    wh:'工作日 08:00 前',        cap:'还没上班 · 拖着步子出门' },
+  { s:'workam',   nm:'元气搬砖',    wh:'上午工作时段',           cap:'开始工作 · 键盘敲起来' },
+  { s:'workpm',   nm:'硬撑时刻',    wh:'下午工作时段',           cap:'又困又渴 · 咖啡续命' },
+  { s:'overtime', nm:'爆肝加班',    wh:'下班后仍在加班',         cap:'黑眼圈 + 月亮上线' },
+  { s:'offwork',  nm:'下班快乐',    wh:'工作结束那一刻',         cap:'满血复活 · 撒花！' },
+  { s:'lunch',    nm:'干饭时间',    wh:'午休时段',               cap:'干饭不积极思想有问题' },
+  { s:'weekend',  nm:'躺平快乐',    wh:'休息日 · 未出勤',        cap:'Zzz… 谁也别叫我' },
+  { s:'holidaywork', nm:'苦命出勤', wh:'休息日 · 标记了出勤',    cap:'别人放假我搬砖' },
+];
+const box = document.getElementById('gallery');
+box.innerHTML = GALLERY.map(g => `
+  <div class="gcard dark">
+    <div class="svgbox">${pet(g.s)}</div>
+    <div class="nm">${g.nm}</div>
+    <div class="wh">${g.wh}</div>
+    <div class="cap">${g.cap}</div>
+  </div>`).join('');
+
+/* ══════════ 填充：主卡 ══════════ */
+document.getElementById('hero').innerHTML = `
+  <div class="sb"><span>09:53</span><span>5G ▮ 70%</span></div>
+  <div class="apph"><span class="lg2"></span><b>SalaryJump</b><span class="gear">⚙︎</span></div>
+  <div class="card">
+    <div class="caps"><span class="cap0 rec">✅ 调休+1</span><span class="cap0">💰 外快</span></div>
+    <div class="hl"><i class="dot"></i><span>今日已赚</span><span class="clock">09:53:14</span></div>
+    <div class="amtrow">
+      <span class="amt">¥ 0.00</span>
+      <span class="petbox">${pet('holidaywork')}</span>
+    </div>
+    <span class="chip">● 周末 · 出勤 调休</span>
+    <div class="pbar"><i></i></div>
+    <div class="s4">
+      <div><b>¥1,007.78</b><span>今日目标</span></div>
+      <div><b>¥125.97</b><span>每小时</span></div>
+      <div><b>¥2.10</b><span>每分钟</span></div>
+      <div><b>¥0.035</b><span>每秒</span></div>
+    </div>
+    <div class="hr"></div>
+    <div class="sched">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+  </div>`;
+
+/* ══════════ 填充：小组件 ══════════ */
+document.getElementById('widget').innerHTML = `
+  <div class="w1"><b>SalaryJump</b><span>09:53:14</span></div>
+  <div class="wrow">
+    <span class="wamt">¥ 0.00</span>
+    <span class="wpet">${pet('holidaywork')}</span>
+  </div>
+  <div class="w2">周末出勤 · 调休+1</div>
+  <div class="wbar"><i></i></div>
+  <div class="w3">累计 ¥ 3,023.34 · 已结算 3 天</div>
+  <div class="w4"><span>今日喝水 1000 / 3000 ml</span><span class="w5">+500 ml</span></div>
+  <div class="wbar"><i style="width:33%"></i></div>`;
+
+/* ══════════ 填充：一周心路 ══════════ */
+const WEEK = [
+  { d:'周一', s:'monday', m:'<b>生无可恋</b><br>乌云罩顶' },
+  { d:'周二', s:'workam', m:'麻木搬砖<br>渐入状态' },
+  { d:'周三', s:'workam', m:' halfway<br>稳如机器' },
+  { d:'周四', s:'commute', m:'<b>曙光在前</b><br>走路带风' },
+  { d:'周五', s:'friday', m:'<b>满血复活</b><br>摩拳擦掌' },
+  { d:'周六', s:'weekend', m:'<b>躺平快乐</b><br>谁也别叫我' },
+  { d:'周日', s:'sunday', m:'午后开始<b>焦虑</b><br>明天又要上班' },
+];
+document.getElementById('week').innerHTML = WEEK.map((w, i) => `
+  <div class="wd ${i>=4&&i<=5?'hl':''}">
+    <div class="day">${w.d}</div>
+    <div class="svgbox">${pet(w.s)}</div>
+    <div class="mood">${w.m}</div>
+  </div>`).join('');
+</script>
+
+<!-- ══════════ 5. 分析 ══════════ -->
+<div class="sec">
+  <h2><span class="n">5</span>分析 · 为什么值得做 & 怎么接</h2>
+  <div class="sub">不是画个装饰，而是把「已经存在但看不见的状态」翻译成情绪。</div>
+  <table class="tbl">
+    <tr><th>现状</th><th>加了小人之后</th></tr>
+    <tr><td>状态机已有 <b>9 种状态</b>（在跑，但用户看不见）</td><td>每种状态 → 一个姿势 + 一句心情，一眼秒懂</td></tr>
+    <tr><td>大数字右侧是一块<b>空白</b></td><td>小人落在这里，<b>不加高度、不挤内容</b></td></tr>
+    <tr><td>数字冷冰冰（今天 ¥0.00 完全没感觉）</td><td>「苦命出勤」小人让 ¥0.00 有了故事感</td></tr>
+    <tr><td>小组件只有文字</td><td>同姿势库同步渲染 → 桌面上也「活」着</td></tr>
+  </table>
+  <div class="note" style="margin-top:12px">
+    <b>技术方案（全代码绘制，零图片资源）</b><br>
+    ① 主卡：新增 <code>WorkerPetView</code>（自定义 View，按 state 切换姿势，约 200 行）；<br>
+    ② 小组件：RemoteViews 加一个 <code>ImageView</code>，用 <b>Bitmap 预渲染</b>（按 状态+深浅主题 缓存，不频繁重绘）；<br>
+    ③ 一周氛围：在时段姿势上叠加「配饰层」（周一乌云 / 周五彩带），判断逻辑约 20 行；<br>
+    ④ 可选二期：微动效 —— 眨眼、呼吸起伏、下班蹦跳。
+  </div>
+  <div class="q" style="margin-top:12px">
+    <b>需要你确认的 4 个点</b>
+    ① 风格：绿色小绿豆（如上）—— 还是想要别的形象（比如小牛小马 🐮🐴 呼应"牛马"）？<br>
+    ② 状态覆盖：8 种姿势够吗？需要增减哪个？<br>
+    ③ 心情文案：要显示吗（如「别人放假我搬砖」），还是只保留小人（更含蓄）？<br>
+    ④ 动效：一期静态（推荐，先看效果）还是直接带微动效？
+  </div>
+</div>
+
+</body></html>

@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#E9EDF0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ padding:16px 10px 40px;display:flex;flex-direction:column;align-items:center}
+.page{width:100%;max-width:760px}
+h1{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.intro{font-size:12px;color:#475569;line-height:1.75;margin-top:7px}
+.sec{margin-top:24px}
+h2{font-size:14.5px;font-weight:800;color:#0F172A;display:flex;align-items:center;gap:8px}
+.num{width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#0B7A5C,#10B981);color:#fff;
+ font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sub{font-size:11.5px;color:#64748B;margin:6px 0 12px;line-height:1.65}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:flex-end}
+.cell{width:150px;background:linear-gradient(168deg,#EAF7F2,#E8F1F7);border-radius:16px;padding:12px 10px;
+ border:1px solid rgba(255,255,255,.9);text-align:center}
+.cell .lbl{font-size:11px;font-weight:750;color:#0A3B31;margin-bottom:6px}
+.cell .box{margin:0 auto}
+.cell .dsc{font-size:10px;color:#7C939C;margin-top:5px;line-height:1.45}
+.badge{display:inline-block;font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:8px;margin-top:6px}
+.b-ok{background:#D1FAE5;color:#047857}.b-new{background:#DBEAFE;color:#1D4ED8}
+.b-warn{background:#FEF3C7;color:#92400E}.b-bad{background:#FECDD3;color:#9F1239}
+table{width:100%;border-collapse:collapse;font-size:11.5px;background:#fff;border-radius:14px;overflow:hidden;margin-top:6px}
+th{background:#F1F5F4;color:#46626B;font-weight:650;padding:9px 11px;text-align:left;font-size:11px}
+td{padding:9px 11px;border-top:1px solid #EEF3F2;color:#16323B;line-height:1.5}
+td b{color:#0B7A5C}
+.note{background:#fff;border-radius:14px;padding:13px 15px;border:1px solid #E2E8EC;font-size:11.8px;color:#475569;line-height:1.75;margin-top:12px}
+.note b{color:#0B7A5C}
+.note code{background:#F1F5F4;border-radius:4px;padding:1px 4px;font-size:10.5px;color:#0F766E}
+svg{display:block;width:100%;height:100%}
+.quote{background:#fff;border-radius:12px;padding:9px 12px;border:1px solid #E2E8EC;font-size:11.5px;color:#16323B;
+ margin-top:8px;line-height:1.6;text-align:left}
+.quote .who{font-size:9.5px;color:#8AA6B0;display:block;margin-bottom:2px}
+.phone{width:170px;background:#fff;border-radius:16px;padding:10px;box-shadow:0 2px 10px rgba(15,23,42,.09)}
+.phone .bar{height:8px;border-radius:4px;background:#E2E8EC;margin-bottom:8px;width:52%}
+.phone .amt{font-size:19px;font-weight:800;color:#0B3B33;letter-spacing:-.5px}
+.phone .mini{font-size:8.5px;color:#7C939C}
+.phone .hr{height:5px;border-radius:3px;background:#EEF3F2;margin-top:8px}
+.flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+</style></head><body>
+<div class="page">
+
+<h1>打工小人 · 优化建议</h1>
+<p class="intro">现状基线：<b>SalaryJump 3.61</b> · 16 种姿势（12 常规 + 4 反应）· 4 级疲劳叠加 ·
+尺寸 <b>88×92dp</b> · 点击随机 3 选 1 反应 · <b>零配置项</b> · 无触觉反馈。</p>
+
+<!-- ══════ 建议 1 ══════ -->
+<div class="sec">
+  <h2><span class="num">1</span>放大尺寸：细节才看得见</h2>
+  <div class="sub">
+    黑眼圈只有 8×7 逻辑单位 —— 在 88dp 上约等于 <b>7dp</b>，几乎糊成一团。
+    疲劳、汗滴这些「有故事」的细节全被浪费了。
+  </div>
+  <div class="row">
+    <div class="cell">
+      <div class="lbl">现在 88×92dp</div>
+      <div class="box" style="width:88px;height:92px" id="sizeA"></div>
+      <span class="badge b-warn">看不清细节</span>
+    </div>
+    <div class="cell">
+      <div class="lbl">建议 104×110dp</div>
+      <div class="box" style="width:104px;height:110px" id="sizeB"></div>
+      <span class="badge b-new">+18% · 细节可辨</span>
+    </div>
+  </div>
+  <div class="note">
+    右侧数字（今日已赚）会自动让出空间，<b>不用改布局结构</b>，只改一个 <code>LinearLayout.LayoutParams</code>。
+    代价：Hero 卡高度约 +8dp。
+  </div>
+</div>
+
+<!-- ══════ 建议 2 ══════ -->
+<div class="sec">
+  <h2><span class="num">2</span>点击反应：从「随机」改为「跟着状态走」</h2>
+  <div class="sub">
+    现在 <code>poke()</code> 不看状态，纯随机 3 选 1 —— 所以<b>加班到崩溃时戳他，可能突然欢呼</b>，出戏。
+  </div>
+  <table>
+    <tr><th style="width:34%">当前姿势</th><th style="width:33%">现在会回什么</th><th style="width:33%">建议回什么</th></tr>
+    <tr><td>加班中 / 疲劳 3 级</td><td>随机（可能欢呼）</td><td><b>惊讶</b> + 「别戳了，让我静静」</td></tr>
+    <tr><td>发薪日 / 存钱达标</td><td>随机</td><td><b>欢呼</b> + 「今天心情好，随便戳」</td></tr>
+    <tr><td>午休 / 休息日</td><td>随机</td><td><b>害羞</b> + 「吃饭呢，别闹」</td></tr>
+    <tr><td>通勤 / 上午</td><td>随机</td><td>随机（这三种都合适，保持）</td></tr>
+  </table>
+  <div class="note">
+    改动量小：<code>poke()</code> 里加一层「按当前 pose 选反应池」。
+    同时让<b>语录和反应呼应</b> —— 现在是各说各的。
+  </div>
+</div>
+
+<!-- ══════ 建议 3 ══════ -->
+<div class="sec">
+  <h2><span class="num">3</span>疲劳值「说人话」：让用户知道为什么蔫</h2>
+  <div class="sub">
+    现在疲劳只体现在黑眼圈上。<b>用户不知道几级、也不知道怎么恢复</b> —— 这是「看得见但读不懂」。
+  </div>
+  <div class="flex" style="align-items:flex-start">
+    <div class="quote" style="flex:1;min-width:220px;margin-top:0">
+      <span class="who">现在（点了小人）</span>「连着上了 7 天，魂快散了…」
+    </div>
+    <div class="quote" style="flex:1;min-width:220px;margin-top:0;border-color:#A7E8CE">
+      <span class="who">建议（补一句状态）</span>「连着上了 7 天，魂快散了…」
+      <div style="margin-top:5px;font-size:10.5px;color:#0B7A5C">疲劳 3/3 · 休一天能回 2 分</div>
+    </div>
+  </div>
+  <div class="note">
+    只在<b>疲劳 ≥2 级</b>时补这一行，平时不打扰。数据现成（<code>PetState.workStreak()</code>），零成本。
+  </div>
+</div>
+
+<!-- ══════ 建议 4 ══════ -->
+<div class="sec">
+  <h2><span class="num">4</span>补触觉反馈：点击「有实体感」</h2>
+  <div class="sub">现在点小人只有 0.96 倍缩放动画，手指没有任何反馈。</div>
+  <table>
+    <tr><th style="width:44%">做法</th><th>说明</th></tr>
+    <tr><td><code>performHapticFeedback(KEYBOARD_TAP)</code></td><td>系统自带，<b>零权限</b>，一行代码</td></tr>
+    <tr><td>庆祝 / 里程碑时用 <code>CONFIRM</code></td><td>稍重的反馈，区分「普通戳」和「有大事」</td></tr>
+  </table>
+  <div class="note">
+    成本极低，但「戳一下有回应」的手感提升明显。要不要跟随系统「触觉反馈」开关由系统管，不用自己做设置。
+  </div>
+</div>
+
+<!-- ══════ 建议 5 ══════ -->
+<div class="sec">
+  <h2><span class="num">5</span>给小人一个设置项（至少能关）</h2>
+  <div class="sub">
+    现在小人<b>完全不可配置</b> —— 不喜欢的人关不掉，喜欢的人也没法调。
+  </div>
+  <table>
+    <tr><th style="width:30%">选项</th><th style="width:70%">说明</th></tr>
+    <tr><td><b>显示小人</b> 开/关</td><td>关掉后 Hero 卡右侧留空，金额居中 —— 最基础的一条</td></tr>
+    <tr><td><b>尺寸</b> 小/中/大</td><td>88 / 104 / 120dp 三档，兼顾小屏和大屏</td></tr>
+    <tr><td>显示工位场景 开/关</td><td>只留小人、不画桌子（有人喜欢干净）</td></tr>
+  </table>
+  <div class="note">放进现有的「设置」弹窗加一个「打工小人」分区即可。</div>
+</div>
+
+<!-- ══════ 建议 6 ══════ -->
+<div class="sec">
+  <h2><span class="num">6</span>彩蛋：连戳有惊喜</h2>
+  <div class="sub">现在怎么戳都是同样 3 种反应，没有「探索感」。</div>
+  <table>
+    <tr><th style="width:32%">触发</th><th>效果</th></tr>
+    <tr><td>1 秒内连戳 3 次</td><td>小人<b>捂耳朵 / 转圈</b>，语录「别戳了别戳了」</td></tr>
+    <tr><td>连戳 8 次以上</td><td>解锁隐藏语录「你有这功夫不如去干活」</td></tr>
+    <tr><td>发薪日戳</td><td>撒钱特效（现有 confetti 复用）</td></tr>
+  </table>
+  <div class="note">纯加法，不影响任何现有逻辑。挑 1-2 条做就够，不用全上。</div>
+</div>
+
+<!-- ══════ 优先级 ══════ -->
+<div class="sec">
+  <h2><span class="num">★</span>我的推荐顺序</h2>
+  <table>
+    <tr><th style="width:52px">优先</th><th style="width:32%">项目</th><th>理由</th></tr>
+    <tr><td><b>P0</b></td><td>② 反应跟着状态走</td><td>修的是「出戏」问题，改动小、体感最明显</td></tr>
+    <tr><td><b>P0</b></td><td>④ 触觉反馈</td><td>一行代码，点击手感提升最大</td></tr>
+    <tr><td><b>P1</b></td><td>① 放大尺寸</td><td>让已有的疲劳/细节真正被看见</td></tr>
+    <tr><td><b>P1</b></td><td>⑤ 设置项</td><td>「能关掉」是基本尊重，也给尺寸提供档位</td></tr>
+    <tr><td><b>P2</b></td><td>③ 疲劳说人话</td><td>锦上添花，但很便宜</td></tr>
+    <tr><td><b>P2</b></td><td>⑥ 彩蛋</td><td>纯趣味，挑 1 条做就好</td></tr>
+  </table>
+  <div class="note">
+    我的看法：<b>② + ④ 先做</b>（都是小改动、修的是实际问题），
+    ① 和 ⑤ 绑在一起做（放大 + 给档位）。
+    ③⑥ 属于「想做再加」，不做也不遗憾。
+  </div>
+</div>
+
+</div>
+<script>
+function scene(working){
+  if(!working) return '';
+  return `<rect x="2" y="86" width="96" height="7" rx="2.5" fill="#C6D3D0"/>
+  <rect x="2" y="50" width="20" height="24" rx="2" fill="#B3C7C3"/>
+  <rect x="4" y="52" width="16" height="19.5" rx="1.2" fill="#8EA8A3"/>
+  <rect x="94" y="56" width="2" height="30" fill="#B3C7C3"/>
+  <rect x="86" y="52" width="12" height="5" rx="2" fill="#A9BFBA"/>`;
+}
+function pet(fatigue, offwork){
+  const arms = offwork
+    ? `<path d="M31 46 Q22 40 20 32" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+       <path d="M69 46 Q78 40 80 32" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+       <path d="M43 74 L38 80" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+       <path d="M57 74 L62 80" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>`
+    : `<path d="M31 58 Q25 64 26 70" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+       <path d="M69 58 Q74 63 73 68" stroke="#063A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+       <path d="M43 82 L40 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>
+       <path d="M57 82 L61 88" stroke="#063A2F" stroke-width="3" stroke-linecap="round"/>`;
+  const eyes = offwork
+    ? `<path d="M40 44 Q43.5 40 47 44" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>
+       <path d="M53 44 Q56.5 40 60 44" stroke="#063A2F" stroke-width="2" fill="none" stroke-linecap="round"/>`
+    : `<circle cx="43.5" cy="54" r="2.7" fill="#063A2F"/><circle cx="56.5" cy="54" r="2.7" fill="#063A2F"/>`;
+  const mouth = offwork
+    ? `<path d="M44 56 Q50 63 56 56" stroke="#063A2F" stroke-width="2.2" fill="none" stroke-linecap="round"/>`
+    : `<path d="M45 65 Q47.5 62 50 65 Q52.5 68 55 65" stroke="#063A2F" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+  const darkEyes = fatigue>=2
+    ? `<ellipse cx="44" cy="58" rx="3" ry="3" fill="none" stroke="rgba(6,58,47,.30)" stroke-width="1.6"/>
+       <ellipse cx="56" cy="58" rx="3" ry="3" fill="none" stroke="rgba(6,58,47,.30)" stroke-width="1.6"/>`:'';
+  const sweat = fatigue>=1
+    ? `<path d="M72 40 Q74.4 43 72 44.8 Q69.6 43 72 40 Z" fill="#7CC6F2"/>`+
+      (fatigue>=2?`<path d="M26 44 Q28.4 47 26 48.8 Q23.6 47 26 44 Z" fill="#7CC6F2"/>`:'') : '';
+  const hair = fatigue>=2
+    ? `<line x1="44" y1="34" x2="42" y2="29" stroke="#063A2F" stroke-width="1.8" stroke-linecap="round"/>
+       <line x1="50" y1="33" x2="50" y2="27.5" stroke="#063A2F" stroke-width="1.8" stroke-linecap="round"/>
+       <line x1="56" y1="34" x2="58" y2="29" stroke="#063A2F" stroke-width="1.8" stroke-linecap="round"/>`:'';
+  const smoke = fatigue>=3
+    ? `<path d="M45 26 Q43 20 45 14" stroke="rgba(107,124,122,.45)" stroke-width="2" fill="none" stroke-linecap="round"/>
+       <path d="M55 25 Q57 19 55 13" stroke="rgba(107,124,122,.45)" stroke-width="2" fill="none" stroke-linecap="round"/>`:'';
+  const cy = offwork?52:58, ry = offwork?23:24;
+  return `
+  <defs><linearGradient id="pg${fatigue}${offwork?1:0}" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2ECFA0"/><stop offset="1" stop-color="#0C8B6F"/></linearGradient></defs>
+  <ellipse cx="50" cy="90" rx="16" ry="3.4" fill="rgba(10,30,25,.10)"/>
+  <ellipse cx="50" cy="${cy}" rx="21" ry="${ry}" fill="url(#pg${fatigue}${offwork?1:0})"/>
+  <ellipse cx="44" cy="${cy-8}" rx="8" ry="5.6" fill="rgba(255,255,255,.30)"/>
+  ${arms}${eyes}${darkEyes}${mouth}${sweat}${hair}${smoke}`;
+}
+const svg = inner => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+document.getElementById('sizeA').innerHTML = svg(scene(true)+pet(2,false));
+document.getElementById('sizeB').innerHTML = svg(scene(true)+pet(2,false));
+</script>
+</body></html>

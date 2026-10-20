@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eef1f4;font-family:"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;padding:16px;
+     display:flex;flex-direction:column;gap:18px;align-items:center}
+.wrap{width:384px}
+.cap{font-size:13.5px;font-weight:700;color:#111827;margin-bottom:2px;display:flex;align-items:center;gap:8px}
+.bdg{font-size:10px;padding:2px 8px;border-radius:7px;font-weight:600}
+.b-now{background:#fee2e2;color:#b91c1c}
+.b-new{background:#d1fae5;color:#047857}
+.b-mid{background:#e0f2fe;color:#0369a1}
+.sub{font-size:11.5px;color:#6b7280;line-height:1.55;margin-bottom:10px}
+.sub b{color:#16323B}
+.ph{border-radius:18px;padding:14px 20px 24px;background:linear-gradient(180deg,#0C1E1B,#0D1B22 55%,#0E1A26)}
+.hero{border-radius:24px;padding:20px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#065F46,#0B8A6A 33%,#0E9C8C 66%,#14B8A6);
+  box-shadow:0 5px 14px rgba(0,0,0,.5)}
+.hero:before{content:"";position:absolute;width:150px;height:150px;border-radius:50%;
+  background:rgba(255,255,255,.12);top:-48px;right:-38px}
+.hero>*{position:relative;z-index:2}
+/* 整行 */
+.rowfull{display:flex;align-items:center;background:rgba(255,255,255,.20);border-radius:20px;
+       padding:9px 6px 9px 14px;margin-bottom:10px}
+.rowfull .st{flex:1;font-size:13px;color:#fff}
+.rowfull .ac{font-size:13px;font-weight:700;color:#fff;background:rgba(255,255,255,.24);
+           padding:5px 12px;border-radius:14px}
+/* 胶囊 */
+.caps{display:flex;gap:7px;margin-bottom:14px}
+.cap1{flex:1;height:40px;border-radius:20px;display:flex;align-items:center;justify-content:center;
+      font-size:12.5px;overflow:hidden;white-space:nowrap;padding:0 8px}
+.cap1.idle{background:rgba(255,255,255,.19);color:rgba(255,255,255,.90);font-weight:500}
+.cap1.rec{background:rgba(255,255,255,.36);color:#FFFFFF;font-weight:700}
+.cap1.run{background:#FFFFFF;color:#0A5C48;font-weight:800}
+.cap1.wide{flex:0 0 auto;min-width:96px}
+/* 卡片 */
+.hrow{display:flex;align-items:center;height:24px;margin-bottom:14px}
+.dotw{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.65);margin-right:7px}
+.hlab{font-size:11.5px;color:rgba(255,255,255,.78);letter-spacing:.12em;font-weight:600;flex:1}
+.clock{font-size:12px;color:rgba(255,255,255,.72)}
+.amt{font-size:46px;font-weight:700;color:#fff;letter-spacing:-1.5px;line-height:1;
+  display:flex;align-items:baseline;gap:2px}
+.amt .c{font-size:24px;font-weight:600}
+.chip{display:inline-block;background:rgba(255,255,255,.20);color:#fff;font-size:12px;
+      padding:6px 11px;border-radius:20px;margin-top:12px}
+.pb{height:6px;border-radius:4px;background:rgba(255,255,255,.26);margin-top:16px;overflow:hidden}
+.pb>i{display:block;height:100%;background:#fff;border-radius:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:14px}
+.stats .v{font-size:13px;font-weight:600;color:#fff;text-align:center}
+.stats .k{font-size:10.5px;color:rgba(255,255,255,.72);text-align:center;margin-top:3px}
+.dv{height:1px;background:rgba(255,255,255,.22);margin:13px 0 9px}
+.sch{font-size:11.5px;color:rgba(255,255,255,.78)}
+/* 标注 */
+.note{background:#FFFBEB;border-radius:10px;padding:8px 11px;font-size:11px;color:#92400E;
+      line-height:1.5;margin-top:10px}
+.note b{color:#78350F}
+</style></head><body>
+
+<!-- ══════ 周末场景 1：现状 ══════ -->
+<div class="wrap"><div class="cap">周末 · 现状 <span class="bdg b-now">两行并存</span></div>
+<div class="sub">出勤行（整行）+ 外快行（整行）= 约 <b>84dp</b>。
+其中出勤行是周末/法定假日专用，<b>不在方案 B 的三行之内</b>。</div>
+<div class="ph"><div class="hero">
+  <div class="rowfull"><span class="st">休息日（记调休）· 今天出勤了？</span><span class="ac">打卡</span></div>
+  <div class="rowfull"><span class="st">💰 今天赚外快了？</span><span class="ac">记一笔</span></div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:16:07</span></div>
+  <div class="amt"><span class="c">¥</span>0.00</div>
+  <div class="chip">● 休息日 · 今天不累计</div>
+  <div class="pb"><i style="width:0%"></i></div>
+  <div class="stats">
+    <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+    <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+  </div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- ══════ 周末场景 2：出勤保持整行 ══════ -->
+<div class="wrap"><div class="cap">周末 · 变体一 <span class="bdg b-mid">出勤保持整行</span></div>
+<div class="sub">出勤行维持原样（信息完整：出勤后可显示「✅ 出勤 3 倍 · ¥900」），
+外快变胶囊。<b>优点</b>：出勤状态显示空间大；<b>缺点</b>：整行+胶囊两种形态并存，不够统一。</div>
+<div class="ph"><div class="hero">
+  <div class="rowfull"><span class="st">休息日（记调休）· 今天出勤了？</span><span class="ac">打卡</span></div>
+  <div class="caps">
+    <div class="cap1 idle wide">💰 外快</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:16:07</span></div>
+  <div class="amt"><span class="c">¥</span>0.00</div>
+  <div class="chip">● 休息日 · 今天不累计</div>
+  <div class="pb"><i style="width:0%"></i></div>
+  <div class="stats">
+    <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+    <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+  </div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div></div></div>
+
+<!-- ══════ 周末场景 3：出勤也做胶囊（推荐）══════ -->
+<div class="wrap"><div class="cap">周末 · 变体二 <span class="bdg b-new">推荐</span></div>
+<div class="sub">出勤也做成胶囊，四种操作完全统一。周末 = <b>[🏢 出勤] [💰 外快]</b>。
+金额细节由下方状态行承载（已有）。</div>
+<div class="ph"><div class="hero">
+  <div class="caps">
+    <div class="cap1 idle">🏢 出勤</div>
+    <div class="cap1 idle">💰 外快</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:16:07</span></div>
+  <div class="amt"><span class="c">¥</span>0.00</div>
+  <div class="chip">● 休息日 · 今天不累计</div>
+  <div class="pb"><i style="width:0%"></i></div>
+  <div class="stats">
+    <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+    <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+  </div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>
+<div class="note">📌 打卡后：胶囊变「✅ 出勤」/「✅ 调休 +1」，状态行同步显示「休息日 · 出勤 3 倍 结算」。
+金额（¥900）已在状态行里，胶囊不重复。</div>
+</div></div>
+
+<!-- ══════ 周末打卡后 ══════ -->
+<div class="wrap"><div class="cap">周末 · 已打卡（变体二）<span> 状态一眼可辨</span></div>
+<div class="ph"><div class="hero">
+  <div class="caps">
+    <div class="cap1 rec">✅ 出勤 3倍</div>
+    <div class="cap1 rec">💰 ¥200.00</div>
+  </div>
+  <div class="hrow"><span class="dotw"></span><span class="hlab">今日已赚</span><span class="clock">20:16:07</span></div>
+  <div class="amt"><span class="c">¥</span>1,100.00</div>
+  <div class="chip">● 法定节假日 · 出勤 3 倍结算</div>
+  <div class="pb"><i style="width:100%"></i></div>
+  <div class="stats">
+    <div><div class="v">¥777.78</div><div class="k">今日目标</div></div>
+    <div><div class="v">¥97.22</div><div class="k">每小时</div></div>
+    <div><div class="v">¥1.62</div><div class="k">每分钟</div></div>
+    <div><div class="v">¥0.027</div><div class="k">每秒</div></div>
+  </div>
+  <div class="dv"></div>
+  <div class="sch">智能工作日 · 08:00-17:00 · 午休 11:30-12:30</div>
+</div>
+<div class="note">💡 ¥900（3 倍出勤）+ ¥200（外快）= <b>¥1,100</b> —— 三个来源都计入当日合计。</div>
+</div></div>
+
+</body></html>
