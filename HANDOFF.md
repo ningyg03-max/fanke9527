@@ -18,7 +18,7 @@
 `实时工资计数器` Android 应用。**纯 Java 手写构建**（无 Gradle），
 源码在 `work-java/`，用 apktool 打资源包 + d8 编 dex + apksigner 签名。
 
-当前 **3.82**（versionCode 106）· 63 个类 / 19986 行 · 测试 **1390 项全过**
+当前 **3.82**（versionCode 106）· 63 个类 / 19986 行 · 测试 **1399 项全过**
 
 ### 开工前必做三件事
 
@@ -394,10 +394,10 @@ python3 /opt/tools/zipcheck.py out.apk | rg "resources.arsc:"       # STORE+4对
 
 ## 6. 当前状态（每次改动后更新）
 
-- **版本**：3.89（versionCode 113）
-- **测试**：**1390 项全过**（`sh tests/run.sh`）
+- **版本**：3.90（versionCode 114）
+- **测试**：**1399 项全过**（`sh tests/run.sh`）
 - **规模**：63 文件 / 19834 行
-- **最近改动**：v99 主卡「已结算天数」也改成本月
+- **最近改动**：v100 修「昨天工资没入账」（归档抽成 DailyArchive）
 
 **最近几个版本**
 
@@ -418,6 +418,7 @@ python3 /opt/tools/zipcheck.py out.apk | rg "resources.arsc:"       # STORE+4对
 | 3.86 | 倒计时改「时:分:秒」|
 | 3.87/3.88 | 主卡 + 小组件改「本月累计」|
 | 3.89 | 主卡「已结算天数」也改成本月 |
+| 3.90 | 修「昨天工资没入账」：归档抽成 DailyArchive |
 
 **评估过但否决的**（详见 `mockup/rejected/README.md`）
 
@@ -476,3 +477,16 @@ new LinearLayout.LayoutParams(0, dp(50.0f), 1.0f)   // 容器 50dp
 用户报「底部有空」，查了三层才找全：孤儿分隔线（31dp）+ 固定高度（26dp）。
 
 **规则**：内容行数可能变的地方，高度用 `wrap_content`（`-2`），别写死 dp。
+
+### 5.ah ⚠️ 「每天该做一次」的事不能寄生在显示函数里（2026-10-21）
+
+**事故**：归档昨天的工资 `cumRollover()` 只被 `cumulativeTotal()` / `cumulativeDays()`
+顺带调用。v3.87 主卡改用新的 `monthlyTotal()` 后，那两个方法没人调了 →
+**归档彻底停摆，昨天的工资一直不入账**。而且没有任何报错，测试全绿。
+
+**规则**：
+- 「每天该做一次」的事（归档、清理、同步）**在 onResume 里显式调用**，
+  不要把它藏在某个「读数据顺便写一下」的函数里
+- 换显示函数时，要查一遍**旧函数里有没有副作用**（它可能不只是读）
+
+**验证**：`rg 'cumRollover|cumulativeTotal|cumulativeDays'` 确认调用链还在。

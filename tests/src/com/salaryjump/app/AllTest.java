@@ -199,6 +199,9 @@ public class AllTest {
         section("BE. 本月累计");
         testMonthlyTotal();
 
+        section("BF. 工资归档触发");
+        testArchiveTrigger();
+
 
         System.out.println();
         System.out.println("────────────────────────────");
@@ -3734,6 +3737,78 @@ public class AllTest {
 
         // null 安全
         eq("null context → 0 天", 0, MainActivity.monthlySettledDays(null));
+    }
+
+    // ══════════ BF. 工资归档触发 ══════════
+    // 回归：归档曾经只靠 cumulativeTotal()/cumulativeDays() 顺带触发，
+    // 主卡改用 monthlyTotal() 后归档就停了 —— 昨天的工资不入账。
+    static void testArchiveTrigger() {
+        MainActivity.SalarySettings st;
+
+        // ── 归档入口本身可用（cumulativeTotal 会顺带归档）──
+        newStore();
+        st = MainActivity.SalarySettings.load(prefs);
+        st.dailySalary = 300.0d;
+        st.save(prefs);
+        // 设 cum_last_day = 昨天前天，模拟「有一天没归档」
+        Calendar now = Calendar.getInstance();
+        Calendar twoDaysAgo = (Calendar) now.clone();
+        twoDaysAgo.add(5, -2);
+        int stampTwo = SalaryHistory.stamp(twoDaysAgo);
+        Calendar yesterday = (Calendar) now.clone();
+        yesterday.add(5, -1);
+        int stampOne = SalaryHistory.stamp(yesterday);
+        prefs.map.put("cum_last_day", Integer.valueOf(stampTwo));
+
+        // 触发归档
+        DailyArchive.rollover(ctx);
+
+        // 昨天应该有一行了（如果昨天是工作日）
+        boolean isWorkday = WorkdayHelper.isWorkday(ctx, st, yesterday);
+        check("归档后昨天有记录（工作日）或本来就不计（休息日）",
+                !isWorkday || SalaryHistory.has(ctx, stampOne));
+
+        // cum_last_day 应该推进到昨天
+        int lastDay = prefs.getInt("cum_last_day", 0);
+        eq("cum_last_day 推进到昨天", stampOne, lastDay);
+
+        // ── 幂等：再调一次不会重复加钱 ──
+        long before = SalaryHistory.centsOf(ctx, stampOne);
+        DailyArchive.rollover(ctx);
+        eqL("重复调用不重复入账", before, SalaryHistory.centsOf(ctx, stampOne));
+
+        // ── cum_last_day = 今天/未来时，不应该归档今天 ──
+        newStore();
+        st = MainActivity.SalarySettings.load(prefs);
+        st.dailySalary = 300.0d;
+        st.save(prefs);
+        int todayStamp = SalaryHistory.stamp(now);
+        prefs.map.put("cum_last_day", Integer.valueOf(todayStamp));
+        DailyArchive.rollover(ctx);
+        check("cum_last_day=今天 → 不归档今天（今天的钱还在实时算）",
+                !SalaryHistory.has(ctx, todayStamp));
+
+        // ── 跨多天：一口气补完 ──
+        newStore();
+        st = MainActivity.SalarySettings.load(prefs);
+        st.dailySalary = 300.0d;
+        st.save(prefs);
+        Calendar fiveAgo = (Calendar) now.clone();
+        fiveAgo.add(5, -5);
+        prefs.map.put("cum_last_day", Integer.valueOf(SalaryHistory.stamp(fiveAgo)));
+        DailyArchive.rollover(ctx);
+        eq("跨 5 天补完后 cum_last_day = 昨天",
+                SalaryHistory.stamp(yesterday), prefs.getInt("cum_last_day", 0));
+
+        // ── 首次使用（cum_last_day=0）只设基准，不补历史 ──
+        newStore();
+        st = MainActivity.SalarySettings.load(prefs);
+        st.dailySalary = 300.0d;
+        st.save(prefs);
+        DailyArchive.rollover(ctx);
+        eq("首次使用 → cum_last_day = 昨天",
+                SalaryHistory.stamp(yesterday), prefs.getInt("cum_last_day", 0));
+        check("首次使用不补历史", !SalaryHistory.has(ctx, stampTwo));
     }
 
     static void testUnitAndRecentFallback() {

@@ -14,7 +14,7 @@ JAVAC=/usr/lib/jvm/java-17-openjdk/bin/javac
 JAVA=/usr/lib/jvm/java-17-openjdk/bin/java
 
 # 被测逻辑类（纯 Java，不依赖 Android UI）
-CLASSES="DrinkTypes WaterReminderScheduler WaterReminderSettings WaterHistory WorkdayHelper OvertimeCalc SalaryHistory OvertimeLog StatutoryHolidays HolidayWork CrashLogger HolidayUpdater Contexts LeaveRecord PrivacyLock PaydayReminder WorkRules ExtraIncome ArchiveSync LeaveAccounts CheckInReminder WidgetText SeedBackfill MonthBackfill PetState WorkerPet PetSettings HeroFit SectionSave DayBreakdown DataCache YearlyStats GoalStore BackupPlan PetQuotes RateDisplay"
+CLASSES="DrinkTypes WaterReminderScheduler WaterReminderSettings WaterHistory WorkdayHelper OvertimeCalc SalaryHistory OvertimeLog StatutoryHolidays HolidayWork CrashLogger HolidayUpdater Contexts LeaveRecord PrivacyLock PaydayReminder WorkRules ExtraIncome ArchiveSync LeaveAccounts CheckInReminder WidgetText SeedBackfill MonthBackfill PetState WorkerPet PetSettings HeroFit SectionSave DayBreakdown DataCache YearlyStats GoalStore BackupPlan PetQuotes RateDisplay DailyArchive"
 
 OUT="$TESTS/out"
 FRESH="$TESTS/fresh"

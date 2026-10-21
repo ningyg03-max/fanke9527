@@ -973,104 +973,9 @@ public class MainActivity extends Activity {
         }
     }
 
+    /** 归档昨天及之前的工资 —— 委托给可测的 {@link DailyArchive}。 */
     private static void cumRollover(Context context) {
-        SharedPreferences sharedPreferences;
-        double d;
-        double d2;
-        SharedPreferences sharedPreferences2 = context.getSharedPreferences("salary_jump", 0);
-        SalarySettings load = SalarySettings.load(sharedPreferences2);
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(5, MATCH);
-        int cumStamp = cumStamp(calendar);
-        int i = sharedPreferences2.getInt("cum_last_day", 0);
-        if (i == 0) {
-            sharedPreferences2.edit().putInt("cum_last_day", cumStamp).apply();
-            return;
-        }
-        if (i >= cumStamp) {
-            return;
-        }
-        double longBitsToDouble = Double.longBitsToDouble(sharedPreferences2.getLong("cum_total_bits", 0L));
-        int i2 = sharedPreferences2.getInt("cum_days", 0);
-        Calendar calendar2 = Calendar.getInstance();
-        int i3 = 1;
-        calendar2.set(i / 10000, ((i / 100) % 100) + MATCH, i % 100);
-        int i4 = 0;
-        while (true) {
-            calendar2.add(5, i3);
-            int cumStamp2 = cumStamp(calendar2);
-            if (cumStamp2 > cumStamp) {
-                sharedPreferences = sharedPreferences2;
-                break;
-            }
-            i = (calendar2.get(i3) * 10000) + ((calendar2.get(2) + i3) * 100) + calendar2.get(5);
-            int rateX10Of = HolidayWork.rateX10Of(context, i);
-            if (rateX10Of > 0) {
-                double d3 = longBitsToDouble;
-                double earned = HolidayWork.earned(load.dailySalary, rateX10Of);
-                long centsOf = ExtraIncome.centsOf(context, i);
-                sharedPreferences = sharedPreferences2;
-                i2++;
-                SalaryHistory.put(context, i, Math.round(earned * 100.0d) + centsOf + MonthBackfill.centsOn(context, i));
-                longBitsToDouble = d3 + ((centsOf + MonthBackfill.centsOn(context, i)) / 100.0d) + earned;
-                i4++;
-            } else {
-                sharedPreferences = sharedPreferences2;
-                int i5 = i4;
-                double d4 = longBitsToDouble;
-                if (HolidayWork.isComp(context, i)) {
-                    long centsOf2 = ExtraIncome.centsOf(context, i);
-                    long centsOn = MonthBackfill.centsOn(context, i);
-                    longBitsToDouble = (centsOf2 > 0 || centsOn > 0) ? d4 + ((centsOf2 + centsOn) / 100.0d) : d4;
-                    SalaryHistory.put(context, i, centsOf2 + centsOn);
-                    i4 = i5 + 1;
-                } else {
-                    if (WorkdayHelper.isWorkday(context, load, calendar2)) {
-                        LeaveRecord.Entry entry = LeaveRecord.get(context, i);
-                        if (entry != null) {
-                            double earned2 = LeaveRecord.earned(load.dailySalary, entry.payPercent, entry.half);
-                            long centsOf3 = ExtraIncome.centsOf(context, i);
-                            i2++;
-                            SalaryHistory.put(context, i, Math.round(100.0d * earned2) + centsOf3 + MonthBackfill.centsOn(context, i));
-                            longBitsToDouble = d4 + earned2 + ((centsOf3 + MonthBackfill.centsOn(context, i)) / 100.0d);
-                            i4 = i5 + 1;
-                        } else {
-                            double d5 = load.dailySalary;
-                            if (!load.overtimeEnabled || load.overtimeRateX10 <= 0) {
-                                d = d5;
-                                d2 = 0.0d;
-                            } else {
-                                d = d5;
-                                d2 = OvertimeCalc.earned(d, SalaryCalculator.totalWorkSeconds(load), OvertimeLog.secondsOfDay(context, cumStamp2, System.currentTimeMillis()), load.overtimeRateX10);
-                            }
-                            long centsOf4 = ExtraIncome.centsOf(context, i);
-                            double d6 = d + d2;
-                            i2++;
-                            SalaryHistory.put(context, cumStamp2, Math.round(100.0d * d6) + centsOf4 + MonthBackfill.centsOn(context, i));
-                            longBitsToDouble = d4 + d6 + ((centsOf4 + MonthBackfill.centsOn(context, i)) / 100.0d);
-                        }
-                    } else {
-                        long centsOf5 = ExtraIncome.centsOf(context, i);
-                        long centsOn2 = MonthBackfill.centsOn(context, i);
-                        if (centsOf5 > 0 || centsOn2 > 0) {
-                            long j = centsOf5 + centsOn2;
-                            longBitsToDouble = d4 + (j / 100.0d);
-                            SalaryHistory.put(context, i, j);
-                        } else {
-                            longBitsToDouble = d4;
-                        }
-                    }
-                    i4 = i5 + 1;
-                    i = cumStamp2;
-                }
-            }
-            if (i4 > 4000) {
-                break;
-            }
-            sharedPreferences2 = sharedPreferences;
-            i3 = 1;
-        }
-        sharedPreferences.edit().putInt("cum_last_day", i).putLong("cum_total_bits", Double.doubleToRawLongBits(longBitsToDouble)).putInt("cum_days", i2).apply();
+        DailyArchive.rollover(context);
     }
 
     private static int cumStamp(Calendar calendar) {
@@ -1235,6 +1140,12 @@ public class MainActivity extends Activity {
             applyPetSettings();
             // 打开 App 时补跑自动备份（定时闹钟可能被 ROM 杀掉）
             BackupScheduler.catchUpIfDue(this);
+            // ★ 归档昨天的工资。
+            //   原来它藏在 cumulativeTotal() / cumulativeDays() 里靠「界面调它」触发，
+            //   但 v3.87 起主卡改用 monthlyTotal()，那两个方法没人调了 →
+            //   归档从此再也没跑过（用户 10/20 的工资没入账就是这么来的）。
+            //   归档是「每天该做一次」的事，必须显式调用，不能依附于某个显示函数。
+            cumRollover(this);
             Calendar calendar = Calendar.getInstance();
             ArchiveSync.refreshPrewritten(this, (calendar.get(1) * 10000) + ((calendar.get(2) + 1) * 100) + calendar.get(5));
             SeedBackfill.applyOnce(this);
