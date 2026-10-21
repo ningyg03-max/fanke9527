@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>星巴克杯 · 效果对比</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#E9F1EF}
+body{font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ width:384px;margin:0 auto;padding:14px 16px 26px;color:#16323B;font-size:13px}
+h1{font-size:16px;font-weight:800;margin-bottom:3px}
+.lead{font-size:11px;color:#5A7680;line-height:1.65;margin-bottom:12px}
+.row{display:flex;gap:8px;margin-bottom:12px}
+.cell{flex:1;text-align:center;min-width:0}
+.cell .t{font-size:10.5px;font-weight:700;color:#16323B;margin-bottom:4px;line-height:1.3}
+.cell .t small{display:block;font-weight:400;color:#8AA6B0;font-size:9px;margin-top:1px}
+.box{background:linear-gradient(168deg,#F4FAF8,#EAF4F1);border-radius:14px;border:1px solid #E2ECEA;
+ overflow:hidden;padding:4px}
+/* 真实像素：中档 104dp → 100 逻辑单位 = 292px；这里显示 1.15 倍 */
+.node{font-size:9.5px;color:#5A7680;line-height:1.55;margin-top:5px;text-align:center}
+.card{background:#fff;border-radius:15px;padding:14px;margin-bottom:10px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+p{font-size:11px;color:#475569;line-height:1.75}
+p b{color:#16323B}
+table{width:100%;border-collapse:collapse;font-size:10.5px;margin-top:7px}
+th{text-align:left;color:#64748B;font-weight:600;padding:4px 6px;font-size:9.5px;background:#F8FBFA}
+td{padding:5px 6px;border-top:1px solid #EEF3F2;color:#475569}
+td b{color:#16323B}
+.note{background:#FFFBEB;border:1px solid #FDE68A;border-radius:11px;padding:11px 13px;
+ font-size:11px;color:#78350F;line-height:1.75;margin-top:10px}
+.note b{color:#92400E}
+.good{background:#F0FDF4;border:1px solid #BBF7D0;color:#166534}
+</style></head><body>
+
+<h1>星巴克杯 · 三种画法</h1>
+<p class="lead">桌面右下角（台灯旁边）那格。真实像素，2 倍放大看细节。</p>
+
+<div class="row" id="row"></div>
+
+<div class="card">
+  <p><b>为什么只有这么大</b></p>
+  <p style="margin-top:5px">
+    桌上那个位置的杯子只有 <b>11 × 10 个逻辑单位</b>。
+    中档尺寸（104dp）下每单位 ≈ 2.9 像素 → 杯子实际 <b>32 × 29 像素</b>。
+    星巴克的 logo 画不出五官细节，只能靠<b>绿圆环</b>这个符号认。
+  </p>
+</div>
+
+<div class="card">
+  <p><b>对比</b></p>
+  <table>
+    <tr><th style="width:60px">方案</th><th>在 32px 下的观感</th></tr>
+    <tr><td><b>1</b></td><td>白杯身 + 绿杯套，绿块清晰，能认出是咖啡杯</td></tr>
+    <tr><td><b>2 ★</b></td><td>同上 + 白色圆环 logo，<b>最像星巴克</b>（环还能看出形状）</td></tr>
+    <tr><td><b>3</b></td><td>整杯绿 —— 远看像一颗绿糖，不像杯子</td></tr>
+  </table>
+</div>
+
+<div class="note good">
+  <b>我推荐方案 2</b>：白杯身保留「纸杯」的形，绿杯套给出星巴克的色，
+  白圆环在 32px 下刚好还能认出是个环。
+</div>
+
+<div class="note">
+  <b>还可以加一点</b>：<br>
+  · 杯口<b>冒热气</b>（两条细曲线，现有 <code>steam()</code> 函数可以直接复用）<br>
+  · 只有「工作日 + 上班时段」出现，下班/周末换成别的（比如一杯啤酒 🍺）
+</div>
+
+<script>
+const U = 292 / 100;          // 中档 104dp 下，每逻辑单位 ≈ 2.92px
+const SCALE = 2;              // 放大 2 倍看细节
+const S = U * SCALE;
+
+// 桌面 + 台灯（只画右半部分，突出杯子）
+function deskRight() {
+  return `
+  <rect x="0" y="86" width="100" height="7" fill="#DDE9E5"/>
+  <rect x="94" y="56" width="2" height="30" fill="#C9D6D2"/>
+  <rect x="86" y="52" width="12" height="5" rx="2" fill="#DCE7E3"/>
+  <ellipse cx="88" cy="66" rx="12" ry="10" fill="#FFF6DC" opacity=".5"/>`;
+}
+
+const CUPS = {
+  a: `<rect x="78" y="76" width="11" height="10" rx="2.2" fill="#E4EFEA"/>
+      <rect x="79.5" y="77.5" width="8" height="3.5" rx="1.4" fill="#B9CBC4"/>`,
+
+  b: `<!-- 白杯身 -->
+      <path d="M78.6 76.2 L88.4 76.2 L87.3 85.6 Q83.5 86.3 79.7 85.6 Z" fill="#FFFFFF" stroke="#D2DFDB" stroke-width="0.45"/>
+      <!-- 杯盖 -->
+      <rect x="77.9" y="74.3" width="11.2" height="2.4" rx="1.1" fill="#F3F8F6" stroke="#D2DFDB" stroke-width="0.4"/>
+      <!-- 绿杯套 -->
+      <path d="M79.5 79.4 L87.5 79.4 L86.9 83.8 Q83.5 84.4 80.1 83.8 Z" fill="#00704A"/>
+      <!-- 吸管 -->
+      <rect x="85.3" y="70.8" width="1" height="4" rx="0.5" fill="#00A862" transform="rotate(13 85.8 72.8)"/>`,
+
+  c: `<!-- 白杯身 -->
+      <path d="M78.6 76.2 L88.4 76.2 L87.3 85.6 Q83.5 86.3 79.7 85.6 Z" fill="#FFFFFF" stroke="#D2DFDB" stroke-width="0.45"/>
+      <!-- 杯盖 -->
+      <rect x="77.9" y="74.3" width="11.2" height="2.4" rx="1.1" fill="#F3F8F6" stroke="#D2DFDB" stroke-width="0.4"/>
+      <!-- 绿杯套 -->
+      <path d="M79.5 79.4 L87.5 79.4 L86.9 83.8 Q83.5 84.4 80.1 83.8 Z" fill="#00704A"/>
+      <!-- 白圆环 logo -->
+      <circle cx="83.5" cy="81.6" r="1.9" fill="none" stroke="#FFFFFF" stroke-width="0.8"/>
+      <!-- 吸管 -->
+      <rect x="85.3" y="70.8" width="1" height="4" rx="0.5" fill="#00A862" transform="rotate(13 85.8 72.8)"/>`,
+
+  d: `<!-- 整杯绿 -->
+      <path d="M78.6 76.2 L88.4 76.2 L87.3 85.6 Q83.5 86.3 79.7 85.6 Z" fill="#00704A"/>
+      <rect x="77.9" y="74.3" width="11.2" height="2.4" rx="1.1" fill="#0A8558"/>
+      <circle cx="83.5" cy="81.4" r="1.9" fill="none" stroke="#FFFFFF" stroke-width="0.75"/>
+      <rect x="85.3" y="70.8" width="1" height="4" rx="0.5" fill="#FFFFFF" opacity=".85" transform="rotate(13 85.8 72.8)"/>`,
+};
+
+const ITEMS = [
+  ['a', '现状',   '白方块（对照）'],
+  ['b', '方案 1', '白杯 + 绿杯套'],
+  ['c', '方案 2 ★', '加白色圆环'],
+  ['d', '方案 3', '整杯绿'],
+];
+
+const row = document.getElementById('row');
+ITEMS.forEach(([k, name, desc]) => {
+  const cell = document.createElement('div');
+  cell.className = 'cell';
+  // viewBox 只框住「台灯 + 杯子」这一块：x 70–100, y 62–93
+  const vbW = 30, vbH = 31;
+  const px = vbW * U * SCALE;
+  cell.innerHTML = `
+    <div class="t">${name}<small>${desc}</small></div>
+    <div class="box">
+      <svg viewBox="70 62 ${vbW} ${vbH}" width="${px}" height="${vbH * U * SCALE}" style="display:block">
+        ${deskRight()}${CUPS[k]}
+      </svg>
+    </div>`;
+  row.appendChild(cell);
+});
+</script>
+</body></html>
