@@ -394,10 +394,10 @@ python3 /opt/tools/zipcheck.py out.apk | rg "resources.arsc:"       # STORE+4对
 
 ## 6. 当前状态（每次改动后更新）
 
-- **版本**：3.90（versionCode 114）
+- **版本**：3.91（versionCode 115）
 - **测试**：**1436 项全过**（`sh tests/run.sh`）
 - **规模**：63 文件 / 19834 行
-- **最近改动**：v100 修「昨天工资没入账」（归档抽成 DailyArchive）
+- **最近改动**：v101 喝水统计加每日总量柱状图 + 饮料改两列
 
 **最近几个版本**
 
@@ -419,6 +419,7 @@ python3 /opt/tools/zipcheck.py out.apk | rg "resources.arsc:"       # STORE+4对
 | 3.87/3.88 | 主卡 + 小组件改「本月累计」|
 | 3.89 | 主卡「已结算天数」也改成本月 |
 | 3.90 | 修「昨天工资没入账」：归档抽成 DailyArchive |
+| 3.91 | 喝水统计加每日总量柱状图 + 饮料改两列 |
 
 **评估过但否决的**（详见 `mockup/rejected/README.md`）
 
