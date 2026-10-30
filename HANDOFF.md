@@ -18,7 +18,7 @@
 `实时工资计数器` Android 应用。**纯 Java 手写构建**（无 Gradle），
 源码在 `work-java/`，用 apktool 打资源包 + d8 编 dex + apksigner 签名。
 
-当前 **3.82**（versionCode 106）· 63 个类 / 19986 行 · 测试 **1399 项全过**
+当前 **3.82**（versionCode 106）· 63 个类 / 19986 行 · 测试 **1436 项全过**
 
 ### 开工前必做三件事
 
@@ -395,7 +395,7 @@ python3 /opt/tools/zipcheck.py out.apk | rg "resources.arsc:"       # STORE+4对
 ## 6. 当前状态（每次改动后更新）
 
 - **版本**：3.90（versionCode 114）
-- **测试**：**1399 项全过**（`sh tests/run.sh`）
+- **测试**：**1436 项全过**（`sh tests/run.sh`）
 - **规模**：63 文件 / 19834 行
 - **最近改动**：v100 修「昨天工资没入账」（归档抽成 DailyArchive）
 

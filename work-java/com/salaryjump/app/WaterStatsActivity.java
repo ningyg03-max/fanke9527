@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -28,6 +32,8 @@ public class WaterStatsActivity extends Activity {
     private TextView rangeNoteView;
     private TextView summaryView;
     private final DecimalFormat amountFormat = new DecimalFormat("#,##0");
+    /** 未达标的柱子用浅绿，避免整张图全是同一种绿 */
+    private static final int COLOR_BAR_LOW = android.graphics.Color.rgb(143, 208, 192);
     private int rangeDays = 7;
 
     private int dp(float f) {
@@ -219,8 +225,6 @@ public class WaterStatsActivity extends Activity {
                 arrayList.add(Integer.valueOf(i13));
             }
         }
-        float f = 18.0f;
-        float f2 = 14.0f;
         if (arrayList.isEmpty()) {
             TextView textView = new TextView(this);
             textView.setText("暂无记录，去主界面记一笔吧");
@@ -238,46 +242,245 @@ public class WaterStatsActivity extends Activity {
                 return iArr[num2.intValue()] - iArr[num.intValue()];
             }
         });
-        int i14 = 1;
-        for (int i15 = 0; i15 < 32; i15++) {
-            if (iArr[i15] > i14) {
-                i14 = iArr[i15];
+
+        // ── 每日总量柱状图 ──
+        // 「今日」只有一根柱子，没有信息量，所以不画
+        if (this.rangeDays > 1) {
+            int[] dailySeries = WaterDailyChart.series(hashMap, this.rangeDays, Calendar.getInstance());
+            LinearLayout.LayoutParams chartLp = matchWrap();
+            chartLp.topMargin = dp(10.0f);
+            this.listContainer.addView(buildDailyChart(dailySeries, this.rangeDays, i5), chartLp);
+        }
+
+        // ── 饮料两列 ──
+        LinearLayout.LayoutParams drinksLp = matchWrap();
+        drinksLp.topMargin = dp(10.0f);
+        this.listContainer.addView(buildDrinksGrid(arrayList, iArr, iArr2), drinksLp);
+    }
+
+    /**
+     * 每日总量柱状图。
+     *
+     * <p>7 天：格子够宽，柱顶写数字；30 天：格子只有 10dp，数字放不下，
+     * 改成右上角显示「平均 / 最高」，日期每 5 天标一个。
+     */
+    private LinearLayout buildDailyChart(int[] data, int days, int targetMl) {
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(1);
+        card.setPadding(dp(14.0f), dp(16.0f), dp(14.0f), dp(10.0f));
+        card.setBackground(MainActivity.softCard(dp(20.0f)));
+        card.setElevation(dp(2.0f));
+
+        LinearLayout head = new LinearLayout(this);
+        head.setOrientation(0);
+        head.setGravity(16);
+        card.addView(head, matchWrap());
+
+        TextView title = new TextView(this);
+        title.setText("每日总量");
+        title.setTextSize(13.5f);
+        title.setTextColor(MainActivity.COLOR_TEXT);
+        title.setTypeface(Typeface.create("sans", 1));
+        head.addView(title, new LinearLayout.LayoutParams(0, -2, 1.0f));
+
+        TextView hint = new TextView(this);
+        hint.setTextSize(11.0f);
+        hint.setTextColor(MainActivity.COLOR_LABEL);
+        hint.setGravity(5);
+        hint.setSingleLine(true);
+        if (days <= 7) {
+            hint.setText("目标 " + targetMl + " ml");
+        } else {
+            hint.setText("平均 " + this.amountFormat.format(WaterDailyChart.average(data))
+                    + " · 最高 " + this.amountFormat.format(WaterDailyChart.maxValue(data)));
+        }
+        head.addView(hint, new LinearLayout.LayoutParams(-2, -2));
+
+        int plotH = dp(96.0f);
+        int labelBand = dp(15.0f);
+        int usable = plotH - labelBand;
+        int axisMax = WaterDailyChart.axisMax(data, targetMl);
+
+        int availW = getResources().getDisplayMetrics().widthPixels - dp(40.0f) - dp(28.0f);
+        int colW = Math.max(1, availW / days);
+        int barW = Math.max(dp(3.0f), Math.round(colW * 0.62f));
+        if (days <= 7) {
+            barW = Math.min(barW, dp(26.0f));
+        }
+
+        FrameLayout plot = new FrameLayout(this);
+        LinearLayout.LayoutParams plotLp = new LinearLayout.LayoutParams(-1, plotH);
+        plotLp.topMargin = dp(13.0f);
+        card.addView(plot, plotLp);
+
+        // 目标虚线
+        if (targetMl > 0 && targetMl <= axisMax) {
+            View goalLine = new View(this);
+            goalLine.setBackground(new DashedLine(MainActivity.COLOR_SOFT_BORDER, dp(1.2f), dp(4.0f), dp(3.0f)));
+            FrameLayout.LayoutParams goalLp = new FrameLayout.LayoutParams(-1, dp(2.0f));
+            goalLp.topMargin = Math.max(0, plotH - Math.round(usable * (targetMl / (float) axisMax)) - dp(1.0f));
+            plot.addView(goalLine, goalLp);
+        }
+
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(0);
+        plot.addView(row, new FrameLayout.LayoutParams(-1, -1));
+
+        int zeroPx = dp(2.0f);
+        Calendar now = Calendar.getInstance();
+        for (int i = 0; i < days; i++) {
+            LinearLayout col = new LinearLayout(this);
+            col.setOrientation(1);
+            // BOTTOM | CENTER_HORIZONTAL：整列贴底，柱子从同一条基线长出来
+            col.setGravity(0x51);
+            row.addView(col, new LinearLayout.LayoutParams(0, -1, 1.0f));
+
+            if (days <= 7 && data[i] > 0) {
+                TextView value = new TextView(this);
+                value.setText(this.amountFormat.format(data[i]));
+                value.setTextSize(8.5f);
+                value.setTextColor(MainActivity.COLOR_MUTED);
+                value.setSingleLine(true);
+                value.setIncludeFontPadding(false);
+                value.setGravity(17);
+                LinearLayout.LayoutParams valueLp = new LinearLayout.LayoutParams(-2, -2);
+                valueLp.bottomMargin = dp(2.0f);
+                col.addView(value, valueLp);
+            }
+
+            View bar = new View(this);
+            bar.setBackground(rounded(data[i] <= 0 ? MainActivity.COLOR_TRACK
+                    : (data[i] >= targetMl ? MainActivity.COLOR_ACCENT : COLOR_BAR_LOW),
+                    dp(2.5f), 0, 0));
+            col.addView(bar, new LinearLayout.LayoutParams(barW,
+                    WaterDailyChart.barPx(data[i], axisMax, usable, zeroPx)));
+        }
+
+        // 横轴：绝对定位，不然 30 天格子只有 10dp，日期会被裁掉
+        FrameLayout axis = new FrameLayout(this);
+        LinearLayout.LayoutParams axisLp = new LinearLayout.LayoutParams(-1, dp(16.0f));
+        axisLp.topMargin = dp(3.0f);
+        card.addView(axis, axisLp);
+
+        int labelW = days <= 7 ? dp(40.0f) : dp(24.0f);
+        String[] labels = WaterDailyChart.labels(now, days, days > 7);
+        for (int i = 0; i < days; i++) {
+            if (!WaterDailyChart.showLabel(i, days)) {
+                continue;
+            }
+            TextView label = new TextView(this);
+            label.setText(labels[i]);
+            label.setTextSize(days <= 7 ? 8.5f : 9.0f);
+            label.setTextColor(MainActivity.COLOR_LABEL);
+            label.setSingleLine(true);
+            label.setIncludeFontPadding(false);
+            label.setGravity(17);
+            FrameLayout.LayoutParams labelLp = new FrameLayout.LayoutParams(labelW, -2);
+            labelLp.leftMargin = Math.round((i * colW) + (colW / 2.0f) - (labelW / 2.0f));
+            axis.addView(label, labelLp);
+        }
+        return card;
+    }
+
+    /**
+     * 饮料卡片，两列。
+     *
+     * <p>原来每种饮料一整行（8 行），现在两列 4 行 —— 竖向省一半。
+     */
+    private LinearLayout buildDrinksGrid(ArrayList types, int[] mlArr, int[] cntArr) {
+        LinearLayout wrap = new LinearLayout(this);
+        wrap.setOrientation(1);
+
+        int gap = dp(9.0f);
+        int availW = getResources().getDisplayMetrics().widthPixels - dp(40.0f);
+        int cardW = (availW - gap) / 2;
+        int innerW = Math.max(1, cardW - dp(26.0f));
+
+        int maxMl = 1;
+        for (int i = 0; i < types.size(); i++) {
+            maxMl = Math.max(maxMl, mlArr[((Integer) types.get(i)).intValue()]);
+        }
+
+        for (int i = 0; i < types.size(); i += 2) {
+            LinearLayout row = new LinearLayout(this);
+            row.setOrientation(0);
+            LinearLayout.LayoutParams rowLp = new LinearLayout.LayoutParams(-1, -2);
+            if (i > 0) {
+                rowLp.topMargin = gap;
+            }
+            wrap.addView(row, rowLp);
+
+            row.addView(drinkCard(((Integer) types.get(i)).intValue(), mlArr, cntArr, maxMl, innerW),
+                    new LinearLayout.LayoutParams(0, -2, 1.0f));
+
+            if (i + 1 < types.size()) {
+                LinearLayout.LayoutParams rightLp = new LinearLayout.LayoutParams(0, -2, 1.0f);
+                rightLp.leftMargin = gap;
+                row.addView(drinkCard(((Integer) types.get(i + 1)).intValue(), mlArr, cntArr, maxMl, innerW),
+                        rightLp);
+            } else {
+                // 奇数个时补空位，否则最后一张卡会撑满整行
+                row.addView(new View(this), new LinearLayout.LayoutParams(0, -2, 1.0f));
             }
         }
-        Iterator it2 = arrayList.iterator();
-        while (it2.hasNext()) {
-            int intValue = ((Integer) it2.next()).intValue();
-            LinearLayout linearLayout = new LinearLayout(this);
-            linearLayout.setOrientation(1);
-            linearLayout.setPadding(dp(f), dp(f2), dp(f), dp(f2));
-            linearLayout.setBackground(MainActivity.softCard(dp(16.0f)));
-            LinearLayout.LayoutParams matchWrap = matchWrap();
-            matchWrap.topMargin = dp(10.0f);
-            this.listContainer.addView(linearLayout, matchWrap);
-            LinearLayout linearLayout2 = new LinearLayout(this);
-            linearLayout2.setOrientation(0);
-            linearLayout2.setGravity(16);
-            linearLayout.addView(linearLayout2, matchWrap());
-            TextView textView2 = new TextView(this);
-            textView2.setText(DrinkTypes.name(this, intValue));
-            textView2.setTextSize(15.0f);
-            textView2.setTextColor(MainActivity.COLOR_TEXT);
-            textView2.setTypeface(Typeface.create("sans", 1));
-            linearLayout2.addView(textView2, new LinearLayout.LayoutParams(0, dp(26.0f), 1.0f));
-            TextView textView3 = new TextView(this);
-            textView3.setText(iArr2[intValue] + " " + DrinkTypes.unit(this, intValue) + " · " + iArr[intValue] + " ml");
-            textView3.setTextSize(13.0f);
-            textView3.setTextColor(MainActivity.COLOR_MUTED);
-            textView3.setGravity(5);
-            linearLayout2.addView(textView3, new LinearLayout.LayoutParams(-2, dp(26.0f)));
-            SheenBar sheenBar = new SheenBar(this);
-            sheenBar.setProgress(iArr[intValue] / Math.max(1, i14));
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-1, dp(8.0f));
-            layoutParams.topMargin = dp(10.0f);
-            linearLayout.addView(sheenBar, layoutParams);
-            f = 18.0f;
-            f2 = 14.0f;
-        }
+        return wrap;
+    }
+
+    private LinearLayout drinkCard(int type, int[] mlArr, int[] cntArr, int maxMl, int innerW) {
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(1);
+        card.setPadding(dp(13.0f), dp(12.0f), dp(13.0f), dp(11.0f));
+        card.setBackground(MainActivity.softCard(dp(16.0f)));
+
+        LinearLayout top = new LinearLayout(this);
+        top.setOrientation(0);
+        top.setGravity(16);
+        card.addView(top, matchWrap());
+
+        TextView name = new TextView(this);
+        name.setText(DrinkTypes.name(this, type));
+        name.setTextSize(13.0f);
+        name.setTextColor(MainActivity.COLOR_TEXT);
+        name.setTypeface(Typeface.create("sans", 1));
+        name.setSingleLine(true);
+        name.setEllipsize(TextUtils.TruncateAt.END);
+        top.addView(name, new LinearLayout.LayoutParams(0, -2, 1.0f));
+
+        TextView count = new TextView(this);
+        count.setText(cntArr[type] + " " + DrinkTypes.unit(this, type));
+        count.setTextSize(10.0f);
+        count.setTextColor(MainActivity.COLOR_LABEL);
+        count.setSingleLine(true);
+        top.addView(count, new LinearLayout.LayoutParams(-2, -2));
+
+        String number = this.amountFormat.format(mlArr[type]);
+        SpannableString amount = new SpannableString(number + " ml");
+        amount.setSpan(new RelativeSizeSpan(0.6f), number.length(), amount.length(), 33);
+        amount.setSpan(new ForegroundColorSpan(MainActivity.COLOR_LABEL), number.length(), amount.length(), 33);
+        TextView amountView = new TextView(this);
+        amountView.setText(amount);
+        amountView.setTextSize(16.5f);
+        amountView.setTextColor(MainActivity.COLOR_BLUE);
+        amountView.setTypeface(Typeface.create("sans", 1));
+        amountView.setSingleLine(true);
+        LinearLayout.LayoutParams amountLp = new LinearLayout.LayoutParams(-2, -2);
+        amountLp.topMargin = dp(2.0f);
+        card.addView(amountView, amountLp);
+
+        int trackH = dp(5.0f);
+        FrameLayout track = new FrameLayout(this);
+        track.setBackground(rounded(MainActivity.COLOR_TRACK, trackH / 2, 0, 0));
+        LinearLayout.LayoutParams trackLp = new LinearLayout.LayoutParams(-1, trackH);
+        trackLp.topMargin = dp(9.0f);
+        card.addView(track, trackLp);
+
+        // 宽度直接算出来，不用等布局回调（OnLayoutChangeListener 之前踩过坑）
+        float frac = Math.min(1.0f, mlArr[type] / (float) maxMl);
+        View fill = new View(this);
+        fill.setBackground(rounded(MainActivity.COLOR_ACCENT, trackH / 2, 0, 0));
+        track.addView(fill, new FrameLayout.LayoutParams(
+                Math.max(trackH, Math.round(innerW * frac)), trackH));
+        return card;
     }
 
     private LinearLayout.LayoutParams matchWrap() {

@@ -202,6 +202,9 @@ public class AllTest {
         section("BF. 工资归档触发");
         testArchiveTrigger();
 
+        section("BG. 每日总量柱状图");
+        testWaterDailyChart();
+
 
         System.out.println();
         System.out.println("────────────────────────────");
@@ -3737,6 +3740,93 @@ public class AllTest {
 
         // null 安全
         eq("null context → 0 天", 0, MainActivity.monthlySettledDays(null));
+    }
+
+    // ══════════ BG. 每日总量柱状图 ══════════
+    // 图表规则写错了只会「看起来怪」，测试是唯一能挡住的手段。
+    static void testWaterDailyChart() {
+        // ── series：稀疏表展开成定长数组，没记录的日子补 0 ──
+        Calendar today = Calendar.getInstance();
+        HashMap<Integer, Integer> totals = new HashMap<>();
+        totals.put(Integer.valueOf(WaterDailyChart.stamp(today)), Integer.valueOf(400));
+        Calendar y1 = (Calendar) today.clone();
+        y1.add(5, -1);
+        totals.put(Integer.valueOf(WaterDailyChart.stamp(y1)), Integer.valueOf(1200));
+        Calendar y3 = (Calendar) today.clone();
+        y3.add(5, -3);
+        totals.put(Integer.valueOf(WaterDailyChart.stamp(y3)), Integer.valueOf(950));
+
+        int[] s7 = WaterDailyChart.series(totals, 7, today);
+        eq("7 天数组长度", 7, s7.length);
+        eq("最后一天 = 今天 400", 400, s7[6]);
+        eq("倒数第二天 = 昨天 1200", 1200, s7[5]);
+        eq("倒数第四天 = 950", 950, s7[3]);
+        eq("没记录的日子补 0（不是跳过）", 0, s7[2]);
+        eq("缺口前后总数守恒", 2550, s7[0] + s7[1] + s7[2] + s7[3] + s7[4] + s7[5] + s7[6]);
+
+        // 30 天：末尾必须和 7 天对齐（同一套日期映射）
+        int[] s30 = WaterDailyChart.series(totals, 30, today);
+        eq("30 天数组长度", 30, s30.length);
+        eq("30 天最后一天也是今天", 400, s30[29]);
+        eq("30 天倒数第二天也是 1200", 1200, s30[28]);
+        eq("30 天倒数第四天也是 950", 950, s30[26]);
+
+        // 空表 / null 不崩
+        eq("null 表 → 全 0", 0, WaterDailyChart.series(null, 7, today)[3]);
+        eq("空表 → 全 0", 0, WaterDailyChart.series(new HashMap<Integer, Integer>(), 7, today)[0]);
+
+        // ── axisMax：要能盖住目标线，也要盖住最高的柱 ──
+        int[] low = {100, 200, 300};
+        check("最高柱低于目标 → 上限取目标线以上", WaterDailyChart.axisMax(low, 1200) > 1200);
+        int[] high = {100, 2400, 300};
+        check("最高柱高于目标 → 上限超过 2400", WaterDailyChart.axisMax(high, 1200) > 2400);
+        check("上限给柱子留了头部空间", WaterDailyChart.axisMax(high, 1200) >= Math.round(2400 * 1.05f));
+        eq("全 0 数据不崩", WaterDailyChart.axisMax(new int[]{0, 0}, 0) > 0 ? 1 : 0, 1);
+
+        // ── barPx：0 值给矮墩，非 0 有下限 ──
+        eq("0 值只给矮墩（表示没记录，不是没画）", 2, WaterDailyChart.barPx(0, 1000, 100, 2));
+        check("有值时高于矮墩", WaterDailyChart.barPx(10, 1000, 100, 2) > 2);
+        eq("满值不打满（留 label 空间）", 100, WaterDailyChart.barPx(1000, 1000, 100, 2));
+        check("极小值有下限，不会看不见", WaterDailyChart.barPx(1, 100000, 100, 2) >= 6);
+        check("值越大柱越高", WaterDailyChart.barPx(800, 1000, 100, 2)
+                > WaterDailyChart.barPx(400, 1000, 100, 2));
+
+        // ── showLabel：7 天全标，30 天只每 5 天一个 ──
+        int shown7 = 0;
+        for (int i = 0; i < 7; i++) {
+            if (WaterDailyChart.showLabel(i, 7)) {
+                shown7++;
+            }
+        }
+        eq("7 天每天都标日期", 7, shown7);
+        int shown30 = 0;
+        for (int i = 0; i < 30; i++) {
+            if (WaterDailyChart.showLabel(i, 30)) {
+                shown30++;
+            }
+        }
+        check("30 天标签数在 6~7 个之间（不是 30 个）", shown30 >= 6 && shown30 <= 7);
+        check("第 0 天一定标", WaterDailyChart.showLabel(0, 30));
+        check("最后一天一定标（否则不知道结尾是哪天）", WaterDailyChart.showLabel(29, 30));
+        check("中间某天不标（省空间）", !WaterDailyChart.showLabel(3, 30));
+
+        // ── average / maxValue ──
+        eq("平均按范围天数算", 100, WaterDailyChart.average(new int[]{100, 100, 100, 100}));
+        eq("平均把 0 算进去（没喝的日子也是 0）", 50, WaterDailyChart.average(new int[]{100, 0}));
+        eq("空数组平均 0", 0, WaterDailyChart.average(new int[0]));
+        eq("null 平均 0", 0, WaterDailyChart.average(null));
+        eq("最大值", 1850, WaterDailyChart.maxValue(new int[]{700, 1850, 1200}));
+        eq("空数组最大 0", 0, WaterDailyChart.maxValue(new int[0]));
+
+        // ── labels ──
+        String[] l7 = WaterDailyChart.labels(today, 7, false);
+        eq("7 天标签个数", 7, l7.length);
+        check("长格式带斜杠", l7[0].indexOf('/') > 0);
+        String[] l30 = WaterDailyChart.labels(today, 30, true);
+        eq("30 天标签个数", 30, l30.length);
+        check("短格式只有日号", l30[0].indexOf('/') < 0 && l30[0].length() <= 2);
+        Calendar c = Calendar.getInstance();
+        eq("最后一天标签 = 今天几号", String.valueOf(c.get(5)), l30[29]);
     }
 
     // ══════════ BF. 工资归档触发 ══════════

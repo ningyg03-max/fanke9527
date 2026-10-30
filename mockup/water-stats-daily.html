@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>喝水统计 · 改造效果</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#EFF7F6}
+body{font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ color:#16323B;width:384px;margin:0 auto;padding:0 0 24px;-webkit-font-smoothing:antialiased}
+
+/* ── 页面 ── */
+.page{padding:18px 20px 0}
+.topbar{display:flex;align-items:center;height:42px}
+.pill{background:#fff;border:1.5px solid #E3EFEC;border-radius:21px;height:42px;
+ padding:0 16px;display:flex;align-items:center;font-size:14px;color:#16323B}
+.title{flex:1;text-align:center;font-size:20px;font-weight:700}
+.ph{width:74px}
+
+/* 分段按钮 */
+.seg{display:flex;gap:8px;margin-top:18px}
+.seg div{flex:1;height:40px;border-radius:19px;display:flex;align-items:center;justify-content:center;
+ font-size:13px;color:#16323B;background:#F7FCFA;border:1.5px solid #D3E9E3}
+.seg div.on{background:#14B8A6;border-color:#14B8A6;color:#fff;font-weight:600}
+
+/* 汇总卡 */
+.card{background:#fff;border-radius:20px;padding:20px 22px;margin-top:16px;
+ box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.sum{font-size:26px;font-weight:700;color:#0F766E;letter-spacing:-.5px}
+.sum small{font-size:14px;font-weight:400;color:#61808C;margin-left:4px}
+.note{font-size:13px;color:#61808C;margin-top:6px;line-height:1.55}
+
+/* ── 每日柱状图 ── */
+.chartcard{background:#fff;border-radius:20px;padding:16px 14px 12px;margin-top:14px;
+ box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.charthead{display:flex;align-items:baseline;justify-content:space-between;padding:0 6px 12px}
+.charthead b{font-size:13.5px;font-weight:700}
+.charthead span{font-size:11px;color:#8AA6B0}
+.plot{position:relative;height:104px;display:flex;align-items:flex-end;gap:2px}
+.goal{position:absolute;left:0;right:0;border-top:1.5px dashed #B9CFCB;z-index:1}
+.goal span{position:absolute;right:0;top:-14px;font-size:9px;color:#8AA6B0;background:#fff;padding:0 3px}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+ height:100%;position:relative;z-index:2;min-width:0}
+.v{font-size:9px;color:#61808C;line-height:1.1;margin-bottom:2px;font-variant-numeric:tabular-nums}
+.bar{width:62%;max-width:22px;border-radius:3px 3px 1px 1px;background:#0B9E7D;min-height:2px}
+.bar.low{background:#8FD0C0}
+.bar.zero{background:#E6F2EE;height:3px !important;border-radius:1px}
+.xaxis{display:flex;gap:2px;margin-top:6px;border-top:1px solid #EEF6F4;padding-top:5px}
+.xaxis div{flex:1;text-align:center;font-size:8.5px;color:#8AA6B0;line-height:1.2;min-width:0;
+ overflow:visible;white-space:nowrap;position:relative}
+.xaxis div.none{color:transparent}
+
+/* ── 饮料两列 ── */
+.drinks{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+.d{background:#fff;border-radius:16px;padding:12px 13px 11px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.dtop{display:flex;align-items:baseline;justify-content:space-between;gap:4px}
+.dname{font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dcnt{font-size:10.5px;color:#8AA6B0;white-space:nowrap;flex-shrink:0}
+.dml{font-size:17px;font-weight:700;color:#0F766E;margin-top:3px;letter-spacing:-.3px;
+ font-variant-numeric:tabular-nums}
+.dml small{font-size:10.5px;font-weight:400;color:#8AA6B0;margin-left:2px}
+.dbar{height:5px;border-radius:3px;background:#E6F2EE;margin-top:8px;overflow:hidden}
+.dbar i{display:block;height:100%;border-radius:3px;background:#0B9E7D}
+
+/* ── 标注 ── */
+.sec{margin:26px 20px 0;font-size:12px;font-weight:700;color:#0F766E;
+ border-left:3px solid #0B9E7D;padding-left:8px}
+.flag{display:inline-block;font-size:10px;font-weight:700;color:#fff;background:#0B9E7D;
+ border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:2px}
+.note2{background:#fff;border-radius:14px;padding:13px 15px;margin:12px 20px 0;
+ font-size:11.5px;color:#475569;line-height:1.8;box-shadow:0 2px 10px rgba(15,23,42,.04)}
+.note2 b{color:#16323B}
+.warn{background:#FFFBEB;color:#78350F;border:1px solid #FDE68A}
+.warn b{color:#92400E}
+</style></head><body>
+
+<div class="sec">近 7 天<span class="flag">新增 ①每日总量</span><span class="flag">②饮料两列</span></div>
+
+<div class="page">
+  <div class="topbar">
+    <div class="pill">返回</div>
+    <div class="title">喝水统计</div>
+    <div class="ph"></div>
+  </div>
+  <div class="seg"><div>今日</div><div class="on">近7天</div><div>近30天</div></div>
+
+  <div class="card">
+    <div class="sum">9,830<small>ml</small></div>
+    <div class="note">目标 1200 ml · 达标 4 天 / 共 7 天<br>约 412 kcal · 含糖 6 / 21 杯</div>
+  </div>
+
+  <div class="chartcard">
+    <div class="charthead"><b>每日总量</b><span>目标 1200 ml</span></div>
+    <div class="plot" id="plot7"></div>
+    <div class="xaxis" id="x7"></div>
+  </div>
+
+  <div class="drinks" id="drinks7"></div>
+</div>
+
+<div class="sec">近 30 天（同样结构，柱变细）</div>
+
+<div class="page">
+  <div class="seg"><div>今日</div><div>近7天</div><div class="on">近30天</div></div>
+
+  <div class="card">
+    <div class="sum">38,940<small>ml</small></div>
+    <div class="note">目标 1200 ml · 达标 16 天 / 共 30 天<br>约 1,684 kcal · 含糖 24 / 88 杯</div>
+  </div>
+
+  <div class="chartcard">
+    <div class="charthead"><b>每日总量</b><span>平均 1,298 · 最高 1,850</span></div>
+    <div class="plot" id="plot30"></div>
+    <div class="xaxis" id="x30"></div>
+  </div>
+</div>
+
+<div class="note2 warn">
+  <b>30 天柱子只有 9dp 宽</b>（每格 11.5dp × 62%），所以：
+  柱顶数字放不下 → 改成在右上角显示「平均 / 最高」；
+  日期只每 5 天标一个。
+  <br><br>
+  <b>没记录的日子留 3dp 灰短线</b>，不会消失 ——
+  这样能一眼看出「哪几天根本没喝」，比只画有记录的日子有信息量。
+</div>
+
+<div class="note2">
+  <b>两列饮料卡</b>：原来每种饮料一整行（8 行），现在 4 行。
+  每张卡改成「名字 + 杯数 / 大号 ml / 细进度条」，ml 比原来更醒目。
+  <br><br>
+  「可乐/汽水」5 个字在 167dp 里刚好放得下。
+</div>
+
+<div class="sec">另一种画法：30 天用网格（备选）</div>
+<div class="page">
+  <div class="chartcard">
+    <div class="charthead"><b>每日总量</b><span>网格版</span></div>
+    <div class="g30" id="grid30"></div>
+  </div>
+</div>
+<div class="note2">
+  网格版每格 45dp，能写「日期 + 总量」，30 天正好 5 行。
+  <b>信息更全，但占竖向空间约 260dp</b>（柱状图只要 130dp）。
+</div>
+
+<script>
+const GOAL = 1200;
+const COL_H = 104;          // .plot 高度
+const PAD = 14;             // 顶部留给数字
+
+function fmt(n){ return n.toLocaleString('en-US'); }
+
+function drawChart(plotId, xId, days, opts) {
+  const vals = days.map(d => d.ml);
+  const maxV = Math.max(GOAL, ...vals) * 1.06;
+  const plot = document.getElementById(plotId);
+  const xaxis = document.getElementById(xId);
+
+  // 目标线
+  const gl = document.createElement('div');
+  gl.className = 'goal';
+  gl.style.bottom = (vals.length ? 0 : 0) + 'px';
+  const gTop = (1 - GOAL / maxV) * (COL_H - PAD);
+  gl.style.top = gTop + 'px';
+  gl.style.bottom = 'auto';
+  gl.innerHTML = opts.showGoalLabel ? `<span>${GOAL}</span>` : '';
+  plot.appendChild(gl);
+
+  days.forEach((d, i) => {
+    const col = document.createElement('div');
+    col.className = 'col';
+    const h = d.ml === 0 ? 0 : Math.max(3, (d.ml / maxV) * (COL_H - PAD));
+    const cls = d.ml === 0 ? 'zero' : (d.ml >= GOAL ? '' : 'low');
+    const showV = opts.showValues && d.ml > 0;
+    col.innerHTML =
+      (showV ? `<div class="v">${fmt(d.ml)}</div>` : '') +
+      `<div class="bar ${cls}" style="height:${h}px"></div>`;
+    plot.appendChild(col);
+
+    const x = document.createElement('div');
+    const showLabel = opts.labelEvery ? (i % opts.labelEvery === 0 || i === days.length - 1) : true;
+    x.className = showLabel ? '' : 'none';
+    x.textContent = showLabel ? (opts.shortLabel ? d.short : d.label) : '';
+    xaxis.appendChild(x);
+  });
+}
+
+// ── 7 天数据 ──
+const d7 = [
+  {label:'10/15', ml:1250}, {label:'10/16', ml:900}, {label:'10/17', ml:0},
+  {label:'10/18', ml:1450}, {label:'10/19', ml:780}, {label:'10/20', ml:1200},
+  {label:'今天',  ml:400},
+];
+drawChart('plot7', 'x7', d7, {showValues:true, showGoalLabel:true});
+
+// ── 30 天数据 ──
+const d30 = [];
+for (let i = 29; i >= 0; i--) {
+  const base = [1450,980,0,1320,1150,860,1600,1240,740,0,1380,1050,1260,900,1520,
+                1120,0,1330,880,1420,960,1210,1580,700,0,1350,1090,1850,1140,1280][29-i];
+  const dt = new Date(2026, 8, 21 + (29 - i));   // 9/21 起 30 天
+  d30.push({label:(dt.getMonth()+1)+'/'+dt.getDate(), short:String(dt.getDate()), ml:base});
+}
+drawChart('plot30', 'x30', d30, {showValues:false, showGoalLabel:true, labelEvery:5, shortLabel:true});
+
+// ── 饮料两列 ──
+const drinks = [
+  ['白开水', 8, 2000], ['咖啡', 4, 1000], ['茶', 3, 750],
+  ['可乐/汽水', 2, 660], ['奶茶', 2, 500], ['果汁', 2, 500],
+];
+const dmax = 2000;
+document.getElementById('drinks7').innerHTML = drinks.map(([n, c, ml]) => `
+  <div class="d">
+    <div class="dtop"><div class="dname">${n}</div><div class="dcnt">${c} 杯</div></div>
+    <div class="dml">${fmt(ml)}<small>ml</small></div>
+    <div class="dbar"><i style="width:${(ml/dmax*100).toFixed(0)}%"></i></div>
+  </div>`).join('');
+
+// ── 网格版 ──
+document.getElementById('grid30').innerHTML = `
+<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px">
+${d30.map(d => {
+  const on = d.ml >= GOAL;
+  const some = d.ml > 0 && d.ml < GOAL;
+  const bg = on ? '#0B9E7D' : (some ? '#D9F0E9' : '#F4F9F7');
+  const fg = on ? '#fff' : (some ? '#0F766E' : '#B9CFCB');
+  const sub = on ? 'rgba(255,255,255,.85)' : (some ? '#5FA593' : '#B9CFCB');
+  return `<div style="background:${bg};border-radius:8px;padding:5px 2px 4px;text-align:center">
+    <div style="font-size:9px;color:${fg};font-weight:600">${d.label}</div>
+    <div style="font-size:9.5px;color:${sub};margin-top:1px;font-variant-numeric:tabular-nums">
+      ${d.ml === 0 ? '—' : fmt(d.ml)}</div>
+  </div>`;
+}).join('')}
+</div>`;
+</script>
+</body></html>
