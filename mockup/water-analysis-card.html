@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>喝水统计 · 分析卡效果</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#EFF7F6}
+body{font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ color:#16323B;width:384px;margin:0 auto;padding:18px 20px 22px;-webkit-font-smoothing:antialiased}
+.topbar{display:flex;align-items:center;height:42px}
+.pill{background:#fff;border:1.5px solid #E3EFEC;border-radius:21px;height:42px;
+ padding:0 16px;display:flex;align-items:center;font-size:14px}
+.title{flex:1;text-align:center;font-size:20px;font-weight:700}
+.seg{display:flex;gap:8px;margin-top:18px}
+.seg div{flex:1;height:40px;border-radius:19px;display:flex;align-items:center;justify-content:center;
+ font-size:13px;background:#F7FCFA;border:1.5px solid #D3E9E3}
+.seg div.on{background:#14B8A6;border-color:#14B8A6;color:#fff;font-weight:600}
+
+.card{background:#fff;border-radius:20px;padding:20px 22px;margin-top:16px;
+ box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.sum{font-size:26px;font-weight:700;color:#0F766E;letter-spacing:-.5px}
+.sum small{font-size:14px;font-weight:400;color:#61808C;margin-left:4px}
+.note{font-size:13px;color:#61808C;margin-top:6px;line-height:1.55}
+
+/* ── 分析卡 ── */
+.ac{margin-top:10px;padding:15px 18px}
+.achead{display:flex;align-items:center}
+.achead b{font-size:12px;color:#8AA6B0;font-weight:700;flex:1}
+.tag{font-size:9.5px;color:#8AA6B0;background:#F7FCFA;border-radius:9px;padding:2px 7px}
+.hl{font-size:16px;font-weight:700;line-height:1.35;margin-top:7px;color:#16323B}
+.f{display:flex;margin-top:8px}
+.dot{width:5px;height:5px;border-radius:3px;background:#0B9E7D;margin:6px 8px 0 0;flex-shrink:0}
+.ft{font-size:11.5px;color:#61808C;line-height:1.45}
+.foot{font-size:10px;color:#8AA6B0;margin-top:9px}
+
+/* 标注 */
+.sec{margin:26px 0 0;font-size:12px;font-weight:700;color:#0F766E;
+ border-left:3px solid #0B9E7D;padding-left:8px}
+.note2{background:#fff;border-radius:14px;padding:13px 15px;margin-top:12px;
+ font-size:11.5px;color:#475569;line-height:1.8;box-shadow:0 2px 10px rgba(15,23,42,.04)}
+.note2 b{color:#16323B}
+.warn{background:#FFFBEB;color:#78350F;border:1px solid #FDE68A}
+.warn b{color:#92400E}
+.good{background:#F0FDF4;color:#166534;border:1px solid #BBF7D0}
+.good b{color:#15803D}
+</style></head><body>
+
+<div class="topbar"><div class="pill">返回</div><div class="title">喝水统计</div><div style="width:74px"></div></div>
+<div class="seg"><div>今日</div><div class="on">近7天</div><div>近30天</div></div>
+
+<div class="card">
+  <div class="sum">19,320<small>ml</small></div>
+  <div class="note">目标 3000 ml · 达标 2 天 / 共 7 天<br>约 1,092 kcal · 含糖 6 / 42 杯</div>
+</div>
+
+<!-- 分析卡：真实输出 -->
+<div class="card ac">
+  <div class="achead"><b>分析</b><span class="tag">按记录统计</span></div>
+  <div class="hl">你不缺总量，缺的是每天都喝到</div>
+  <div class="f"><div class="dot"></div><div class="ft">
+    有记录的日子平均 2,664 ml（目标 3000）。7 天里只有 2 天达标（29%），上下波动 626 ml：最好的一天 3,355，最差 1,855</div></div>
+  <div class="f"><div class="dot"></div><div class="ft">
+    最近在往下走 · 前 3 天平均 3,305 ml，后 4 天 2,237 ml，降了 32%（只按有记录的日子算）</div></div>
+  <div class="f"><div class="dot"></div><div class="ft">
+    一次喝得多、次数偏少 · 平均每次 460 ml，一天约 8 次。拆成 250 ml 喝吸收更均匀</div></div>
+  <div class="foot">· 时间分布类分析（几点喝、空档多长）要攒够 3 天才有</div>
+</div>
+
+<div class="sec">攒够时间数据后（第 4 天起）</div>
+<div class="card ac">
+  <div class="achead"><b>分析</b><span class="tag">按记录统计</span></div>
+  <div class="hl">你不缺总量，缺的是每天都喝到</div>
+  <div class="f"><div class="dot"></div><div class="ft">
+    有记录的日子平均 2,664 ml（目标 3000）。7 天里只有 2 天达标（29%），上下波动 626 ml：最好的一天 3,355，最差 1,855</div></div>
+  <div class="f"><div class="dot"></div><div class="ft">
+    白天有 6 小时的空档 · 按 8:00–20:00 算，最长有一天连续 6 小时没喝东西。一口气补不如分几次</div></div>
+  <div class="f"><div class="dot"></div><div class="ft">
+    最近在往下走 · 前 3 天平均 3,305 ml，后 4 天 2,237 ml，降了 32%（只按有记录的日子算）</div></div>
+</div>
+
+<div class="note2 warn">
+  <b>为什么写「按记录统计」不写 AI</b><br>
+  这些结论全是<b>能算出来的</b>：达标率、波动、趋势、空档长度、单次容量。
+  接个大模型只会把同样的数字换个说法，不会多出信息；而它<b>没有</b>体重、
+  活动量、气温，真给建议就会开始编。
+</div>
+
+<div class="note2">
+  <b>口径必须一致</b>：波动和趋势都<b>只按有记录的日子算</b>。
+  把没记录的日子当 0，会出现「前 10 天 2610 → 后 10 天 1832，降了 30%」这种
+  假下降 —— 其实是断档造成的。
+</div>
+
+<div class="note2 good">
+  <b>这次同时补了数据</b>：<code>water_hours</code> 新存储，日切时把
+  「每小时喝了多少」存下来。<br>
+  原来 <code>water_history</code> 只有「日期:类型:总量:杯数」，<b>没有时间</b> ——
+  一清零，几点喝、空档多长就永远算不出来了。
+</div>
+
+</body></html>

@@ -243,10 +243,25 @@ public class WaterStatsActivity extends Activity {
             }
         });
 
-        // ── 每日总量柱状图 ──
-        // 「今日」只有一根柱子，没有信息量，所以不画
+        // 「今日」只有一根柱子，没有信息量，所以不画柱状图；
+        // 分析卡也一样 —— 一天的数据看不出任何规律
         if (this.rangeDays > 1) {
             int[] dailySeries = WaterDailyChart.series(hashMap, this.rangeDays, Calendar.getInstance());
+
+            Calendar from = Calendar.getInstance();
+            from.add(5, -(this.rangeDays - 1));
+            int fromStamp = (from.get(1) * 10000) + ((from.get(2) + 1) * 100) + from.get(5);
+            Calendar now = Calendar.getInstance();
+            int toStamp = (now.get(1) * 10000) + ((now.get(2) + 1) * 100) + now.get(5);
+
+            DailyAnalysis.Result analysis = DailyAnalysis.analyze(
+                    dailySeries, i5,
+                    WaterHourLog.days(sharedPreferences, fromStamp, toStamp),
+                    i10, i11, i7);
+            LinearLayout.LayoutParams analysisLp = matchWrap();
+            analysisLp.topMargin = dp(10.0f);
+            this.listContainer.addView(buildAnalysisCard(analysis), analysisLp);
+
             LinearLayout.LayoutParams chartLp = matchWrap();
             chartLp.topMargin = dp(10.0f);
             this.listContainer.addView(buildDailyChart(dailySeries, this.rangeDays, i5), chartLp);
@@ -256,6 +271,100 @@ public class WaterStatsActivity extends Activity {
         LinearLayout.LayoutParams drinksLp = matchWrap();
         drinksLp.topMargin = dp(10.0f);
         this.listContainer.addView(buildDrinksGrid(arrayList, iArr, iArr2), drinksLp);
+    }
+
+    /**
+     * 分析卡。
+     *
+     * <p>刻意<b>不叫「AI 分析」</b> —— 这是统计规则算出来的，
+     * 标成 AI 会让人误以为它能考虑体重、运动量这些它根本没有的数据。
+     */
+    private LinearLayout buildAnalysisCard(DailyAnalysis.Result result) {
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(1);
+        card.setPadding(dp(18.0f), dp(15.0f), dp(18.0f), dp(15.0f));
+        card.setBackground(MainActivity.softCard(dp(20.0f)));
+
+        LinearLayout head = new LinearLayout(this);
+        head.setOrientation(0);
+        head.setGravity(16);
+        card.addView(head, matchWrap());
+
+        TextView title = new TextView(this);
+        title.setText("分析");
+        title.setTextSize(12.0f);
+        title.setTextColor(MainActivity.COLOR_LABEL);
+        title.setTypeface(Typeface.create("sans", 1));
+        head.addView(title, new LinearLayout.LayoutParams(0, -2, 1.0f));
+
+        // 这行小字很重要：让人知道依据是什么，而不是「AI 说的」
+        TextView tag = new TextView(this);
+        tag.setText("按记录统计");
+        tag.setTextSize(9.5f);
+        tag.setTextColor(MainActivity.COLOR_LABEL);
+        tag.setPadding(dp(7.0f), dp(2.0f), dp(7.0f), dp(2.0f));
+        tag.setBackground(MainActivity.softPill(dp(9.0f), 0));
+        head.addView(tag, new LinearLayout.LayoutParams(-2, -2));
+
+        if (result.hint != null) {
+            TextView hint = new TextView(this);
+            hint.setText(result.hint);
+            hint.setTextSize(12.5f);
+            hint.setTextColor(MainActivity.COLOR_MUTED);
+            hint.setLineSpacing(dp(2.0f), 1.0f);
+            LinearLayout.LayoutParams hintLp = new LinearLayout.LayoutParams(-1, -2);
+            hintLp.topMargin = dp(8.0f);
+            card.addView(hint, hintLp);
+            return card;
+        }
+
+        TextView headline = new TextView(this);
+        headline.setText(result.headline);
+        headline.setTextSize(16.0f);
+        headline.setTextColor(MainActivity.COLOR_TEXT);
+        headline.setTypeface(Typeface.create("sans", 1));
+        headline.setLineSpacing(dp(2.0f), 1.05f);
+        LinearLayout.LayoutParams headlineLp = new LinearLayout.LayoutParams(-1, -2);
+        headlineLp.topMargin = dp(7.0f);
+        card.addView(headline, headlineLp);
+
+        for (int i = 0; i < result.findings.size(); i++) {
+            DailyAnalysis.Finding finding = result.findings.get(i);
+            LinearLayout line = new LinearLayout(this);
+            line.setOrientation(0);
+            LinearLayout.LayoutParams lineLp = new LinearLayout.LayoutParams(-1, -2);
+            lineLp.topMargin = dp(8.0f);
+            card.addView(line, lineLp);
+
+            View dot = new View(this);
+            dot.setBackground(rounded(MainActivity.COLOR_ACCENT, dp(3.0f), 0, 0));
+            LinearLayout.LayoutParams dotLp = new LinearLayout.LayoutParams(dp(5.0f), dp(5.0f));
+            dotLp.topMargin = dp(6.0f);
+            dotLp.rightMargin = dp(8.0f);
+            line.addView(dot, dotLp);
+
+            TextView detail = new TextView(this);
+            // 第一条已经是大标题，不再重复标题；后面几条带上标题更清楚
+            detail.setText(i == 0 ? finding.detail : (finding.title + " · " + finding.detail));
+            detail.setTextSize(11.5f);
+            detail.setTextColor(MainActivity.COLOR_MUTED);
+            detail.setLineSpacing(dp(2.0f), 1.05f);
+            line.addView(detail, new LinearLayout.LayoutParams(0, -2, 1.0f));
+        }
+
+        // 时间分布的可信度提示 —— 让用户知道「空档分析」还没攒够数据
+        int hourDays = WaterHourLog.dayCount(this.getSharedPreferences("salary_jump", 0));
+        if (hourDays < 3) {
+            TextView foot = new TextView(this);
+            foot.setText("· 时间分布类分析（几点喝、空档多长）要攒够 3 天才有");
+            foot.setTextSize(10.0f);
+            foot.setTextColor(MainActivity.COLOR_LABEL);
+            foot.setLineSpacing(dp(1.5f), 1.0f);
+            LinearLayout.LayoutParams footLp = new LinearLayout.LayoutParams(-1, -2);
+            footLp.topMargin = dp(9.0f);
+            card.addView(foot, footLp);
+        }
+        return card;
     }
 
     /**

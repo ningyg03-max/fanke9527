@@ -116,6 +116,10 @@ public final class WaterReminderScheduler {
             List<WaterRecord> parseRecords = parseRecords(sharedPreferences.getString(KEY_RECORDS, ""));
             if (!parseRecords.isEmpty()) {
                 WaterHistory.archive(sharedPreferences, string, parseRecords);
+                // 同时归档小时分布 —— water_history 只存「每天多少 ml」，
+                // 时间戳一清零就没了，「几点喝/空档多长」再也算不出来
+                WaterHourLog.archive(sharedPreferences, WaterHistory.dayStamp(string),
+                        WaterHourLog.buckets(parseRecords));
             }
         }
         sharedPreferences.edit().putString("water_day", dayKey).putString(KEY_RECORDS, "").putInt("water_consumed", 0).apply();

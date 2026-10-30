@@ -2,6 +2,7 @@ package com.salaryjump.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -204,6 +205,12 @@ public class AllTest {
 
         section("BG. 每日总量柱状图");
         testWaterDailyChart();
+
+        section("BH. 小时分布归档");
+        testWaterHourLog();
+
+        section("BI. 喝水分析规则");
+        testDailyAnalysis();
 
 
         System.out.println();
@@ -3740,6 +3747,256 @@ public class AllTest {
 
         // null 安全
         eq("null context → 0 天", 0, MainActivity.monthlySettledDays(null));
+    }
+
+    // ══════════ BH. 小时分布归档 ══════════
+    // 原来 water_history 只存「每天多少 ml」，时间戳一清零就没了，
+    // 「几点喝 / 空档多长」这类分析永远做不了。
+    static void testWaterHourLog() {
+        // ── buckets：按小时折叠 ──
+        List<WaterReminderScheduler.WaterRecord> recs = new ArrayList<>();
+        recs.add(recAt(9, 500));
+        recs.add(recAt(9, 250));
+        recs.add(recAt(15, 500));
+        int[] b = WaterHourLog.buckets(recs);
+        eq("桶数 24", 24, b.length);
+        eq("9 点两笔合并", 750, b[9]);
+        eq("15 点一笔", 500, b[15]);
+        eq("没喝的整点都是 0", 0, b[12]);
+        eq("总量守恒", 1250, sumOf(b));
+
+        eq("null 记录 → 全 0", 0, sumOf(WaterHourLog.buckets(null)));
+        // 0 值记录不该占桶
+        List<WaterReminderScheduler.WaterRecord> zero = new ArrayList<>();
+        zero.add(recAt(10, 0));
+        eq("0 ml 的记录忽略", 0, sumOf(WaterHourLog.buckets(zero)));
+
+        // ── archive + range ──
+        newStore();
+        WaterHourLog.archive(prefs, 20261020, mkBuckets(new int[]{9, 500, 15, 500}));
+        WaterHourLog.archive(prefs, 20261021, mkBuckets(new int[]{10, 300, 16, 400}));
+        eq("两天已归档", 2, WaterHourLog.dayCount(prefs));
+
+        int[] r = WaterHourLog.range(prefs, 20261020, 20261021);
+        eq("跨天 9 点累加", 500, r[9]);
+        eq("跨天 10 点", 300, r[10]);
+        eq("跨天 15 点", 500, r[15]);
+        eq("跨天 16 点", 400, r[16]);
+        eq("range 总量", 1700, sumOf(r));
+
+        int[] onlyOne = WaterHourLog.range(prefs, 20261021, 20261021);
+        eq("限定范围只取一天", 300, onlyOne[10]);
+        eq("范围外的小时不进来", 0, onlyOne[9]);
+        eq("范围内天数", 1, WaterHourLog.dayCountInRange(prefs, 20261021, 20261021));
+        eq("跨范围天数", 2, WaterHourLog.dayCountInRange(prefs, 20261020, 20261021));
+        eq("范围全空 → 0 天", 0, WaterHourLog.dayCountInRange(prefs, 20250101, 20250131));
+
+        // ── 同一天重复归档不应产生两行（否则 range 会翻倍）──
+        WaterHourLog.archive(prefs, 20261020, mkBuckets(new int[]{9, 500, 15, 500}));
+        eq("重复归档不重复计数", 2, WaterHourLog.dayCount(prefs));
+        eq("重复归档不翻倍", 500, WaterHourLog.range(prefs, 20261020, 20261021)[9]);
+
+        // 重新归档同一天但数据不同 → 应以新数据为准
+        WaterHourLog.archive(prefs, 20261020, mkBuckets(new int[]{9, 800}));
+        eq("同日重归档覆盖旧值", 800, WaterHourLog.range(prefs, 20261020, 20261020)[9]);
+        eq("同日重归档后总量", 800, sumOf(WaterHourLog.range(prefs, 20261020, 20261020)));
+
+        // ── 全 0 的一天不写（避免存一堆空行）──
+        newStore();
+        WaterHourLog.archive(prefs, 20261022, new int[24]);
+        eq("全 0 的一天不归档", 0, WaterHourLog.dayCount(prefs));
+
+        // ── 脏数据不崩 ──
+        newStore();
+        prefs.map.put(WaterHourLog.KEY, "20261023:9~500|坏数据;garbage;20261024:25~100|9~200");
+        int[] dirty = WaterHourLog.range(prefs, 20261001, 20261031);
+        eq("越界小时(25)被丢弃", dirty[9], 700);   // 500(10/23) + 200(10/24)
+        eq("脏数据不崩且不入桶", sumOf(dirty), 700);
+        eq("两行各算一天（garbage 那行不算）", 2, WaterHourLog.dayCountInRange(prefs, 20261001, 20261031));
+
+        newStore();
+        eq("无数据 → 全 0", 0, sumOf(WaterHourLog.range(prefs, 20260101, 20261231)));
+        eq("无数据 → 0 天", 0, WaterHourLog.dayCount(prefs));
+
+        // ── 365 天裁剪 ──
+        newStore();
+        WaterHourLog.archive(prefs, 20200101, mkBuckets(new int[]{9, 500}));
+        eq("超过一年的记录被裁掉", 0, WaterHourLog.dayCount(prefs));
+    }
+
+    static WaterReminderScheduler.WaterRecord recAt(int hour, int ml) {
+        Calendar c = Calendar.getInstance();
+        c.set(2026, 9, 20, hour, 30, 0);
+        c.set(14, 0);
+        return new WaterReminderScheduler.WaterRecord(c.getTimeInMillis(), ml, 0);
+    }
+
+    /** 构造「小时,ml」交替的数组 */
+    static int[] mkBuckets(int[] pairs) {
+        int[] out = new int[24];
+        for (int i = 0; i + 1 < pairs.length; i += 2) {
+            out[pairs[i]] = pairs[i + 1];
+        }
+        return out;
+    }
+
+    static int sumOf(int[] arr) {
+        int sum = 0;
+        if (arr == null) {
+            return 0;
+        }
+        for (int v : arr) {
+            sum += v;
+        }
+        return sum;
+    }
+
+    // ══════════ BI. 喝水分析规则 ══════════
+    static void testDailyAnalysis() {
+        // ── 数据不足 ──
+        DailyAnalysis.Result few = DailyAnalysis.analyze(new int[]{3000, 2000}, 3000, null, 2, 0, 5000);
+        check("少于 3 天 → 给提示不给结论", few.hint != null && few.findings.isEmpty());
+        check("提示里说明天数", few.hint.contains("2"));
+
+        DailyAnalysis.Result none = DailyAnalysis.analyze(new int[0], 3000, null, 0, 0, 0);
+        check("空数据 → 提示", none.hint != null);
+
+        DailyAnalysis.Result zeros = DailyAnalysis.analyze(new int[]{0, 0, 0, 0, 0}, 3000, null, 0, 0, 0);
+        check("全 0 → 提示没有记录", zeros.hint != null && zeros.hint.contains("没有记录"));
+
+        // ── 规则：忽高忽低（用户的真实形态）──
+        // 平均接近目标，但只有一半日子达标，波动大
+        int[] wavy = {3400, 3760, 2760, 3965, 3755, 2880, 2580, 2000, 3255, 3355, 2000, 2855, 1855};
+        DailyAnalysis.Result r1 = DailyAnalysis.analyze(wavy, 3000, null, 98, 14, 44000);
+        check("忽高忽低能识别", r1.headline != null && r1.headline.contains("不缺总量"));
+        check("结论不超过 3 条", r1.findings.size() <= 3);
+        check("最严重的一条排第一", r1.findings.get(0).severity >= 70);
+
+        // ── 规则：喝得稳 ──
+        int[] steady = {3200, 3100, 3300, 3050, 3150, 3250, 3200};
+        DailyAnalysis.Result r2 = DailyAnalysis.analyze(steady, 3000, null, 88, 2, 22000);
+        check("稳定达标 → 正面结论", r2.headline != null && r2.headline.contains("稳"));
+        eq("正面结论只给 1 条", 1, r2.findings.size());
+        check("正面结论严重度低", r2.findings.get(0).severity < 50);
+
+        // ── 规则：整体偏少 ──
+        int[] low = {1800, 1500, 1200, 1900, 1400, 1600, 1300};
+        DailyAnalysis.Result r3 = DailyAnalysis.analyze(low, 3000, null, 20, 1, 10700);
+        boolean foundLow = false;
+        for (DailyAnalysis.Finding f : r3.findings) {
+            if (f.title.contains("偏少")) {
+                foundLow = true;
+            }
+        }
+        check("整体偏少能识别", foundLow);
+
+        // ── 规则：趋势往下走 ──
+        int[] falling = {3400, 3400, 3400, 3400, 2000, 2000, 2000, 2000};
+        DailyAnalysis.Result r4 = DailyAnalysis.analyze(falling, 3000, null, 30, 0, 21600);
+        boolean foundTrend = false;
+        for (DailyAnalysis.Finding f : r4.findings) {
+            if (f.title.contains("往下走")) {
+                foundTrend = true;
+            }
+        }
+        check("后半段掉 40% → 识别为下降趋势", foundTrend);
+
+        // 掉 10% 不该报（阈值 15%）
+        int[] mild = {3400, 3400, 3400, 3400, 3060, 3060, 3060, 3060};
+        DailyAnalysis.Result r5 = DailyAnalysis.analyze(mild, 3000, null, 30, 0, 26000);
+        for (DailyAnalysis.Finding f : r5.findings) {
+            check("轻微波动不报下降趋势", !f.title.contains("往下走"));
+        }
+
+        // ── 规则：白天空档（需要 3 天以上时间数据）──
+        int[] gaps = mkBuckets(new int[]{9, 500, 15, 500});
+        DailyAnalysis.Result r6 = DailyAnalysis.analyze(steady, 3000, new int[][]{gaps, gaps, gaps}, 30, 2, 22000);
+        boolean foundGap = false;
+        for (DailyAnalysis.Finding f : r6.findings) {
+            if (f.title.contains("空档")) {
+                foundGap = true;
+            }
+        }
+        check("8-20 点里空 5 小时 → 报空档", foundGap);
+
+        // 关键：空档必须逐天算。如果两天各在 9 点和 15 点喝，累加后 9/15 都有值，
+        // 空档就被「填平」了 —— 测出来的是「有没有在这个钟点喝过」，不是「一天断多久」
+        int[] dayA = mkBuckets(new int[]{9, 500, 15, 500});
+        int[] dayB = mkBuckets(new int[]{12, 500, 13, 500});
+        DailyAnalysis.Result r6b = DailyAnalysis.analyze(steady, 3000,
+                new int[][]{dayA, dayA, dayA}, 30, 2, 22000);
+        boolean gapA = false;
+        for (DailyAnalysis.Finding f : r6b.findings) {
+            if (f.title.contains("空档")) {
+                gapA = true;
+            }
+        }
+        check("同一种作息连续 3 天 → 报空档", gapA);
+
+        DailyAnalysis.Result r7 = DailyAnalysis.analyze(steady, 3000, new int[][]{gaps}, 30, 2, 22000);
+        for (DailyAnalysis.Finding f : r7.findings) {
+            check("时间数据不足 3 天 → 不报空档", !f.title.contains("空档"));
+        }
+
+        // ── 规则：大杯低频 ──
+        DailyAnalysis.Result r8 = DailyAnalysis.analyze(steady, 3000, null, 56, 0, 28000);
+        boolean foundBolus = false;
+        for (DailyAnalysis.Finding f : r8.findings) {
+            if (f.title.contains("次数偏少")) {
+                foundBolus = true;
+            }
+        }
+        check("平均每次 500ml → 报大杯低频", foundBolus);
+
+        DailyAnalysis.Result r9 = DailyAnalysis.analyze(steady, 3000, null, 112, 0, 28000);
+        for (DailyAnalysis.Finding f : r9.findings) {
+            check("平均每次 250ml → 不报", !f.title.contains("次数偏少"));
+        }
+
+        // ── 规则：含糖偏高 ──
+        DailyAnalysis.Result r10 = DailyAnalysis.analyze(steady, 3000, null, 20, 8, 22000);
+        boolean foundSugar = false;
+        for (DailyAnalysis.Finding f : r10.findings) {
+            if (f.title.contains("含糖")) {
+                foundSugar = true;
+            }
+        }
+        check("含糖 40% → 报出来", foundSugar);
+
+        DailyAnalysis.Result r11 = DailyAnalysis.analyze(steady, 3000, null, 20, 2, 22000);
+        for (DailyAnalysis.Finding f : r11.findings) {
+            check("含糖 10% → 不报", !f.title.contains("含糖"));
+        }
+
+        // ── 记录不连续 ──
+        int[] holes = {3000, 0, 0, 3000, 0, 3000, 0, 0, 3000, 3000};
+        DailyAnalysis.Result r12 = DailyAnalysis.analyze(holes, 3000, null, 40, 0, 12000);
+        boolean foundHole = false;
+        for (DailyAnalysis.Finding f : r12.findings) {
+            if (f.title.contains("没有记录")) {
+                foundHole = true;
+            }
+        }
+        check("5/10 天没记录 → 报断档", foundHole);
+
+        // ── 纯函数 ──
+        eq("avgOf 区间平均", 2000, DailyAnalysis.avgOf(new int[]{1000, 3000, 5000}, 0, 3) - 1000);
+        eq("avgOf 越界返回 0", 0, DailyAnalysis.avgOf(new int[]{1, 2}, 2, 1));
+        eq("stddev 恒定数组为 0", 0, (int) DailyAnalysis.stddev(new int[]{5, 5, 5}, 5));
+        check("stddev 有波动时 > 0", DailyAnalysis.stddev(new int[]{0, 10}, 5) > 0);
+        eq("空数组 stddev 0", 0, (int) DailyAnalysis.stddev(new int[0], 0));
+
+        // 空档只算 8-20 点，半夜不喝不算
+        int[] nightEmpty = new int[24];
+        nightEmpty[9] = 500;
+        nightEmpty[19] = 500;
+        eq("8-20 点之外的空档不算", 9, DailyAnalysis.longestDryStreak(nightEmpty));
+
+        int[] allDay = new int[24];
+        for (int h = 8; h <= 20; h++) {
+            allDay[h] = 200;
+        }
+        eq("每钟点都喝 → 无空档", 0, DailyAnalysis.longestDryStreak(allDay));
     }
 
     // ══════════ BG. 每日总量柱状图 ══════════

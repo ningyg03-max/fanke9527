@@ -57,7 +57,7 @@ public final class WaterHistory {
         StringBuilder sb = new StringBuilder();
         for (String str2 : str.split(";")) {
             String[] split = str2.split(":");
-            if (split.length == 4) {
+            if (split.length >= 4) {
                 try {
                     z = Integer.parseInt(split[0]) >= i;
                 } catch (NumberFormatException e) {
@@ -82,7 +82,7 @@ public final class WaterHistory {
         }
         for (String str : string.split(";")) {
             String[] split = str.split(":");
-            if (split.length == 4) {
+            if (split.length >= 4) {
                 try {
                     int parseInt = Integer.parseInt(split[0]);
                     if (parseInt >= i && parseInt <= i2) {
