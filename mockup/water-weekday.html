@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>喝水统计 · 只算工作日</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#EFF7F6}
+body{font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+ color:#16323B;width:384px;margin:0 auto;padding:18px 20px 22px;-webkit-font-smoothing:antialiased}
+.topbar{display:flex;align-items:center;height:42px}
+.pill{background:#fff;border:1.5px solid #E3EFEC;border-radius:21px;height:42px;
+ padding:0 16px;display:flex;align-items:center;font-size:14px}
+.title{flex:1;text-align:center;font-size:20px;font-weight:700}
+.seg{display:flex;gap:8px;margin-top:18px}
+.seg div{flex:1;height:40px;border-radius:19px;display:flex;align-items:center;justify-content:center;
+ font-size:13px;background:#F7FCFA;border:1.5px solid #D3E9E3}
+.seg div.on{background:#14B8A6;border-color:#14B8A6;color:#fff;font-weight:600}
+
+.card{background:#fff;border-radius:20px;padding:20px 22px;margin-top:16px;
+ box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.sum{font-size:26px;font-weight:700;color:#0F766E;letter-spacing:-.5px}
+.sum small{font-size:14px;font-weight:400;color:#61808C;margin-left:4px}
+.note{font-size:13px;color:#61808C;margin-top:6px;line-height:1.55}
+.note .dim{color:#A8BEC6}
+
+/* 图表 */
+.chartcard{background:#fff;border-radius:20px;padding:16px 14px 12px;margin-top:10px;
+ box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.charthead{display:flex;align-items:baseline;justify-content:space-between;padding:0 6px 12px}
+.charthead b{font-size:13.5px}
+.charthead span{font-size:11px;color:#8AA6B0}
+.plot{position:relative;height:104px;display:flex;align-items:flex-end;gap:2px}
+.goal{position:absolute;left:0;right:0;border-top:1.5px dashed #B9CFCB;z-index:1}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+ height:100%;position:relative;z-index:2;min-width:0}
+.v{font-size:9px;color:#61808C;line-height:1.1;margin-bottom:2px;font-variant-numeric:tabular-nums}
+.bar{width:62%;max-width:22px;border-radius:3px 3px 1px 1px;background:#0B9E7D;min-height:2px}
+.bar.low{background:#8FD0C0}
+.bar.off{background:#E6F2EE;height:3px !important;border-radius:1px}
+.xaxis{display:flex;gap:2px;margin-top:6px;border-top:1px solid #EEF6F4;padding-top:5px}
+.xaxis div{flex:1;text-align:center;font-size:8.5px;color:#8AA6B0;line-height:1.2;min-width:0;
+ overflow:visible;white-space:nowrap;position:relative}
+.legend{font-size:9.5px;color:#8AA6B0;padding:6px 6px 0}
+
+/* 分析 */
+.ac{margin-top:10px;padding:15px 18px}
+.achead{display:flex;align-items:center}
+.achead b{font-size:12px;color:#8AA6B0;font-weight:700;flex:1}
+.tag{font-size:9.5px;color:#8AA6B0;background:#F7FCFA;border-radius:9px;padding:2px 7px}
+.hl{font-size:16px;font-weight:700;line-height:1.35;margin-top:7px}
+.f{display:flex;margin-top:8px}
+.dot{width:5px;height:5px;border-radius:3px;background:#0B9E7D;margin:6px 8px 0 0;flex-shrink:0}
+.ft{font-size:11.5px;color:#61808C;line-height:1.45}
+
+/* 对比 */
+.sec{margin:26px 0 0;font-size:12px;font-weight:700;color:#0F766E;
+ border-left:3px solid #0B9E7D;padding-left:8px}
+table{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:10px;background:#fff;
+ border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(15,23,42,.04)}
+th{text-align:left;color:#64748B;font-weight:600;padding:8px 10px;font-size:10.5px;background:#F8FBFA}
+td{padding:9px 10px;border-top:1px solid #EEF3F2;color:#475569}
+td b{color:#16323B}
+td.win{color:#0B9E7D;font-weight:700}
+.note2{background:#fff;border-radius:14px;padding:13px 15px;margin-top:12px;
+ font-size:11.5px;color:#475569;line-height:1.8;box-shadow:0 2px 10px rgba(15,23,42,.04)}
+.note2 b{color:#16323B}
+.warn{background:#FFFBEB;color:#78350F;border:1px solid #FDE68A}
+</style></head><body>
+
+<div class="topbar"><div class="pill">返回</div><div class="title">喝水统计</div><div style="width:74px"></div></div>
+<div class="seg"><div>今日</div><div class="on">近7天</div><div>近30天</div></div>
+
+<div class="card">
+  <div class="sum">13,320<small>ml</small></div>
+  <div class="note">目标 3000 ml · 达标 2 天 / 共 5 天<br>约 752 kcal · 含糖 4 / 28 杯<br>
+  <span class="dim">只统计工作日，周末不计</span></div>
+</div>
+
+<div class="chartcard">
+  <div class="charthead"><b>每日总量</b><span>目标 3000 ml</span></div>
+  <div class="plot" id="plot"></div>
+  <div class="xaxis" id="xaxis"></div>
+  <div class="legend">周末不计入统计</div>
+</div>
+
+<div class="card ac">
+  <div class="achead"><b>分析</b><span class="tag">按记录统计</span></div>
+  <div class="hl">你不缺总量，缺的是每天都喝到</div>
+  <div class="f"><div class="dot"></div><div class="ft">
+    有记录的日子平均 2,664 ml（目标 3000）。5 天里只有 2 天达标（40%），上下波动 626 ml：最好的一天 3,355，最差 1,855</div></div>
+  <div class="f"><div class="dot"></div><div class="ft">
+    一次喝得多、次数偏少 · 平均每次 476 ml，一天约 6 次。拆成 250 ml 喝吸收更均匀</div></div>
+</div>
+
+<div class="sec">口径变化（你的真实数据，10/09–10/28）</div>
+<table>
+  <tr><th>口径</th><th>天数</th><th>平均</th><th>达标率</th></tr>
+  <tr><td>原：含周末</td><td>20</td><td>2,221 ml</td><td>40%</td></tr>
+  <tr><td>新：只工作日</td><td>14</td><td class="win">2,661 ml</td><td class="win">43%</td></tr>
+  <tr><td>（被排除的周末）</td><td>6</td><td>1,193 ml</td><td>33%</td></tr>
+</table>
+
+<div class="note2 warn">
+  <b>周末平均只有 1,193 ml</b>，正好把整体平均压低了 440 ml。<br>
+  这 440 ml 不是「喝得少」，是<b>你那两天根本没记</b> —— 混在达标率里就是错误的信息。
+</div>
+
+<div class="note2">
+  <b>图表怎么处理</b>：周末那两根柱子<b>留一条 3dp 矮墩、不显示数字、日期灰掉</b>，
+  底部写「周末不计入统计」。<br>
+  时间轴保持连续（不跳格），但一眼能看出哪天不该看。
+</div>
+
+<script>
+const GOAL = 3000, COL_H = 104, PAD = 14;
+const days = [
+  {label:'10/22', ml:3255, on:true}, {label:'10/23', ml:3355, on:true},
+  {label:'10/24', ml:0, on:false},   {label:'10/25', ml:0, on:false},
+  {label:'10/26', ml:2000, on:true}, {label:'10/27', ml:2855, on:true},
+  {label:'10/28', ml:1855, on:true},
+];
+const counted = days.filter(d => d.on).map(d => d.ml);
+const maxV = Math.max(...counted, GOAL) * 1.08;
+const plot = document.getElementById('plot'), xaxis = document.getElementById('xaxis');
+
+const gl = document.createElement('div');
+gl.className = 'goal';
+gl.style.top = ((1 - GOAL / maxV) * (COL_H - PAD)) + 'px';
+gl.style.bottom = 'auto';
+plot.appendChild(gl);
+
+days.forEach(d => {
+  const col = document.createElement('div');
+  col.className = 'col';
+  let h, cls;
+  if (!d.on) { h = 3; cls = 'off'; }
+  else {
+    h = Math.max(3, d.ml / maxV * (COL_H - PAD));
+    cls = d.ml >= GOAL ? '' : 'low';
+  }
+  const showNum = d.on && d.ml > 0;
+  col.innerHTML = (showNum ? `<div class="v">${d.ml.toLocaleString()}</div>` : '') +
+    `<div class="bar ${cls}" style="height:${h}px"></div>`;
+  plot.appendChild(col);
+
+  const x = document.createElement('div');
+  x.textContent = d.label;
+  if (!d.on) x.style.color = '#DDEAE6';
+  xaxis.appendChild(x);
+});
+</script>
+</body></html>

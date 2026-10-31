@@ -160,6 +160,14 @@ final class WaterHourLog {
      * 算出来的是「这段时间里有没有在这个钟点喝过」，不是「典型的一天断多久」。
      */
     static int[][] days(android.content.SharedPreferences prefs, int from, int to) {
+        return days(prefs, from, to, false);
+    }
+
+    /**
+     * @param trackedOnly true = 只要需要维护的日子（跳过周末），
+     *                    否则周末的全天空档会被当成「一天没喝」
+     */
+    static int[][] days(android.content.SharedPreferences prefs, int from, int to, boolean trackedOnly) {
         if (prefs == null) {
             return new int[0][];
         }
@@ -180,6 +188,9 @@ final class WaterHourLog {
                 continue;
             }
             if (day < from || day > to) {
+                continue;
+            }
+            if (trackedOnly && !WaterScope.isTracked(day)) {
                 continue;
             }
             int[] buckets = new int[HOURS];

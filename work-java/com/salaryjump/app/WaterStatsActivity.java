@@ -173,26 +173,35 @@ public class WaterStatsActivity extends Activity {
             i++;
         }
         SharedPreferences sharedPreferences = getSharedPreferences("salary_jump", 0);
+        // 周末不维护 → 区间统计只算工作日。「今日」页例外：
+        // 它就问今天，哪怕是周六也该如实显示
+        final boolean weekdayOnly = this.rangeDays > 1;
+        Calendar calendar = Calendar.getInstance();
+        int i3 = (calendar.get(1) * 10000) + ((calendar.get(2) + 1) * 100) + calendar.get(5);
+        boolean todayTracked = !weekdayOnly || WaterScope.isTracked(i3);
+
         final int[] iArr = new int[32];
         int[] iArr2 = new int[32];
         int i2 = 0;
-        for (WaterReminderScheduler.WaterRecord waterRecord : WaterReminderScheduler.getRecords(this)) {
-            int clamp = DrinkTypes.clamp(waterRecord.type);
-            iArr[clamp] = iArr[clamp] + waterRecord.amountMl;
-            iArr2[clamp] = iArr2[clamp] + 1;
-            i2 += waterRecord.amountMl;
+        if (todayTracked) {
+            for (WaterReminderScheduler.WaterRecord waterRecord : WaterReminderScheduler.getRecords(this)) {
+                int clamp = DrinkTypes.clamp(waterRecord.type);
+                iArr[clamp] = iArr[clamp] + waterRecord.amountMl;
+                iArr2[clamp] = iArr2[clamp] + 1;
+                i2 += waterRecord.amountMl;
+            }
         }
-        Calendar calendar = Calendar.getInstance();
-        int i3 = (calendar.get(1) * 10000) + ((calendar.get(2) + 1) * 100) + calendar.get(5);
         HashMap hashMap = new HashMap();
-        hashMap.put(Integer.valueOf(i3), Integer.valueOf(i2));
+        if (todayTracked) {
+            hashMap.put(Integer.valueOf(i3), Integer.valueOf(i2));
+        }
         if (this.rangeDays > 1) {
             Calendar calendar2 = Calendar.getInstance();
             calendar2.add(5, -(this.rangeDays - 1));
             int i4 = (calendar2.get(1) * 10000) + ((calendar2.get(2) + 1) * 100) + calendar2.get(5);
             Calendar calendar3 = Calendar.getInstance();
             calendar3.add(5, -1);
-            hashMap.putAll(WaterHistory.query(sharedPreferences, i4, (calendar3.get(1) * 10000) + ((calendar3.get(2) + 1) * 100) + calendar3.get(5), iArr, iArr2));
+            hashMap.putAll(WaterHistory.query(sharedPreferences, i4, (calendar3.get(1) * 10000) + ((calendar3.get(2) + 1) * 100) + calendar3.get(5), iArr, iArr2, weekdayOnly));
         }
         int i5 = WaterReminderSettings.load(this).targetMl;
         Iterator it = hashMap.values().iterator();
@@ -217,7 +226,14 @@ public class WaterStatsActivity extends Activity {
                 i11 += iArr2[i12];
             }
         }
-        this.rangeNoteView.setText("目标 " + i5 + " ml · 达标 " + i6 + " 天" + (this.rangeDays > 1 ? " / 共 " + this.rangeDays + " 天" : "") + "\n约 " + i9 + " kcal" + (i10 > 0 ? " · 含糖 " + i11 + " / " + i10 + " 杯" : ""));
+        int trackedDays = this.rangeDays > 1
+                ? WaterScope.trackedDays(this.rangeDays, Calendar.getInstance())
+                : 1;
+        this.rangeNoteView.setText("目标 " + i5 + " ml · 达标 " + i6 + " 天"
+                + (this.rangeDays > 1 ? " / 共 " + trackedDays + " 天" : "")
+                + "\n约 " + i9 + " kcal"
+                + (i10 > 0 ? " · 含糖 " + i11 + " / " + i10 + " 杯" : "")
+                + (weekdayOnly ? "\n只统计工作日，周末不计" : ""));
         this.listContainer.removeAllViews();
         ArrayList arrayList = new ArrayList();
         for (int i13 = 0; i13 < 32; i13++) {
@@ -227,7 +243,7 @@ public class WaterStatsActivity extends Activity {
         }
         if (arrayList.isEmpty()) {
             TextView textView = new TextView(this);
-            textView.setText("暂无记录，去主界面记一笔吧");
+            textView.setText(weekdayOnly ? "工作日暂无记录，去主界面记一笔吧" : "暂无记录，去主界面记一笔吧");
             textView.setTextSize(14.0f);
             textView.setTextColor(MainActivity.COLOR_MUTED);
             textView.setGravity(17);
@@ -246,7 +262,11 @@ public class WaterStatsActivity extends Activity {
         // 「今日」只有一根柱子，没有信息量，所以不画柱状图；
         // 分析卡也一样 —— 一天的数据看不出任何规律
         if (this.rangeDays > 1) {
-            int[] dailySeries = WaterDailyChart.series(hashMap, this.rangeDays, Calendar.getInstance());
+            Calendar chartToday = Calendar.getInstance();
+            int[] dailySeries = WaterDailyChart.series(hashMap, this.rangeDays, chartToday);
+            // 分析卡只喂工作日 —— 它内部把 0 当「没记录」，混进周末的 0 会造出假趋势
+            int[] trackedSeries = WaterScope.trackedSeries(hashMap, this.rangeDays, chartToday);
+            boolean[] trackedMask = WaterScope.mask(this.rangeDays, chartToday);
 
             Calendar from = Calendar.getInstance();
             from.add(5, -(this.rangeDays - 1));
@@ -255,8 +275,8 @@ public class WaterStatsActivity extends Activity {
             int toStamp = (now.get(1) * 10000) + ((now.get(2) + 1) * 100) + now.get(5);
 
             DailyAnalysis.Result analysis = DailyAnalysis.analyze(
-                    dailySeries, i5,
-                    WaterHourLog.days(sharedPreferences, fromStamp, toStamp),
+                    trackedSeries, i5,
+                    WaterHourLog.days(sharedPreferences, fromStamp, toStamp, true),
                     i10, i11, i7);
             LinearLayout.LayoutParams analysisLp = matchWrap();
             analysisLp.topMargin = dp(10.0f);
@@ -264,7 +284,7 @@ public class WaterStatsActivity extends Activity {
 
             LinearLayout.LayoutParams chartLp = matchWrap();
             chartLp.topMargin = dp(10.0f);
-            this.listContainer.addView(buildDailyChart(dailySeries, this.rangeDays, i5), chartLp);
+            this.listContainer.addView(buildDailyChart(dailySeries, this.rangeDays, i5, trackedMask), chartLp);
         }
 
         // ── 饮料两列 ──
@@ -373,7 +393,7 @@ public class WaterStatsActivity extends Activity {
      * <p>7 天：格子够宽，柱顶写数字；30 天：格子只有 10dp，数字放不下，
      * 改成右上角显示「平均 / 最高」，日期每 5 天标一个。
      */
-    private LinearLayout buildDailyChart(int[] data, int days, int targetMl) {
+    private LinearLayout buildDailyChart(int[] data, int days, int targetMl, boolean[] tracked) {
         LinearLayout card = new LinearLayout(this);
         card.setOrientation(1);
         card.setPadding(dp(14.0f), dp(16.0f), dp(14.0f), dp(10.0f));
@@ -397,18 +417,20 @@ public class WaterStatsActivity extends Activity {
         hint.setTextColor(MainActivity.COLOR_LABEL);
         hint.setGravity(5);
         hint.setSingleLine(true);
+        int[] counted = pickTracked(data, tracked);
         if (days <= 7) {
             hint.setText("目标 " + targetMl + " ml");
         } else {
-            hint.setText("平均 " + this.amountFormat.format(WaterDailyChart.average(data))
-                    + " · 最高 " + this.amountFormat.format(WaterDailyChart.maxValue(data)));
+            // 「平均」也只算工作日 —— 混进周末的 0 会把平均值压低
+            hint.setText("平均 " + this.amountFormat.format(WaterDailyChart.average(counted))
+                    + " · 最高 " + this.amountFormat.format(WaterDailyChart.maxValue(counted)));
         }
         head.addView(hint, new LinearLayout.LayoutParams(-2, -2));
 
         int plotH = dp(96.0f);
         int labelBand = dp(15.0f);
         int usable = plotH - labelBand;
-        int axisMax = WaterDailyChart.axisMax(data, targetMl);
+        int axisMax = WaterDailyChart.axisMax(counted, targetMl);
 
         int availW = getResources().getDisplayMetrics().widthPixels - dp(40.0f) - dp(28.0f);
         int colW = Math.max(1, availW / days);
@@ -444,7 +466,7 @@ public class WaterStatsActivity extends Activity {
             col.setGravity(0x51);
             row.addView(col, new LinearLayout.LayoutParams(0, -1, 1.0f));
 
-            if (days <= 7 && data[i] > 0) {
+            if (days <= 7 && data[i] > 0 && scoped(i, tracked)) {
                 TextView value = new TextView(this);
                 value.setText(this.amountFormat.format(data[i]));
                 value.setTextSize(8.5f);
@@ -458,11 +480,13 @@ public class WaterStatsActivity extends Activity {
             }
 
             View bar = new View(this);
-            bar.setBackground(rounded(data[i] <= 0 ? MainActivity.COLOR_TRACK
+            boolean inScope = scoped(i, tracked);
+            bar.setBackground(rounded(!inScope || data[i] <= 0 ? MainActivity.COLOR_TRACK
                     : (data[i] >= targetMl ? MainActivity.COLOR_ACCENT : COLOR_BAR_LOW),
                     dp(2.5f), 0, 0));
+            // 周末只画一条矮墩，表示「这天不计」，不是「这天没喝」
             col.addView(bar, new LinearLayout.LayoutParams(barW,
-                    WaterDailyChart.barPx(data[i], axisMax, usable, zeroPx)));
+                    inScope ? WaterDailyChart.barPx(data[i], axisMax, usable, zeroPx) : zeroPx));
         }
 
         // 横轴：绝对定位，不然 30 天格子只有 10dp，日期会被裁掉
@@ -477,10 +501,11 @@ public class WaterStatsActivity extends Activity {
             if (!WaterDailyChart.showLabel(i, days)) {
                 continue;
             }
+            boolean inScope = scoped(i, tracked);
             TextView label = new TextView(this);
             label.setText(labels[i]);
             label.setTextSize(days <= 7 ? 8.5f : 9.0f);
-            label.setTextColor(MainActivity.COLOR_LABEL);
+            label.setTextColor(inScope ? MainActivity.COLOR_LABEL : MainActivity.COLOR_TRACK);
             label.setSingleLine(true);
             label.setIncludeFontPadding(false);
             label.setGravity(17);
@@ -488,7 +513,54 @@ public class WaterStatsActivity extends Activity {
             labelLp.leftMargin = Math.round((i * colW) + (colW / 2.0f) - (labelW / 2.0f));
             axis.addView(label, labelLp);
         }
+
+        if (hasUntracked(tracked)) {
+            TextView legend = new TextView(this);
+            legend.setText("周末不计入统计");
+            legend.setTextSize(9.5f);
+            legend.setTextColor(MainActivity.COLOR_LABEL);
+            LinearLayout.LayoutParams legendLp = new LinearLayout.LayoutParams(-1, -2);
+            legendLp.topMargin = dp(6.0f);
+            card.addView(legend, legendLp);
+        }
         return card;
+    }
+
+    private static boolean scoped(int index, boolean[] tracked) {
+        return tracked == null || index >= tracked.length || tracked[index];
+    }
+
+    private static boolean hasUntracked(boolean[] tracked) {
+        if (tracked == null) {
+            return false;
+        }
+        for (boolean value : tracked) {
+            if (!value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** 只取要统计的那几天的数据 */
+    private static int[] pickTracked(int[] data, boolean[] tracked) {
+        if (data == null || tracked == null) {
+            return data == null ? new int[0] : data;
+        }
+        int count = 0;
+        for (int i = 0; i < data.length; i++) {
+            if (scoped(i, tracked)) {
+                count++;
+            }
+        }
+        int[] out = new int[count];
+        int k = 0;
+        for (int i = 0; i < data.length; i++) {
+            if (scoped(i, tracked)) {
+                out[k++] = data[i];
+            }
+        }
+        return out;
     }
 
     /**

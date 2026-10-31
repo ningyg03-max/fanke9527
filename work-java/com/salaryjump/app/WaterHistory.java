@@ -75,6 +75,15 @@ public final class WaterHistory {
     }
 
     static HashMap<Integer, Integer> query(SharedPreferences sharedPreferences, int i, int i2, int[] iArr, int[] iArr2) {
+        return query(sharedPreferences, i, i2, iArr, iArr2, false);
+    }
+
+    /**
+     * @param trackedOnly true = 只统计需要维护的日子（跳过周末）。
+     *                    周末的空缺不是「没喝」，算进达标率会把数字拉低。
+     */
+    static HashMap<Integer, Integer> query(SharedPreferences sharedPreferences, int i, int i2,
+                                           int[] iArr, int[] iArr2, boolean trackedOnly) {
         HashMap<Integer, Integer> hashMap = new HashMap<>();
         String string = sharedPreferences.getString(KEY, "");
         if (string == null || string.length() == 0) {
@@ -86,6 +95,9 @@ public final class WaterHistory {
                 try {
                     int parseInt = Integer.parseInt(split[0]);
                     if (parseInt >= i && parseInt <= i2) {
+                        if (trackedOnly && !WaterScope.isTracked(parseInt)) {
+                            continue;
+                        }
                         int clamp = DrinkTypes.clamp(Integer.parseInt(split[1]));
                         int parseInt2 = Integer.parseInt(split[2]);
                         int parseInt3 = Integer.parseInt(split[3]);

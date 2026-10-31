@@ -212,6 +212,9 @@ public class AllTest {
         section("BI. 喝水分析规则");
         testDailyAnalysis();
 
+        section("BJ. 只统计工作日");
+        testWaterScope();
+
 
         System.out.println();
         System.out.println("────────────────────────────");
@@ -3747,6 +3750,115 @@ public class AllTest {
 
         // null 安全
         eq("null context → 0 天", 0, MainActivity.monthlySettledDays(null));
+    }
+
+    // ══════════ BJ. 只统计工作日 ══════════
+    // 用户：周末不维护 → 周末的空缺不能拉低达标率、不能造出假趋势
+    static void testWaterScope() {
+        // 2026-10-19 是周一，10-24 周六，10-25 周日
+        eq("周一 10/19 计入", 1, WaterScope.isTracked(20261019) ? 1 : 0);
+        eq("周二 10/20 计入", 1, WaterScope.isTracked(20261020) ? 1 : 0);
+        eq("周五 10/23 计入", 1, WaterScope.isTracked(20261023) ? 1 : 0);
+        eq("周六 10/24 不计", 0, WaterScope.isTracked(20261024) ? 1 : 0);
+        eq("周日 10/25 不计", 0, WaterScope.isTracked(20261025) ? 1 : 0);
+        // 边界：跨月、跨年
+        eq("10/31 周六不计", 0, WaterScope.isTracked(20261031) ? 1 : 0);
+        eq("11/02 周一计入（跨月）", 1, WaterScope.isTracked(20261102) ? 1 : 0);
+        eq("周六 20270102 不计（跨年）", 0, WaterScope.isTracked(20270102) ? 1 : 0);
+        eq("闰年 2/29(2024 周四) 计入", 1, WaterScope.isTracked(20240229) ? 1 : 0);
+
+        // ── trackedDays：一段天数里有几天要统计 ──
+        Calendar sunday = mk("2026-10-25");
+        eq("周日往前 7 天 → 5 个工作日", WaterScope.trackedDays(7, sunday), 5);
+        Calendar monday = mk("2026-10-19");
+        eq("周一往前 7 天 → 5 个工作日", WaterScope.trackedDays(7, monday), 5);
+        Calendar saturday = mk("2026-10-24");
+        eq("周六往前 7 天 → 5 个工作日", WaterScope.trackedDays(7, saturday), 5);
+        eq("单天（周一）→ 1", WaterScope.trackedDays(1, monday), 1);
+        // 近 30 天一般是 21~22 个工作日
+        // 9/26(周六) 起 30 天 = 4 整周 + 两个周末日 → 正好 20 个工作日
+        eq("近 30 天（起于周六）→ 20 个工作日", WaterScope.trackedDays(30, sunday), 20);
+        eq("近 30 天（起于周二）→ 22 个工作日", WaterScope.trackedDays(30, mk("2026-10-21")), 22);
+        eq("近 30 天（起于周日）→ 21 个工作日", WaterScope.trackedDays(30, mk("2026-10-19")), 21);
+
+        // ── mask：周末位置为 false ──
+        boolean[] mask7 = WaterScope.mask(7, sunday);
+        eq("mask 长度", 7, mask7.length);
+        eq("今天(周日)不计", 0, mask7[6] ? 1 : 0);
+        eq("昨天(周六)不计", 0, mask7[5] ? 1 : 0);
+        eq("前天(周五)计入", 1, mask7[4] ? 1 : 0);
+        int inMask = 0;
+        for (boolean v : mask7) {
+            if (v) {
+                inMask++;
+            }
+        }
+        eq("mask 里计数=", inMask, 5);
+
+        // ── trackedSeries：只保留工作日，周末那几天整根去掉 ──
+        Calendar today = mk("2026-10-25");   // 周日
+        HashMap<Integer, Integer> totals = new HashMap<>();
+        totals.put(20261025, 3000);   // 周日 —— 不该进
+        totals.put(20261024, 3000);   // 周六 —— 不该进
+        totals.put(20261023, 2800);   // 周五
+        totals.put(20261022, 3100);   // 周四
+        totals.put(20261021, 2000);   // 周三
+        totals.put(20261020, 0);      // 周二没记录
+        totals.put(20261019, 3300);   // 周一
+
+        int[] ts = WaterScope.trackedSeries(totals, 7, today);
+        eq("7 天筛掉周末 → 5 个", 5, ts.length);
+        eq("第一根是周一 3300", 3300, ts[0]);
+        eq("周二没记录保持 0", 0, ts[1]);
+        eq("第三根周三 2000", 2000, ts[2]);
+        eq("第四根周四 3100", 3100, ts[3]);
+        eq("第五根周五 2800", 2800, ts[4]);
+        eq("周末的 3000 没被算进来", 1, contains(ts, 3000) ? 0 : 1);
+
+        // 和「不筛」对比：不筛会把周末的 3000 也算成达标
+        int[] all = WaterDailyChart.series(totals, 7, today);
+        eq("不筛时 7 根", 7, all.length);
+        eq("不筛时周末也算进去", 6, countAtLeast(all, 2000));
+
+        // ── trackedSeries 用在分析上：周末不会造出假趋势 ──
+        // 前 5 个工作日都 3000，周末 0 —— 不筛会算出「下降」
+        Calendar week = mk("2026-10-25");
+        HashMap<Integer, Integer> only = new HashMap<>();
+        only.put(20261019, 3000);
+        only.put(20261020, 3000);
+        only.put(20261021, 3000);
+        only.put(20261022, 3000);
+        only.put(20261023, 3000);
+        int[] onlyTracked = WaterScope.trackedSeries(only, 7, week);
+        eq("只有工作日 → 5 根", 5, onlyTracked.length);
+        DailyAnalysis.Result r = DailyAnalysis.analyze(onlyTracked, 3000, null, 60, 0, 15000);
+        eq("每个工作日都达标 → 正面结论只 1 条（周末没污染）", 1, r.findings.size());
+        check("判定为稳定", r.headline != null && r.headline.contains("稳"));
+
+        // ── 边界：null / 0 天 ──
+        eq("null today 也返回全部", WaterScope.mask(3, null).length, 3);
+        eq("0 天不崩（返回 1 根空数组）", WaterScope.trackedSeries(null, 0, null).length, 1);
+        eq("null today 不筛，原样返回", WaterScope.trackedSeries(null, 3, null).length, 3);
+        check("dayStamp 0 不当作周末", WaterScope.isTracked(0));
+    }
+
+    static boolean contains(int[] arr, int v) {
+        for (int x : arr) {
+            if (x == v) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static int countAtLeast(int[] arr, int v) {
+        int c = 0;
+        for (int x : arr) {
+            if (x >= v) {
+                c++;
+            }
+        }
+        return c;
     }
 
     // ══════════ BH. 小时分布归档 ══════════

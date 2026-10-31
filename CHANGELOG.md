@@ -3,6 +3,75 @@
 > 按版本倒序排列（最新在最上）。
 > 本文件由对话历史重建：**v2–v61、v64–v75 已还原；v62 / v63 在历史里没有留下记录**。
 
+## v103：喝水统计只算工作日（2026-10-31）★ 当前交付版本
+
+用户：「喝水功能的统计，只需要统计周内的数据，周末我不维护」
+
+### 问题：周末的空缺被当成「没喝」
+
+原来近 7 天 / 近 30 天把所有日子都算进去。用户周末不维护数据，
+那两天的 0 就成了「没达标的坏日子」，把平均值和达标率一起拉低。
+
+用真实数据（10/09–10/28）对比：
+
+| 口径 | 天数 | 平均 | 达标率 |
+|---|---|---|---|
+| 原：含周末 | 20 | 2,221 ml | 40% |
+| **新：只工作日** | **14** | **2,661 ml** | **43%** |
+| （被排除的周末） | 6 | 1,193 ml | 33% |
+
+周末平均只有 **1,193 ml**，正好压低了 440 ml —— 那不是「喝得少」，是**没记**。
+
+### 改法：口径集中到一个类
+
+新增 `WaterScope`，判断「这天要不要统计」只在这里做一次：
+
+```
+isTracked(dayStamp)          周末 = false
+trackedDays(days, today)     近 7 天 → 5，近 30 天 → 20~22
+trackedSeries(totals, ...)   给分析卡用：周末那几天整根去掉
+mask(days, today)            给图表用：周末位置 = false
+```
+
+三处消费都接上了：
+- `WaterHistory.query(..., trackedOnly)` —— 饮料汇总、总 ml、热量、含糖杯数
+- `WaterHourLog.days(..., trackedOnly)` —— 空档分析（否则周末整天空洞会被当成「一天没喝」）
+- `WaterDailyChart` 的序列 —— 分析卡只喂工作日序列
+
+### 图表怎么处理
+
+周末**不隐藏**（时间轴要连续，否则看不出哪天了），而是：
+- 柱子只留 **3dp 矮墩**、颜色用 track 色
+- **不显示数字**
+- 日期**灰掉**
+- 卡片底部写「周末不计入统计」
+
+### 「今日」页保持原样
+
+它问的就是今天。哪怕是周六，也该如实显示今天喝了多少 ——
+不维护是「不追求达标」，不是「不许有数据」。
+
+### 测试 BJ 组 37 项
+
+- 周一/周五计入、周六周日不计、跨月跨年、闰年 2/29
+- `trackedDays`：近 7 天恒为 5；近 30 天按起始星期 20~22
+- `trackedSeries`：周末那根被剔除（**不是变 0**，是整根去掉）
+- **周末不会造出假趋势**（前 5 个工作日全达标 → 判定为稳，不因周末 0 而报下降）
+- null today / 0 天不崩
+
+### 顺带修的两个实现问题（都是测试逼出来的）
+
+1. `trackedDays` 循环里**漏了 `cursor.add(5, 1)`** —— 7 次都在算同一天，
+   返回 7 或 0（取决于今天是周末）。测试拿真实日历比对才发现。
+2. `trackedSeries` 没处理 `today == null` → NPE。加了原样返回的兜底。
+
+### 验证
+
+javac **275 类**（+1 WaterScope）；测试 **1533/1533**
+smali 核对：`WaterScope` 入包、`WaterStatsActivity` 引用 4 处、
+`WaterHistory.query` 签名已带 `Z`（布尔）
+**产物**：`SalaryJump-3.93-weekday.apk`（218148B，versionCode 117，v2+v3 签名）
+
 ## v102：喝水分析卡 + 补小时分布归档（2026-10-30）★ 当前交付版本
 
 用户：「就我这喝水记录，能不能让AI给个分析结果，写在统计页面，先分析一下」
@@ -70,7 +139,7 @@
 
 ### 验证
 
-javac **274 类**（+2：WaterHourLog / DailyAnalysis）；测试 **1496/1496**
+javac **274 类**（+2：WaterHourLog / DailyAnalysis）；测试 **1533/1533**
 smali 核对：新类入包、日切有 `WaterHourLog->archive`、统计页有 `buildAnalysisCard`
 **产物**：`SalaryJump-3.92-analysis.apk`（214052B，versionCode 116，v2+v3 签名）
 
@@ -125,7 +194,7 @@ labels(today, days, shortForm)
 
 ### 验证
 
-javac **269 类**（+2：WaterDailyChart / DashedLine）；测试 **1496/1496**
+javac **269 类**（+2：WaterDailyChart / DashedLine）；测试 **1533/1533**
 smali 核对：三个新类入包、`WaterStatsActivity` 引用 `WaterDailyChart` 7 处、
 `buildDailyChart([III)` 与 `buildDrinksGrid(...)` 都在
 **产物**：`SalaryJump-3.91-waterchart.apk`（209956B，versionCode 115，v2+v3 签名）
@@ -176,7 +245,7 @@ MainActivity.onResume()          ← ★ 显式调用，不再依赖界面函数
 
 ### 验证
 
-javac **267 类**（+1 DailyArchive）；测试 **1496/1496**
+javac **267 类**（+1 DailyArchive）；测试 **1533/1533**
 smali 核对：`DailyArchive` 入包、`MainActivity` 里有 `DailyArchive->rollover` 调用
 **产物**：`SalaryJump-3.90-archivefix.apk`（205859B，versionCode 114，v2+v3 签名）
 
@@ -211,7 +280,7 @@ this.cumulativeDaysView.setText("已结算 " + monthlySettledDays(this) + " 天"
 
 ### 验证
 
-javac **266 类**；测试 **1496/1496**
+javac **266 类**；测试 **1533/1533**
 smali 核对：主卡 2 处 `monthlySettledDays`（定义 + 调用）、小组件 1 处（调用）
 **产物**：`SalaryJump-3.89-monthdays.apk`（205859B，versionCode 113，v2+v3 签名）
 
@@ -257,7 +326,7 @@ smali 核对：主卡 2 处 `monthlySettledDays`（定义 + 调用）、小组�
 
 ### 验证
 
-javac **266 类**；测试 **1496/1496**（BE 组扩到 12 项）
+javac **266 类**；测试 **1533/1533**（BE 组扩到 12 项）
 - **上月 123456.78 一分没混进本月**
 - 本月已归档 + 今天实时
 - 本月天数只算本月、null 安全
@@ -303,7 +372,7 @@ private static String formatDuration(int i) → "%02d:%02d"
 
 ### 验证
 
-javac **266 类**；测试 **1496/1496**（新增 BD 组 18 项）
+javac **266 类**；测试 **1533/1533**（新增 BD 组 18 项）
 - 0 / 1 / 59 秒 · 1 分 · 59:59 · 整 1 小时 · 9 小时
 - **秒要补零**（`1:05:03` 而非 `1:5:3`）· **分要补零**（`1:00:07`）
 - 负数钳为 0 · `59:59 → 1:00:00` 边界
@@ -355,7 +424,7 @@ linearLayout.addView(linearLayout2, new LinearLayout.LayoutParams(0, dp(50.0f), 
 
 ### 验证
 
-javac **266 类**；测试 **1496/1496**
+javac **266 类**；测试 **1533/1533**
 smali 核对：`addStat` 高度为 `-0x2`、`HERO_LINE` **只剩字段定义、零引用**
 **产物**：`SalaryJump-3.85-nogap.apk`（205853B，versionCode 109，v2+v3 签名）
 
@@ -401,7 +470,7 @@ heroCard.addView(view2, layoutParams5);   // ← 分隔线，后面什么都没�
 
 ### 验证
 
-javac **266 类**；测试 **1496/1496**
+javac **266 类**；测试 **1533/1533**
 smali 核对：`clockView` 已不在包里、时间格式串已删、间距常量（16/14）入包
 **产物**：`SalaryJump-3.84-compact.apk`（205860B，versionCode 108，v2+v3 签名）
 
@@ -444,7 +513,7 @@ smali 核对：类已不在包里、`本周` 文案无残留。
 ### 验证
 
 javac **266 类**（比上版少 1 个 = WeekDigest 已删）
-测试 **1496/1496**（删掉 BC 组 28 项，其余全过）
+测试 **1533/1533**（删掉 BC 组 28 项，其余全过）
 **产物**：`SalaryJump-3.83-inline.apk`（205860B，versionCode 107，v2+v3 签名）
 
 ### 教训
@@ -503,7 +572,7 @@ javac **266 类**（比上版少 1 个 = WeekDigest 已删）
 
 ### 验证
 
-javac **267 类**；测试 **1496/1496**（新增 BC 组 28 项）
+javac **267 类**；测试 **1533/1533**（新增 BC 组 28 项）
 - 周三：本周 3 天 vs 上周同 3 天（**上周后几天的钱不能算进来**）
 - 周一：只比 1 天 · 周日：算满 7 天
 - **跨月**（本周一落在上月）
@@ -544,7 +613,7 @@ PaydayReminder.set(ctx, true, Math.min(28, todayDay + 3));
 - 1–25 号 → 走「设未来某天」分支，差值恒为 +3
 - 26–31 号 → 走「设今天」分支，恒为 0
 
-测试 **1496/1496**
+测试 **1533/1533**
 
 ### 教训
 
@@ -594,7 +663,7 @@ PaydayReminder.set(ctx, true, Math.min(28, todayDay + 3));
 
 ### 验证
 
-javac **266 类**；测试 **1496/1496**（新增 BB 组 12 项）
+javac **266 类**；测试 **1533/1533**（新增 BB 组 12 项）
 - 0–7 点 / 22–23 点算睡，8–21 点算醒（含用户的 15:00 场景）
 - **24 小时里恰好 10 小时算睡**
 - 无参版本可调用（读系统时钟）
@@ -664,7 +733,7 @@ if (HolidayWork.isComp(context, i)) {
 
 ### 验证
 
-javac **266 类**；测试 **1496/1496**（BA 组扩到 41 项）
+javac **266 类**；测试 **1533/1533**（BA 组扩到 41 项）
 关键回归：**「调休即便误传 15 倍也不放大」**、**「调休时标签仍是调休，不显示 1.5 倍」**
 smali 核对：`modeFor(IZ)I` / `labelFor(IIZ)` / `hourlyFor(DIIZ)D` 三个新签名入包，
 「调休 · 不计薪」字符串在位
@@ -707,7 +776,7 @@ smali 核对：`modeFor(IZ)I` / `labelFor(IIZ)` / `hourlyFor(DIIZ)D` 三个新�
 
 ### 验证
 
-javac **266 类**；测试 **1496/1496**（新增 BA 组 29 项）
+javac **266 类**；测试 **1533/1533**（新增 BA 组 29 项）
 - 9 种状态逐个验证该显示还是该灰 · **恰好 4 种显示**
 - 倍率文案（1.5 倍 / 2 倍 / 3 倍 / 越界兜底）
 - 时薪放大（加班 1.5×、出勤 2×/3×、倍率为 0 时不放大、灰掉状态不放大）
