@@ -3,6 +3,91 @@
 > 按版本倒序排列（最新在最上）。
 > 本文件由对话历史重建：**v2–v61、v64–v75 已还原；v62 / v63 在历史里没有留下记录**。
 
+## v104：修「半天假只算半天钱」（2026-11-02）★ 当前交付版本
+
+用户反馈：**「这个年假，有问题，我只休半天，还要上班半天」**
+（截图：今日已赚 ¥503.89 冻住不动，每小时/每分钟/每秒 全是「—」，小人说「今日休假」）
+
+### 根因：请假分支直接 return，等于「整天不工作」
+
+```java
+if (entry != null) {
+    salarySnapshot.state = 8;
+    salarySnapshot.progress = LeaveRecord.ratio(payPercent, half);   // 半天 → 0.5
+    salarySnapshot.earned = LeaveRecord.earned(daily, payPercent, half); // 半天 → 503.89
+    return salarySnapshot;      // ← 再也不往下算上班进度
+}
+```
+
+半天年假的定义是「**休半天 + 上半天**」，但代码把它当成「一整天都不用来」：
+
+| 症状 | 原因 |
+|---|---|
+| 金额一整天冻在 ¥503.89 | 不走上班累积分支 |
+| 每小时/每分钟/每秒 全是「—」 | `RateDisplay.modeFor(8)` → DIM |
+| 小人躺平「今日休假」 | `resolvePose(8)` 直接返回休假姿势 |
+| **归档只记 503.89** | `ArchiveSync.contribution` 用 `LeaveRecord.earned`（只算请假那半天）|
+
+### 改法：半天假 = 请假那半天（立即可见）+ 上班那半天（按时间累积）
+
+```java
+progress = min(1.0, 请假比例 + 0.5 × 已上班比例)
+earned   = 日薪 × progress
+```
+
+| 时刻 | 进度 | 今日已赚 |
+|---|---|---|
+| 8:00 | 50% | ¥503.89 |
+| 10:00 | 62% | ¥622.45 |
+| 13:00 | 74% | ¥741.01 |
+| 17:00 | **100%** | **¥1,007.78** |
+
+新增 `LeaveRecord.dayEarned(daily, payPercent, half)` 作为**当天最终应得**的唯一口径：
+
+| 情况 | 结果 |
+|---|---|
+| 全天全薪 | 100% |
+| 半天年假（全薪） | 50% + 50% = **100%** |
+| 半天事假（无薪） | 0% + 50% = **50%** |
+| 半天病假（60%） | 30% + 50% = **80%** |
+
+`ArchiveSync` / `DailyArchive` / 记录假期的 Toast 全部改用 `dayEarned` ——
+否则第二天入账还是只有一半。
+
+### 顺带抽 `WorkClock`
+
+「已上班多少秒」的时间数学原来内联在 `calculateBase` 里，
+半天假的分支需要同一套算法。抽成纯函数，避免两处各写一份慢慢跑偏：
+
+```
+elapsedSeconds(...)   8:00-17:00 + 午休 11:30-12:30 → 13:00 = 4h
+elapsedRatio(...)     0~1
+inWorkWindow(...)     午休不算在上班
+```
+
+### 界面
+
+- 状态胶囊：`年假 · 全薪 · 半天（另半天上班）· 今日 ¥741.01`
+- 费率栏：上班时段恢复显示 `¥119.70/每小时`
+- 小人：9 点→键盘姿势、14 点→下午姿势；台词「半天假 · 还有半天班」
+
+### 测试 BK 组 42 项
+
+- 时间段全套：上班前/准点/上午/午休中/午休结束/下午/下班后/深夜
+- 全天 vs 半天 × 各种 payPercent（100/60/0）
+- **半天年假收工 = 100%**，半天事假 = 50%，半天病假 60% = 80%
+- live 收工金额 **等于** 归档金额（两个口径必须一致）
+- 费率栏在半天假上班时显示、午休时灰掉
+- 小人姿势：半天假 9 点/14 点是工作姿势，全天假仍是休假姿势
+- `resolvePose(8)` 旧调用仍返回休假（向后兼容）
+
+### 验证
+
+javac **276 类**（+1 WorkClock）；测试 **1575/1575**
+smali 核对：`WorkClock` 入包、`MainActivity` 有 4 处 `leaveHalfWorking`、
+`ArchiveSync`(2) 与 `DailyArchive`(1) 都用 `LeaveRecord->dayEarned`
+**产物**：`SalaryJump-3.94-halfleave.apk`（218148B，versionCode 118，v2+v3 签名）
+
 ## v103：喝水统计只算工作日（2026-10-31）★ 当前交付版本
 
 用户：「喝水功能的统计，只需要统计周内的数据，周末我不维护」
@@ -67,7 +152,7 @@ mask(days, today)            给图表用：周末位置 = false
 
 ### 验证
 
-javac **275 类**（+1 WaterScope）；测试 **1533/1533**
+javac **275 类**（+1 WaterScope）；测试 **1575/1575**
 smali 核对：`WaterScope` 入包、`WaterStatsActivity` 引用 4 处、
 `WaterHistory.query` 签名已带 `Z`（布尔）
 **产物**：`SalaryJump-3.93-weekday.apk`（218148B，versionCode 117，v2+v3 签名）
@@ -139,7 +224,7 @@ smali 核对：`WaterScope` 入包、`WaterStatsActivity` 引用 4 处、
 
 ### 验证
 
-javac **274 类**（+2：WaterHourLog / DailyAnalysis）；测试 **1533/1533**
+javac **274 类**（+2：WaterHourLog / DailyAnalysis）；测试 **1575/1575**
 smali 核对：新类入包、日切有 `WaterHourLog->archive`、统计页有 `buildAnalysisCard`
 **产物**：`SalaryJump-3.92-analysis.apk`（214052B，versionCode 116，v2+v3 签名）
 
@@ -194,7 +279,7 @@ labels(today, days, shortForm)
 
 ### 验证
 
-javac **269 类**（+2：WaterDailyChart / DashedLine）；测试 **1533/1533**
+javac **269 类**（+2：WaterDailyChart / DashedLine）；测试 **1575/1575**
 smali 核对：三个新类入包、`WaterStatsActivity` 引用 `WaterDailyChart` 7 处、
 `buildDailyChart([III)` 与 `buildDrinksGrid(...)` 都在
 **产物**：`SalaryJump-3.91-waterchart.apk`（209956B，versionCode 115，v2+v3 签名）
@@ -245,7 +330,7 @@ MainActivity.onResume()          ← ★ 显式调用，不再依赖界面函数
 
 ### 验证
 
-javac **267 类**（+1 DailyArchive）；测试 **1533/1533**
+javac **267 类**（+1 DailyArchive）；测试 **1575/1575**
 smali 核对：`DailyArchive` 入包、`MainActivity` 里有 `DailyArchive->rollover` 调用
 **产物**：`SalaryJump-3.90-archivefix.apk`（205859B，versionCode 114，v2+v3 签名）
 
@@ -280,7 +365,7 @@ this.cumulativeDaysView.setText("已结算 " + monthlySettledDays(this) + " 天"
 
 ### 验证
 
-javac **266 类**；测试 **1533/1533**
+javac **266 类**；测试 **1575/1575**
 smali 核对：主卡 2 处 `monthlySettledDays`（定义 + 调用）、小组件 1 处（调用）
 **产物**：`SalaryJump-3.89-monthdays.apk`（205859B，versionCode 113，v2+v3 签名）
 
@@ -326,7 +411,7 @@ smali 核对：主卡 2 处 `monthlySettledDays`（定义 + 调用）、小组�
 
 ### 验证
 
-javac **266 类**；测试 **1533/1533**（BE 组扩到 12 项）
+javac **266 类**；测试 **1575/1575**（BE 组扩到 12 项）
 - **上月 123456.78 一分没混进本月**
 - 本月已归档 + 今天实时
 - 本月天数只算本月、null 安全
@@ -372,7 +457,7 @@ private static String formatDuration(int i) → "%02d:%02d"
 
 ### 验证
 
-javac **266 类**；测试 **1533/1533**（新增 BD 组 18 项）
+javac **266 类**；测试 **1575/1575**（新增 BD 组 18 项）
 - 0 / 1 / 59 秒 · 1 分 · 59:59 · 整 1 小时 · 9 小时
 - **秒要补零**（`1:05:03` 而非 `1:5:3`）· **分要补零**（`1:00:07`）
 - 负数钳为 0 · `59:59 → 1:00:00` 边界
@@ -424,7 +509,7 @@ linearLayout.addView(linearLayout2, new LinearLayout.LayoutParams(0, dp(50.0f), 
 
 ### 验证
 
-javac **266 类**；测试 **1533/1533**
+javac **266 类**；测试 **1575/1575**
 smali 核对：`addStat` 高度为 `-0x2`、`HERO_LINE` **只剩字段定义、零引用**
 **产物**：`SalaryJump-3.85-nogap.apk`（205853B，versionCode 109，v2+v3 签名）
 
@@ -470,7 +555,7 @@ heroCard.addView(view2, layoutParams5);   // ← 分隔线，后面什么都没�
 
 ### 验证
 
-javac **266 类**；测试 **1533/1533**
+javac **266 类**；测试 **1575/1575**
 smali 核对：`clockView` 已不在包里、时间格式串已删、间距常量（16/14）入包
 **产物**：`SalaryJump-3.84-compact.apk`（205860B，versionCode 108，v2+v3 签名）
 
@@ -513,7 +598,7 @@ smali 核对：类已不在包里、`本周` 文案无残留。
 ### 验证
 
 javac **266 类**（比上版少 1 个 = WeekDigest 已删）
-测试 **1533/1533**（删掉 BC 组 28 项，其余全过）
+测试 **1575/1575**（删掉 BC 组 28 项，其余全过）
 **产物**：`SalaryJump-3.83-inline.apk`（205860B，versionCode 107，v2+v3 签名）
 
 ### 教训
@@ -572,7 +657,7 @@ javac **266 类**（比上版少 1 个 = WeekDigest 已删）
 
 ### 验证
 
-javac **267 类**；测试 **1533/1533**（新增 BC 组 28 项）
+javac **267 类**；测试 **1575/1575**（新增 BC 组 28 项）
 - 周三：本周 3 天 vs 上周同 3 天（**上周后几天的钱不能算进来**）
 - 周一：只比 1 天 · 周日：算满 7 天
 - **跨月**（本周一落在上月）
@@ -613,7 +698,7 @@ PaydayReminder.set(ctx, true, Math.min(28, todayDay + 3));
 - 1–25 号 → 走「设未来某天」分支，差值恒为 +3
 - 26–31 号 → 走「设今天」分支，恒为 0
 
-测试 **1533/1533**
+测试 **1575/1575**
 
 ### 教训
 
@@ -663,7 +748,7 @@ PaydayReminder.set(ctx, true, Math.min(28, todayDay + 3));
 
 ### 验证
 
-javac **266 类**；测试 **1533/1533**（新增 BB 组 12 项）
+javac **266 类**；测试 **1575/1575**（新增 BB 组 12 项）
 - 0–7 点 / 22–23 点算睡，8–21 点算醒（含用户的 15:00 场景）
 - **24 小时里恰好 10 小时算睡**
 - 无参版本可调用（读系统时钟）
@@ -733,7 +818,7 @@ if (HolidayWork.isComp(context, i)) {
 
 ### 验证
 
-javac **266 类**；测试 **1533/1533**（BA 组扩到 41 项）
+javac **266 类**；测试 **1575/1575**（BA 组扩到 41 项）
 关键回归：**「调休即便误传 15 倍也不放大」**、**「调休时标签仍是调休，不显示 1.5 倍」**
 smali 核对：`modeFor(IZ)I` / `labelFor(IIZ)` / `hourlyFor(DIIZ)D` 三个新签名入包，
 「调休 · 不计薪」字符串在位
@@ -776,7 +861,7 @@ smali 核对：`modeFor(IZ)I` / `labelFor(IIZ)` / `hourlyFor(DIIZ)D` 三个新�
 
 ### 验证
 
-javac **266 类**；测试 **1533/1533**（新增 BA 组 29 项）
+javac **266 类**；测试 **1575/1575**（新增 BA 组 29 项）
 - 9 种状态逐个验证该显示还是该灰 · **恰好 4 种显示**
 - 倍率文案（1.5 倍 / 2 倍 / 3 倍 / 越界兜底）
 - 时薪放大（加班 1.5×、出勤 2×/3×、倍率为 0 时不放大、灰掉状态不放大）

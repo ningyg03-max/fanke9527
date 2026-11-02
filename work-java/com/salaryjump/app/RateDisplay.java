@@ -37,7 +37,11 @@ final class RateDisplay {
      * @param state       当前状态
      * @param holidayComp 是否「调休出勤」（无薪）
      */
-    static int modeFor(int state, boolean holidayComp) {
+    static int modeFor(int state, boolean holidayComp, boolean leaveHalfWorking) {
+        if (state == MainActivity.STATE_LEAVE && leaveHalfWorking) {
+            // 半天假：休的那半天已经计过钱，上班这半天还在赚 → 费率要显示
+            return SHOW;
+        }
         switch (state) {
             case MainActivity.STATE_MORNING:        // 上午
             case MainActivity.STATE_AFTERNOON:      // 下午
@@ -54,7 +58,11 @@ final class RateDisplay {
 
     /** 兼容旧调用（不知道是否调休时，按非调休处理）。 */
     static int modeFor(int state) {
-        return modeFor(state, false);
+        return modeFor(state, false, false);
+    }
+
+    static int modeFor(int state, boolean holidayComp) {
+        return modeFor(state, holidayComp, false);
     }
 
     /** 灰掉时用的占位文本。 */

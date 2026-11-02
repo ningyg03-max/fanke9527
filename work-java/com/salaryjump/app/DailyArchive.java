@@ -84,7 +84,7 @@ final class DailyArchive {
                 LeaveRecord.Entry entry = LeaveRecord.get(context, stampValue);
                 if (entry != null) {
                     // 请假：按计薪比例
-                    double earned = LeaveRecord.earned(settings.dailySalary, entry.payPercent, entry.half);
+                    double earned = LeaveRecord.dayEarned(settings.dailySalary, entry.payPercent, entry.half);
                     days++;
                     SalaryHistory.put(context, stampValue, Math.round(100.0d * earned) + extra + backfill);
                     total = total + earned + ((extra + backfill) / 100.0d);

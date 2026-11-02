@@ -2255,7 +2255,7 @@ public class MainActivity extends Activity {
         }
         this.progressBar.setProgress((float) calculate.progress);
         if (this.workerPetView != null) {
-            this.workerPetView.setState(calculate.state);
+            this.workerPetView.setState(calculate.state, calculate.leaveHalfWorking);
             // 倍率的取值必须分三种情况：
             //   法定/计薪出勤 → holidayRateX10（30/20）
             //   调休出勤     → 无薪，传 0（不能回落到加班倍率！）
@@ -2268,10 +2268,12 @@ public class MainActivity extends Activity {
             } else {
                 rateX10 = 0;
             }
-            updateRateLabels(calculate.state, rateX10, calculate.holidayComp);
+            updateRateLabels(calculate.state, rateX10, calculate.holidayComp, calculate.leaveHalfWorking);
             int petFatigue = PetState.fatigueLevel(this);
             this.workerPetView.setFatigue(petFatigue);
-            String moodText = WorkerPet.moodText(this.workerPetView.getDisplayPose());
+            String moodText = calculate.leaveHalfWorking
+                    ? "半天假 · 还有半天班"
+                    : WorkerPet.moodText(this.workerPetView.getDisplayPose());
             int daysToPayday = PetState.daysToPayday(this);
             // 小人那列窄，发薪倒数用「·5天」这种紧凑写法
             if (daysToPayday == 0) {
@@ -2297,7 +2299,7 @@ public class MainActivity extends Activity {
         int i = HERO_TEXT;
         if (calculate.state == 8) {
             i = Color.rgb(196, 181, 253);
-            str = (calculate.leaveName == null ? "请假" : calculate.leaveName) + " · " + LeaveRecord.payText(calculate.leavePayPercent) + (calculate.leaveHalf ? " · 半天" : "") + " · 今日 " + this.moneyFormat.format(calculate.earned) + " 元";
+            str = (calculate.leaveName == null ? "请假" : calculate.leaveName) + " · " + LeaveRecord.payText(calculate.leavePayPercent) + (calculate.leaveHalf ? " · 半天" : "") + (calculate.leaveHalfWorking ? "（另半天上班）" : "") + " · 今日 " + this.moneyFormat.format(calculate.earned) + " 元";
         } else {
             if (calculate.state == STATE_HOLIDAY_WORK) {
                 i = Color.rgb(253, 224, 71);
@@ -2704,7 +2706,7 @@ public class MainActivity extends Activity {
     /* JADX INFO: Access modifiers changed from: private */
     public void applyLeave(Calendar calendar, String str, int i, boolean z) {
         LeaveRecord.put(this, (calendar.get(1) * 10000) + ((calendar.get(2) + 1) * 100) + calendar.get(5), str, i, z);
-        Toast.makeText(this, "已记为" + LeaveRecord.describe(str, i, z) + " · " + this.moneyFormat.format(LeaveRecord.earned(this.settings.dailySalary, i, z)) + " 元", 0).show();
+        Toast.makeText(this, "已记为" + LeaveRecord.describe(str, i, z) + " · " + this.moneyFormat.format(LeaveRecord.dayEarned(this.settings.dailySalary, i, z)) + " 元", 0).show();
         SalaryWidgetProvider.refreshAll(this);
         refreshDisplay();
     }
@@ -2995,6 +2997,13 @@ public class MainActivity extends Activity {
      * @param holidayComp 是否「调休出勤」—— 无薪，费率要灰掉
      */
     public void updateRateLabels(int state, int rateX10, boolean holidayComp) {
+        updateRateLabels(state, rateX10, holidayComp, false);
+    }
+
+    /**
+     * @param leaveHalfWorking 半天假但在上另外半天班 —— 费率要照常显示
+     */
+    public void updateRateLabels(int state, int rateX10, boolean holidayComp, boolean leaveHalfWorking) {
         double d = SalaryCalculator.totalWorkSeconds(this.settings);
         double d2 = d > 0.0d ? this.settings.dailySalary / d : 0.0d;
         double d3 = d2 * 60.0d;
@@ -3007,7 +3016,7 @@ public class MainActivity extends Activity {
         }
 
         // 费率只在「真的在赚」时显示；其余时刻灰掉，避免下班/周末还在暗示在赚钱
-        if (RateDisplay.modeFor(state, holidayComp) == RateDisplay.SHOW) {
+        if (RateDisplay.modeFor(state, holidayComp, leaveHalfWorking) == RateDisplay.SHOW) {
             double hourly = RateDisplay.hourlyFor(60.0d * d3, state, rateX10, holidayComp);
             this.hourlyView.setText("¥" + this.moneyFormat.format(hourly));
             this.minuteView.setText("¥" + this.rateFormat.format(hourly / 60.0d));
@@ -3527,6 +3536,8 @@ public class MainActivity extends Activity {
         boolean holidayComp;
         int holidayRateX10;
         boolean leaveHalf;
+        /** 半天假 + 另外半天还在上班（此时金额要继续累积、费率要显示） */
+        boolean leaveHalfWorking;
         String leaveName;
         int leavePayPercent;
         double overtimeEarned;
@@ -3594,8 +3605,24 @@ public class MainActivity extends Activity {
                 salarySnapshot.leavePayPercent = entry.payPercent;
                 salarySnapshot.leaveHalf = entry.half;
                 salarySnapshot.leaveName = entry.name;
-                salarySnapshot.progress = LeaveRecord.ratio(entry.payPercent, entry.half);
-                salarySnapshot.earned = LeaveRecord.earned(salarySettings.dailySalary, entry.payPercent, entry.half);
+                double leaveRatio = LeaveRecord.ratio(entry.payPercent, entry.half);
+                if (entry.half) {
+                    // 半天假 = 休半天 + 上半天。请假那半天按比例计（立即可见），
+                    // 上班那半天按实际时间累积 —— 否则金额会一整天冻在半天工资上
+                    int nowSec = WorkClock.secondsOfDay(calendar);
+                    double workRatio = WorkClock.elapsedRatio(nowSec,
+                            salarySettings.workStartMinutes, salarySettings.workEndMinutes,
+                            salarySettings.breakStartMinutes, salarySettings.breakEndMinutes, d3);
+                    salarySnapshot.leaveHalfWorking = WorkClock.inWorkWindow(nowSec,
+                            salarySettings.workStartMinutes, salarySettings.workEndMinutes,
+                            salarySettings.breakStartMinutes, salarySettings.breakEndMinutes);
+                    salarySnapshot.progress = Math.min(1.0d,
+                            leaveRatio + (LeaveRecord.HALF_WORK_SHARE * workRatio));
+                    salarySnapshot.earned = salarySettings.dailySalary * salarySnapshot.progress;
+                } else {
+                    salarySnapshot.progress = leaveRatio;
+                    salarySnapshot.earned = LeaveRecord.earned(salarySettings.dailySalary, entry.payPercent, entry.half);
+                }
                 return salarySnapshot;
             }
             double d4 = (calendar.get(11) * 3600.0d) + (calendar.get(12) * 60.0d) + calendar.get(13) + (calendar.get(14) / 1000.0d);

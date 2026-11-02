@@ -46,7 +46,15 @@ public class WorkerPetView extends View {
     }
 
     public void setState(int i) {
-        int resolvePose = WorkerPet.resolvePose(i, Calendar.getInstance(), workEndMinutes(this.appContext));
+        setState(i, false);
+    }
+
+    /**
+     * @param leaveHalfWorking 半天假但在上另外半天班 —— 此时不该显示「休假」姿势
+     */
+    public void setState(int i, boolean leaveHalfWorking) {
+        int resolvePose = WorkerPet.resolvePose(i, Calendar.getInstance(),
+                workEndMinutes(this.appContext), leaveHalfWorking);
         if (resolvePose != this.pose) {
             this.pose = resolvePose;
             invalidate();

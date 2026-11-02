@@ -44,7 +44,7 @@ final class ArchiveSync {
         }
         LeaveRecord.Entry entry = LeaveRecord.get(context, i);
         if (entry != null) {
-            return LeaveRecord.earned(dailySalary(context), entry.payPercent, entry.half);
+            return LeaveRecord.dayEarned(dailySalary(context), entry.payPercent, entry.half);
         }
         return dailySalary(context);
     }
@@ -82,7 +82,7 @@ final class ArchiveSync {
             return centsOf;
         }
         LeaveRecord.Entry entry = LeaveRecord.get(context, i);
-        return entry != null ? Math.round(LeaveRecord.earned(dailySalary(context), entry.payPercent, entry.half) * 100.0d) + centsOf : Math.round(dailySalary(context) * 100.0d) + centsOf;
+        return entry != null ? Math.round(LeaveRecord.dayEarned(dailySalary(context), entry.payPercent, entry.half) * 100.0d) + centsOf : Math.round(dailySalary(context) * 100.0d) + centsOf;
     }
 
     static void refreshPrewritten(Context context, int i) {

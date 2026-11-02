@@ -215,6 +215,9 @@ public class AllTest {
         section("BJ. 只统计工作日");
         testWaterScope();
 
+        section("BK. 半天假 / 上班时间");
+        testHalfLeave();
+
 
         System.out.println();
         System.out.println("────────────────────────────");
@@ -3750,6 +3753,80 @@ public class AllTest {
 
         // null 安全
         eq("null context → 0 天", 0, MainActivity.monthlySettledDays(null));
+    }
+
+    // ══════════ BK. 半天假 / 上班时间 ══════════
+    // 用户反馈：「我只休半天，还要上班半天」—— 原来半天假被当成整天不工作，
+    // 金额一整天冻在半天工资上，费率栏灰掉、小人说「今日休假」。
+    static void testHalfLeave() {
+        int start = 480;      // 8:00
+        int end = 1020;       // 17:00
+        int bStart = 690;     // 11:30
+        int bEnd = 750;       // 12:30
+        double total = 8.5d * 3600.0d;
+
+        eq("上班前 → 0", (int) WorkClock.elapsedSeconds(7 * 3600, start, end, bStart, bEnd, total), 0);
+        eq("8:00 整 → 0", (int) WorkClock.elapsedSeconds(8 * 3600, start, end, bStart, bEnd, total), 0);
+        eq("9:00 → 1 小时", (int) WorkClock.elapsedSeconds(9 * 3600, start, end, bStart, bEnd, total), 3600);
+        eq("11:00 → 3 小时", (int) WorkClock.elapsedSeconds(11 * 3600, start, end, bStart, bEnd, total), 3 * 3600);
+        eq("午休中不累加", (int) WorkClock.elapsedSeconds(12 * 3600, start, end, bStart, bEnd, total), 3 * 3600 + 1800);
+        eq("午休结束那一刻 → 不变", (int) WorkClock.elapsedSeconds(12 * 3600 + 1800, start, end, bStart, bEnd, total), 3 * 3600 + 1800);
+        eq("13:00 → 4h（3.5h + 0.5h）", (int) WorkClock.elapsedSeconds(13 * 3600, start, end, bStart, bEnd, total), (int) (4.0d * 3600));
+        eq("下班后 → 满 8.5h", (int) WorkClock.elapsedSeconds(18 * 3600, start, end, bStart, bEnd, total), (int) total);
+        eq("深夜也不超过总工时", (int) WorkClock.elapsedSeconds(23 * 3600, start, end, bStart, bEnd, total), (int) total);
+
+        eqD("比例：上班前 0", 0.0d, WorkClock.elapsedRatio(7 * 3600, start, end, bStart, bEnd, total));
+        eqD("比例：下班后 1", 1.0d, WorkClock.elapsedRatio(18 * 3600, start, end, bStart, bEnd, total));
+        check("比例：半程在 0~1 之间", WorkClock.elapsedRatio(13 * 3600, start, end, bStart, bEnd, total) > 0.4d);
+        eqD("总工时为 0 不崩", 0.0d, WorkClock.elapsedRatio(13 * 3600, start, end, bStart, bEnd, 0.0d));
+
+        eq("上班时段：8:00 是", 1, WorkClock.inWorkWindow(8 * 3600, start, end, bStart, bEnd) ? 1 : 0);
+        eq("上班时段：7:59 否", 0, WorkClock.inWorkWindow(7 * 3600 + 59 * 60, start, end, bStart, bEnd) ? 1 : 0);
+        eq("上班时段：午休 否", 0, WorkClock.inWorkWindow(12 * 3600, start, end, bStart, bEnd) ? 1 : 0);
+        eq("上班时段：12:30 是", 1, WorkClock.inWorkWindow(12 * 3600 + 1800, start, end, bStart, bEnd) ? 1 : 0);
+        eq("上班时段：17:00 否", 0, WorkClock.inWorkWindow(17 * 3600, start, end, bStart, bEnd) ? 1 : 0);
+        eq("上班时段：16:59 是", 1, WorkClock.inWorkWindow(16 * 3600 + 59 * 60, start, end, bStart, bEnd) ? 1 : 0);
+
+        // ── dayEarned：半天假当天最终应得 ──
+        double daily = 1007.78d;
+        eqD("全天全薪 → 100%", daily, LeaveRecord.dayEarned(daily, 100, false));
+        eqD("全天无薪 → 0", 0.0d, LeaveRecord.dayEarned(daily, 0, false));
+        eqD("全天 60% → 60%", daily * 0.6d, LeaveRecord.dayEarned(daily, 60, false));
+        eqD("半天年假全薪 → 100%", daily, LeaveRecord.dayEarned(daily, 100, true));
+        eqD("半天事假无薪 → 50%", daily * 0.5d, LeaveRecord.dayEarned(daily, 0, true));
+        eqD("半天病假 60% → 80%", daily * 0.8d, LeaveRecord.dayEarned(daily, 60, true));
+        eqD("日薪为 0 不崩", 0.0d, LeaveRecord.dayEarned(0.0d, 100, true));
+
+        eqD("旧口径半天只有 50%", daily * 0.5d, LeaveRecord.earned(daily, 100, true));
+        check("新口径比旧口径多出「上班那半天」",
+                LeaveRecord.dayEarned(daily, 100, true) > LeaveRecord.earned(daily, 100, true));
+
+        // ── 费率栏：半天假在上班时段要显示 ──
+        eq("半天假上班中 → 显示费率", RateDisplay.SHOW, RateDisplay.modeFor(MainActivity.STATE_LEAVE, false, true));
+        eq("半天假没在上班 → 灰掉", RateDisplay.DIM, RateDisplay.modeFor(MainActivity.STATE_LEAVE, false, false));
+        eq("上班中仍显示", RateDisplay.SHOW, RateDisplay.modeFor(MainActivity.STATE_MORNING, false, false));
+
+        // ── 小人姿势：半天假上班时不能躺着 ──
+        Calendar morning = mk("2026-11-02");
+        morning.set(11, 9);
+        eq("半天假 9 点 → 键盘姿势（非休假）", 1, WorkerPet.resolvePose(MainActivity.STATE_LEAVE, morning, 1020, true));
+        Calendar afternoon = mk("2026-11-02");
+        afternoon.set(11, 14);
+        eq("半天假 14 点 → 下午姿势（非休假）", 2, WorkerPet.resolvePose(MainActivity.STATE_LEAVE, afternoon, 1020, true));
+        eq("半天假但没在上班 → 休假姿势", 8, WorkerPet.resolvePose(MainActivity.STATE_LEAVE, afternoon, 1020, false));
+        eq("全天假 → 休假姿势", 8, WorkerPet.resolvePose(MainActivity.STATE_LEAVE, morning, 1020, false));
+
+        // ── 金额推进：半天年假 从 50% 长到 100% ──
+        double ratioAtStart = LeaveRecord.ratio(100, true);
+        eqD("半天年假起始 = 50%", 0.5d, ratioAtStart);
+        double atNoon = Math.min(1.0d, ratioAtStart + LeaveRecord.HALF_WORK_SHARE
+                * WorkClock.elapsedRatio(13 * 3600, start, end, bStart, bEnd, total));
+        check("半天年假下午超过 50%", atNoon > 0.5d);
+        check("半天年假不超过 100%", atNoon <= 1.0d);
+        double atEnd = Math.min(1.0d, ratioAtStart + LeaveRecord.HALF_WORK_SHARE);
+        eqD("半天年假下班 = 100%", 1.0d, atEnd);
+        eqD("live 收工金额 = 归档金额", LeaveRecord.dayEarned(daily, 100, true), daily * atEnd);
+        eqD("半天事假收工 = 50%", LeaveRecord.dayEarned(daily, 0, true), daily * 0.5d);
     }
 
     // ══════════ BJ. 只统计工作日 ══════════

@@ -158,6 +158,35 @@ public final class LeaveRecord {
         return clampPercent;
     }
 
+    /** 半天假里「另外半天上班」最多值日薪的多少 */
+    public static final double HALF_WORK_SHARE = 0.5d;
+
+    /**
+     * 半天假当天最终应得 —— <b>含另外半天上班的钱</b>。
+     *
+     * <p>半天假的意思是「休半天、另半天正常上班」，所以：
+     * <ul>
+     *   <li>请假那半天：按 payPercent 折算一半</li>
+     *   <li>上班那半天：按正常工资计（{@link #HALF_WORK_SHARE}）</li>
+     * </ul>
+     *
+     * <p>半天年假（全薪）= 50% + 50% = 100%；
+     * 半天事假（无薪）= 0% + 50% = 50%；半天病假（60%）= 30% + 50% = 80%。
+     *
+     * <p>归档时用这个，而不是 {@link #earned} —— 后者只算请假那半天，
+     * 会把上了半天班的钱漏掉。
+     */
+    public static double dayEarned(double daily, int payPercent, boolean half) {
+        if (daily <= 0.0d) {
+            return 0.0d;
+        }
+        if (!half) {
+            return daily * (clampPercent(payPercent) / 100.0d);
+        }
+        double leavePart = daily * (clampPercent(payPercent) / 200.0d);
+        return Math.min(daily, leavePart + (daily * HALF_WORK_SHARE));
+    }
+
     public static double earned(double d, int i, boolean z) {
         if (d <= 0.0d) {
             return 0.0d;

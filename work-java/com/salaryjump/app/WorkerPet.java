@@ -38,7 +38,15 @@ final class WorkerPet {
     }
 
     static int resolvePose(int i, Calendar calendar, int i2) {
+        return resolvePose(i, calendar, i2, false);
+    }
+
+    static int resolvePose(int i, Calendar calendar, int i2, boolean leaveHalfWorking) {
         if (i == 8) {
+            // 半天假但那半天在上班 → 用正常班中的姿势，不要躺着
+            if (leaveHalfWorking) {
+                return calendar.get(11) < 12 ? 1 : 2;
+            }
             return 8;
         }
         if (i == HOLIDAY_WORK) {

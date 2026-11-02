@@ -713,7 +713,7 @@ public class SalaryCalendarActivity extends Activity {
             @Override // android.content.DialogInterface.OnClickListener
             public void onClick(DialogInterface dialogInterface, int i3) {
                 LeaveRecord.put(SalaryCalendarActivity.this, i, str, i2, i3 == 1);
-                Toast.makeText(SalaryCalendarActivity.this, "已记为" + LeaveRecord.describe(str, i2, i3 == 1) + " · " + SalaryCalendarActivity.this.moneyFormat.format(LeaveRecord.earned(MainActivity.SalarySettings.load(SalaryCalendarActivity.this.getSharedPreferences("salary_jump", 0)).dailySalary, i2, i3 == 1)) + " 元", 0).show();
+                Toast.makeText(SalaryCalendarActivity.this, "已记为" + LeaveRecord.describe(str, i2, i3 == 1) + " · " + SalaryCalendarActivity.this.moneyFormat.format(LeaveRecord.dayEarned(MainActivity.SalarySettings.load(SalaryCalendarActivity.this.getSharedPreferences("salary_jump", 0)).dailySalary, i2, i3 == 1)) + " 元", 0).show();
                 SalaryWidgetProvider.refreshAll(SalaryCalendarActivity.this);
                 SalaryCalendarActivity.this.render();
             }
